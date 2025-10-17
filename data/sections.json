@@ -1,0 +1,50 @@
+[
+    {
+        "url": "home",
+        "text": "Inicio",
+        "title": "Inicio", 
+        "isInMenu": true
+    },
+    {
+        "url": "pactos",
+        "text": "Pactos",
+        "title": "Pactos",
+        "isInMenu": true
+    },
+    {
+        "url": "demons",
+        "text": "Demons",
+        "title": "Demons", 
+        "isInMenu": true
+    },
+    {
+        "url": "AgendarRitual",
+        "text": "Agendar Ritual",
+        "title": "Agendar Ritual",
+        "isInMenu": true
+    },
+    {
+        "url": "contacto",
+        "text": "Contacto",
+        "title": "Contacto", 
+        "isInMenu": true
+    },
+    {
+        "url": "enviado",
+        "text": "Formulario Enviado",
+        "title": "Formulario enviado con éxito", 
+        "isInMenu": false
+    },
+    {
+        "url": "alumno",
+        "text": "Alumno",
+        "title": "Datos del Alumno", 
+        "isInMenu": true
+    }, 
+    {
+        "url": "404",
+        "text": "Error 404",
+        "title": "Página no encontrada", 
+        "isInMenu": false
+    }
+]
