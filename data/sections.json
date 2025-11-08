@@ -1,33 +1,27 @@
 [
     {
-        "url": "home",
-        "text": "Inicio",
-        "title": "Inicio", 
+        "url": "abyssum",
+        "text": "Abyssum",
+        "title": "Abyssum: Pactos de Demonios",
         "isInMenu": true
     },
     {
-        "url": "pactos",
-        "text": "Pactos",
-        "title": "Pactos",
+        "url": "pacts",
+        "text": "Pacts",
+        "title": "Pacts",
         "isInMenu": true
     },
     {
         "url": "demons",
-        "text": "Demons",
-        "title": "Demons", 
+        "text": "Entidades",
+        "title": "Entidades del Abismo",
         "isInMenu": true
     },
     {
-        "url": "AgendarRitual",
-        "text": "Agendar Ritual",
-        "title": "Agendar Ritual",
-        "isInMenu": true
-    },
-    {
-        "url": "contacto",
-        "text": "Contacto",
-        "title": "Contacto", 
-        "isInMenu": true
+        "url": "404",
+        "text": "Error 404",
+        "title": "Página no encontrada",
+        "isInMenu": false
     },
     {
         "url": "enviado",
@@ -40,7 +34,7 @@
         "text": "Alumno",
         "title": "Datos del Alumno", 
         "isInMenu": true
-    }, 
+    },              
     {
         "url": "404",
         "text": "Error 404",

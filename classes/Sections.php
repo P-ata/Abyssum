@@ -25,16 +25,17 @@ class Sections
     public static function sectionsOfSite():array
     {
         $sections = [];
+        
         $JSON = file_get_contents(BASE_PATH . '/data/sections.json');
         $JSONData = json_decode($JSON);
 
         foreach ($JSONData as $value){
-            $sec = new self();
-            $sec->url = $value->url;
-            $sec->text = $value->text;
-            $sec->title = $value->title;
-            $sec->isInMenu = $value->isInMenu;
-            $sections[] = $sec;
+            $section = new self();
+            $section->url = $value->url;
+            $section->text = $value->text;
+            $section->title = $value->title;
+            $section->isInMenu = (bool)$value->isInMenu;
+            $sections[] = $section;
         }
         return $sections;
     }
@@ -57,7 +58,7 @@ class Sections
         $JSONData = json_decode($JSON, true);
         
         foreach ($JSONData as $value){
-            if($value["isInMenu"]){
+            if(!empty($value["isInMenu"])){
                 $menuSections[] = $value["url"];
             }
         }

@@ -3,6 +3,31 @@ services:
     build: .
     ports: ["8080:80"]
     volumes: [ "./:/var/www/html" ]
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=demons
+      - DB_USER=root
+      - DB_PASS=secret
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=demons
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-psecret"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
   ui:
     image: node:20-alpine
@@ -10,7 +35,23 @@ services:
     volumes: 
       - ./:/app
       - /app/node_modules
-    command: sh -c "npm install && npx tailwindcss -i ./public/assets/css/input.css -o ./public/assets/css/tailwind.css --watch --minify"
+    ports:
+      - "5173:5173"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    command: sh -c "npm i && npm run dev -- --host 0.0.0.0 --port 5173"
     restart: unless-stopped
     stdin_open: true
     tty: true
+
+  tailwind:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run tw:all:watch"
+    restart: unless-stopped
+
+volumes:
+  mysql-data:

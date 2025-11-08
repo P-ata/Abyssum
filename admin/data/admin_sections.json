@@ -1,0 +1,15 @@
+[
+  {
+    "url": "dashboard",
+    "text": "Dashboard",
+    "title": "Panel de administración",
+    "isInMenu": true
+  },
+  {
+    "url": "new-pact",
+    "text": "New Pact",
+    "title": "Crear un nuevo Pact",
+    "isInMenu": true
+  }
+]
+
