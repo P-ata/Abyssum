@@ -71,26 +71,11 @@ if ($route !== null && str_starts_with($route, 'admin')) {
         }
     }
     ?>
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?= htmlspecialchars($adminTitle) ?></title>
-        <link rel="stylesheet" href="/assets/admin/css/tailwind.css">
-        <!-- GSAP for admin animations -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-        <script src="/assets/admin/js/dashboard.js" defer></script>
-        <?php if ($adminView === 'new-pact'): ?>
-        <script src="/assets/admin/js/new-pact.js" defer></script>
-        <?php endif; ?>
-    </head>
-    <body class="bg-black text-white">
-        <main>
-            <?php require BASE_PATH . '/admin/views/' . $adminView . '.php'; ?>
-        </main> 
-    </body>
-    </html>
+    <?php require BASE_PATH . '/admin/views/partials/admin-head.php'; ?>
+    <main>
+        <?php require BASE_PATH . '/admin/views/' . $adminView . '.php'; ?>
+    </main>
+    <?php require BASE_PATH . '/admin/views/partials/admin-footer.php'; ?>
     <?php
     exit;
 }
@@ -118,26 +103,8 @@ foreach ($sections as $value) {
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= htmlspecialchars($sectionTitle) ?></title>
-
-  <link rel="canonical" href="https://tailwindcss.com">
-  <link rel="stylesheet" href="/assets/css/tailwind.css">
-
-  <!-- GSAP -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-
-  <!-- JS -->
-  <script type="module" src="/assets/js/pacts.js"></script>
-  <script type="module" src="/assets/js/demons.js"></script>
-</head>
-<body>
-  <main>
+<?php require BASE_PATH . '/views/partials/head.php'; ?>
+<main>
     <?php require BASE_PATH . '/views/' . $view . '.php'; ?>
-  </main>
-</body>
-</html>
+</main>
+<?php require BASE_PATH . '/views/partials/footer.php'; ?>

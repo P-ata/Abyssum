@@ -107,38 +107,7 @@
       </div>
     </div>
 
-    <!-- Center logo/emblem -->
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[1] pointer-events-none">
-      <div class="w-[150px] h-[150px]">
-        <svg viewBox="0 0 100 100" class="w-full h-full animate-spin" style="animation-duration: 20s;">
-          <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="1" class="text-amber-600/30"/>
-          <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="1" class="text-amber-600/50"/>
-          <circle cx="50" cy="50" r="5" fill="currentColor" class="text-amber-600"/>
-        </svg>
-      </div>
-    </div>
+    
 
   </div>
 </div>
-
-<style>
-  /* Carousel slide transitions */
-  .carousel-slide {
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    transform: scale(0.8);
-  }
-
-  .carousel-slide.active {
-    opacity: 1 !important;
-    transform: scale(1) !important;
-    z-index: 2;
-  }
-
-  /* Mini card active state */
-  .mini-card.active {
-    border-color: rgb(251, 191, 36) !important;
-    background: rgba(251, 191, 36, 0.1) !important;
-    box-shadow: 0 0 20px rgba(251, 191, 36, 0.2) !important;
-  }
-</style>
-</style>
