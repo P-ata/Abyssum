@@ -52,9 +52,10 @@ if ($route !== null && str_starts_with($route, 'admin')) {
         exit;
     }
 
-    // /admin → dashboard por defecto
+    // /admin → redirigir a /admin/dashboard para URL consistente
     if ($adminRoute === '') {
-        $adminRoute = 'dashboard';
+        header('Location: /admin/dashboard');
+        exit;
     }
 
     // misma lógica que público pero con AdminSections
