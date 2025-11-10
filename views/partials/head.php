@@ -5,9 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><?= htmlspecialchars($sectionTitle ?? '') ?></title>
   <link rel="canonical" href="https://tailwindcss.com" />
+  <!-- Tailwind CSS (público) -->
   <link rel="stylesheet" href="/assets/css/tailwind.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script type="module" src="/assets/js/pacts.js"></script>
-  <script type="module" src="/assets/js/demons.js"></script>
+  
+  <!-- Vite dev server para módulos ES (development) -->
+  <?php if (($_SERVER['SERVER_NAME'] ?? 'localhost') === 'localhost'): ?>
+    <script type="module" src="http://localhost:5173/@vite/client"></script>
+  <?php endif; ?>
+  
+  <!-- JS específico por vista (como módulos ES) -->
+  <?php if (($view ?? '') === 'pacts'): ?>
+    <script type="module" src="http://localhost:5173/public/assets/js/pacts.js"></script>
+  <?php endif; ?>
+  <?php if (($view ?? '') === 'abyssum'): ?>
+    <script type="module" src="http://localhost:5173/public/assets/js/demons.js"></script>
+  <?php endif; ?>
 </head>
 <body>

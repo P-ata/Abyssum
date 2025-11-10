@@ -1,3 +1,5 @@
+import { gsap } from 'gsap';
+
 // Demon Carousel with GSAP
 class DemonCarousel {
   constructor() {

@@ -1,4 +1,6 @@
-// new-pact page interactions (front only)
+import { gsap } from 'gsap';
+
+// new-pact page interactions
 (() => {
   const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
   const $  = (sel, ctx=document) => ctx.querySelector(sel);
@@ -6,12 +8,10 @@
 
   onReady(() => {
     // Entrance animations
-    if (window.gsap) {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      tl.from('#npTitle span', { y: 40, opacity: 0, stagger: 0.12, duration: 0.8 })
-        .from('#mediaCard', { y: 30, opacity: 0, duration: 0.5 }, '-=0.4')
-        .from('#newPactForm .form-section', { y: 20, opacity: 0, stagger: 0.06, duration: 0.4 }, '-=0.2');
-    }
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    tl.from('#npTitle span', { y: 40, opacity: 0, stagger: 0.12, duration: 0.8 })
+      .from('#mediaCard', { y: 30, opacity: 0, duration: 0.5 }, '-=0.4')
+      .from('#newPactForm .form-section', { y: 20, opacity: 0, stagger: 0.06, duration: 0.4 }, '-=0.2');
 
     // Power live value
     const powerRange = $('#powerRange');
@@ -29,7 +29,7 @@
         const on = toggle.getAttribute('data-on') === 'true';
         toggle.setAttribute('data-on', String(!on));
         toggle.textContent = on ? 'INACTIVO' : 'ACTIVO';
-        if (window.gsap) gsap.fromTo(toggle, { opacity: 0.6 }, { opacity: 1, duration: 0.2 });
+        gsap.fromTo(toggle, { opacity: 0.6 }, { opacity: 1, duration: 0.2 });
       });
     }
 
