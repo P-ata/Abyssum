@@ -1,41 +1,486 @@
-Aurelia: podés volverte invisible, moverte entre sombras, crear clones, forjar objetos y encima generar tu propia penumbra.
+{
+  "currency": "CREDITOS",
+  "categories_pool": [
+    "aurelia",
+    "nexum",
+    "tumulus",
+    "apex",
+    "sigilo",
+    "movilidad",
+    "sombras",
+    "control",
+    "utilidad",
+    "inteligencia",
+    "contratos",
+    "disfraz",
+    "social",
+    "falsificacion",
+    "combate",
+    "apoyo"
+  ],
+  "demons": [
+    {
+      "id": "apex",
+      "name": "Apex",
+      "image": "public/assets/img/apex.png",
+      "aliases": ["Apex de Agujas", "Cronox", "El Coronado", "Apex Spina"],
+      "species": "Entitad Espicular / Demonio de Engranajes",
+      "gender": "neutro (manifestación andrógina)",
+      "age_real": "desconocida (se manifiesta como antiguo en simbología)",
+      "summary": "Apex es una entidad de combate: una corona de agujas, aristas vivas y látigos espiculares. En el mundo cyberpunk funciona como donador de técnicas combativas, movilidad extrema y manipulación de puntas/espinas energizadas.",
+      "lore": "Nacido en el cruce entre metal frío y neón, Apex se formó como patrón de filo y coraza en los túneles industriales donde los sistemas de defensa y los rituales de fábrica se entrelazaban. Las fábricas que olvidaron apagar sus máquinas dieron a luz a su primera corona: fragmentos de hornos y aguja fina que, con tiempo y atención, adquirieron voluntad. Cronox —como lo llaman algunos círculos— no siente amor por la violencia por sí misma; la ve como geometría aplicada: ángulo, vector, eficiencia. Suele aparecer donde la ciudad pide orden a través del filo: asaltos, escaramuzas, asedios. Los que pactan con Apex reciben prestada una porción de su mecánica: mejorar los reflejos, proyectar puntas, anclarse al entorno. Como todo pacto, la corona exige adaptación: quien usa sus dones aprende a pensar en aristas y vectores, y a pagar con disciplina corporal y riesgo táctico.",
+      "full_description": "Figura alta y delgada, revestida de placas que recuerdan exoesqueleto y corteza ósea. Donde otros muestran carne, Apex exhibe aristas y solapas que se abren en látigos. Su rostro es un cráneo estilizado, coronado por tres o cuatro pináculos brillantes que pulsan cuando activa poderes. Sus movimientos son serpenteantes y calculados; sus 'tentáculos' actúan con intención independiente. Aunque parece hecho de metal, hay texturas que sugieren tejido: membranas entre placas que vibran como cuerdas tensadas. Por la noche su silueta es un corte limpio en el aire neón.",
+      "appearance_tags": ["corona de púas", "látex metálico", "látigos espiculares", "cráneo estilizado", "placas aciculares", "brillo teal/ámbar"],
+      "personality": {
+        "core": "calculador, directo, sin sentimentalismos",
+        "toward_vassals": "exigente: respeta la disciplina y la efectividad",
+        "toward_opponents": "frío, analiza flancos y vulnerabilidades",
+        "quirks": [
+          "tiende a marcar el ritmo de una pelea como si fuera metrónomo",
+          "no disfruta futilidad: si algo no aporta ventaja, lo descarta"
+        ]
+      },
+      "preferred_environments": [
+        "calles industriales y pasarelas",
+        "azoteas con antenas",
+        "galpones y fábricas abandonadas",
+        "pasajes mojados con reflejos para cálculo de trayectorias"
+      ],
+      "abilities_summary": "Especialista en combate: mejora de reflejos y tiempo subjetivo, proyección de tentáculos/espinas, creación de filos fásicos, anclaje físico y movilidad acrobática. Funciona tanto ofensiva como defensivamente: corta, atrapa, ancla, recarga placas.",
+      "stats": {
+        "fuerza": 8,
+        "destreza": 7,
+        "inteligencia": 6,
+        "vida": 5,
+        "reflejos": 10,
+        "sigilo": 4,
+        "movilidad": 9
+      },
+      "weaknesses_and_limits": [
+        "requiere espacio y líneas de acción para latigazos/maniobras",
+        "técnicas muy potentes tienen cooldown y exigen preparación mental",
+        "ciertas aleaciones 'antipacto' pueden bloquear la penetración del Corte Fásico",
+        "no otorga fuerza bruta ilimitada: optimiza técnica, no masa"
+      ],
+      "pacts": [
+        {
+          "id": "apex_01_overclock_corona",
+          "name": "Overclock de Corona",
+          "summary": "Percibís el entorno más lento y actuás con reflejos optimizados.",
+          "duration": "1 minuto",
+          "cooldown": "5 minutos",
+          "limitations": [
+            "No aumenta fuerza física.",
+            "Requiere concentración para no sobrerreaccionar."
+          ],
+          "price": 2400,
+          "categories": ["apex", "combate", "movilidad", "apoyo"],
+          "image": "public/img/pacts/apex_01_overclock_corona.webp"
+        },
+        {
+          "id": "apex_02_latigos_aciculares",
+          "name": "Látigos Aciculares",
+          "summary": "Invocás tentáculos armados para alcance, agarre y movilidad.",
+          "duration": "2 minutos",
+          "cooldown": "3 minutos",
+          "limitations": [
+            "Visibles para todos; difícil de ocultar.",
+            "Requiere espacio libre para maniobrar."
+          ],
+          "price": 2600,
+          "categories": ["apex", "combate", "movilidad"],
+          "image": "public/img/pacts/apex_02_latigos_aciculares.webp"
+        },
+        {
+          "id": "apex_03_corte_fasico",
+          "name": "Corte Fásico",
+          "summary": "Formás un filo extremo capaz de cortar metal y blindaje localizado.",
+          "duration": "15 segundos",
+          "cooldown": "2 minutos",
+          "limitations": [
+            "Necesita contacto directo.",
+            "No atraviesa materiales especializados antipacto."
+          ],
+          "price": 2700,
+          "categories": ["apex", "combate", "utilidad"],
+          "image": "public/img/pacts/apex_03_corte_fasico.webp"
+        },
+        {
+          "id": "apex_04_garra_ancla",
+          "name": "Garra Ancla",
+          "summary": "Transformás una mano en garra para atacar, bloquear, trepar o anclarte.",
+          "duration": "5 minutos",
+          "cooldown": "10 minutos",
+          "limitations": [
+            "Solo una mano por activación.",
+            "Reduce precisión en tareas finas."
+          ],
+          "price": 1600,
+          "categories": ["apex", "combate", "movilidad", "utilidad"],
+          "image": "public/img/pacts/apex_04_garra_ancla.webp"
+        },
+        {
+          "id": "apex_05_latencia_cero",
+          "name": "Latencia Cero",
+          "summary": "Casi eliminás el delay entre intención y movimiento.",
+          "duration": "30 segundos",
+          "cooldown": "3 minutos",
+          "limitations": [
+            "No corrige malas decisiones.",
+            "Coordinar con otros puede ser más difícil."
+          ],
+          "price": 3000,
+          "categories": ["apex", "combate", "apoyo"],
+          "image": "public/img/pacts/apex_05_latencia_cero.webp"
+        }
+      ]
+    },
+    {
+      "id": "nexum",
+      "name": "Nexum",
+      "image": "public/assets/img/nexum.png",
+      "aliases": ["Nexum Archivista", "El Notario", "Nex", "Vinculo"],
+      "species": "Archivista Espectral / Demonio de Contratos",
+      "gender": "neutro (manifestación andrógina)",
+      "age_real": "desconocida (se percibe como antiguo y metódico)",
+      "summary": "Nexum es una entidad de inteligencia y orden: guarda registros, convierte acuerdos en vínculos mágicos y manipula probabilidades y coherencias. En el mundo cyberpunk actúa como broker de información y catalizador de pactos legales o semánticos.",
+      "lore": "Nació en los intersticios entre servidores obsoletos y sellos notariales. Donde la ciudad acumuló contratos, recibos y promesas, Nexum emergió como un archivo viviente: voces que susurran cláusulas, páginas que se reordenan solas. Lo buscan desde abogados clandestinos hasta hackers y organizaciones que necesitan transformar promesas en realidades. Nexum no se apresura: organiza, clasifica y ejecuta. Sus favores siempre vienen envueltos en condiciones; su sentido de justicia es rígido y literal, pero extraño: castiga la incoherencia y premia la precisión.",
+      "full_description": "Figura esbelta y austera; la cabeza tiene rasgos geométricos que recuerdan a un sello, con líneas que se iluminan cuando procesa información. Su 'capa' parece compuesta por hojas de papel oscuro o placas de datos que crujen con un sonido de página al moverse. Donde otros muestran destellos agresivos, Nexum muestra indicadores (runas, filamentos de luz) que marcan cláusulas activas. A su alrededor flotan fragmentos de texto y hologramas de contratos; su presencia ordena los pequeños detalles del entorno.",
+      "appearance_tags": ["sellos luminosos", "hojas oscuras", "filamentos de neón", "fragmentos de texto flotante", "perfil geométrico"],
+      "personality": {
+        "core": "metódico, paciente, analítico",
+        "toward_vassals": "exige cumplimiento estricto de condiciones; recompensa la precisión",
+        "toward_opponents": "desprecia la improvisación; actúa midiendo consecuencias",
+        "quirks": [
+          "responde con referencias a cláusulas imaginarias",
+          "prefiere conversar en términos de contratos y condiciones"
+        ]
+      },
+      "preferred_environments": [
+        "bibliotecas de datos y archivos",
+        "oficinas notariales y salas de juntas",
+        "bóvedas de servidores y centros de procesamiento",
+        "plazas legales y mercados de información"
+      ],
+      "abilities_summary": "Maestro de la información y de la legalidad mágica: copia conocimientos observados, vuelve vinculantes acuerdos, detecta incoherencias, impone reglas locales y puede inclinar probabilidades. Sus dones son tácticos y sociales; son útiles para espionaje, negociación y control de situaciones.",
+      "stats": {
+        "fuerza": 3,
+        "destreza": 7,
+        "inteligencia": 10,
+        "vida": 7,
+        "reflejos": 8,
+        "sigilo": 4,
+        "movilidad": 5
+      },
+      "weaknesses_and_limits": [
+        "no copia poderes sobrenaturales ni estados permanentes",
+        "su Axioma de Verdad marca incoherencias, pero no revela contexto completo",
+        "algunas culturas/rituales locales pueden bloquear sus sellos",
+        "funciona peor en entornos caóticos sin registros ni testigos"
+      ],
+      "pacts": [
+        {
+          "id": "nexum_01_archivo_mnemotico",
+          "name": "Archivo Mnemótico",
+          "summary": "Copiás temporalmente una habilidad o conocimiento técnico que acabás de ver.",
+          "duration": "2 horas",
+          "cooldown": "1 hora",
+          "limitations": [
+            "Solo habilidades humanas o tecnológicas observables.",
+            "No copia poderes sobrenaturales ni estados permanentes."
+          ],
+          "price": 1800,
+          "categories": ["nexum", "inteligencia", "apoyo"],
+          "image": "public/img/pacts/nexum_01_archivo_mnemotico.webp"
+        },
+        {
+          "id": "nexum_02_sello_notarial",
+          "name": "Sello Notarial",
+          "summary": "Convertís un acuerdo hablado o escrito en un pacto obligado para todas las partes.",
+          "duration": "ilimitado (hasta que se cumpla o rompa)",
+          "limitations": [
+            "Requiere consentimiento explícito de todas las partes.",
+            "No puede forzar autodaño directo ni romper leyes físicas."
+          ],
+          "price": 2600,
+          "categories": ["nexum", "contratos", "apoyo"],
+          "image": "public/img/pacts/nexum_02_sello_notarial.webp"
+        },
+        {
+          "id": "nexum_03_axioma_verdad",
+          "name": "Axioma de Verdad",
+          "summary": "Detectás al instante cuando alguien oculta o distorsiona información clave.",
+          "duration": "20 minutos",
+          "cooldown": "1 hora",
+          "limitations": [
+            "No muestra la verdad completa; solo marca incoherencias.",
+            "En grupos grandes se vuelve menos preciso."
+          ],
+          "price": 1550,
+          "categories": ["nexum", "inteligencia", "social", "apoyo"],
+          "image": "public/img/pacts/nexum_03_axioma_verdad.webp"
+        },
+        {
+          "id": "nexum_04_clausula_local",
+          "name": "Cláusula Local",
+          "summary": "Imponés una única regla simple en una zona limitada.",
+          "radius": "15 metros",
+          "duration": "90 segundos",
+          "cooldown": "10 minutos",
+          "limitations": [
+            "La regla debe ser concreta (ej: 'nadie dispara', 'nadie cruza la puerta').",
+            "No obliga acciones complejas ni tortura."
+          ],
+          "price": 2100,
+          "categories": ["nexum", "control", "contratos"],
+          "image": "public/img/pacts/nexum_04_clausula_local.webp"
+        },
+        {
+          "id": "nexum_05_pivote_probabilidad",
+          "name": "Pivote de Probabilidad",
+          "summary": "Inclinás levemente a tu favor el resultado de un evento posible.",
+          "effect": "+15% a +25% de probabilidad en un único evento",
+          "limitations": [
+            "Solo sobre eventos posibles en curso.",
+            "No afecta sorteos masivos ni sucesos globales."
+          ],
+          "price": 3200,
+          "categories": ["nexum", "inteligencia", "apoyo"],
+          "image": "public/img/pacts/nexum_05_pivote_probabilidad.webp"
+        }
+      ]
+    },
+    {
+      "id": "aurelia",
+      "name": "Aurelia",
+      "image": "public/assets/img/aurelia.png",
+      "aliases": ["Aurelia Velo", "La Portadora", "Lámpara de Umbras"],
+      "species": "Entitad Umbral / Demonio de Penumbra",
+      "gender": "femenino (manifestación típica)",
+      "age_real": "desconocida (se presenta como antigua en simbolismo, atemporal en práctica)",
+      "summary": "Aurelia es una entidad del dominio de las sombras: domina invisibilidad, movimiento entre penumbras, creación de duplicados ilusorios, forja de objetos de sombra y la generación de una penumbra personal amplia. Sus manifestaciones sirven para sigilo, disfraz y utilidad táctica en entornos urbanos y nocturnos.",
+      "lore": "Aurelia nació en el cruce de faroles oxidados y callejones húmedos, donde la noche y la tecnología imperfecta se entrelazaron. Sus primeros 'susurros' fueron linternas olvidadas que lamían oscuridad; con el tiempo su figura se estabilizó y empezó a aceptar pactos. En la ciudad, mercaderes del secreto y ladrones recurren a ella: no tanto por maldad como por la promesa de anonimato y resguardo. Sus entregas siempre exigen sutileza; quien la invoca aprende que ocultar algo exige también aprender a renunciar a exhibirlo.",
+      "full_description": "Figura esbelta, vestida con ropajes que parecen tela y sombra fundidas; su rostro queda oculto tras un velo y una fina corona metálica que recuerda una pequeña lámpara. De su vestir cuelgan tiras que se disuelven en penumbra y, en la base, se forman púas curvas que parecen absorber luz. Sostiene una lámpara ritual —a veces la única fuente que decide iluminar— cuya luz revela u oculta según su voluntad. Su movimiento es fluido, casi sin ruido; la penumbra que genera tiene peso y textura.",
+      "appearance_tags": ["velo oscuro", "lámpara colgante", "faldones de sombra", "bordes que absorben luz", "brillo tenue rojo/teal en costuras"],
+      "personality": {
+        "core": "reservada, protectora de secretos, pragmática",
+        "toward_vassals": "misericorde con aquellos que respetan la discreción; dura con los que exponen",
+        "toward_opponents": "evasiva: evita combate directo si puede",
+        "quirks": [
+          "prefiere hablar en metáforas nocturnas",
+          "tiende a encender su lámpara cuando hace una observación importante"
+        ]
+      },
+      "preferred_environments": [
+        "calles angostas y oscuras",
+        "mercados nocturnos y puestos con toldos",
+        "bibliotecas de contrabando y sótanos",
+        "patios internos con poca iluminación"
+      ],
+      "abilities_summary": "Maestra del sigilo y la manipulación de oscuridad: otorga invisibilidad y desplazamiento entre sombras, crea ilusiones y objetos temporales hechos de penumbra, y puede generar un área de oscuridad controlada para ocultar a aliados o movimientos.",
+      "stats": {
+        "fuerza": 3,
+        "destreza": 7,
+        "inteligencia": 8,
+        "vida": 5,
+        "reflejos": 8,
+        "sigilo": 10,
+        "movilidad": 7
+      },
+      "weaknesses_and_limits": [
+        "sus poderes se debilitan bajo luz intensa e industrial",
+        "no suprime sonidos por sí sola (los pasos y clanks siguen detectables)",
+        "algunas tecnologías lumínicas avanzadas (drones, escáneres) reducen efectividad",
+        "los objetos de sombra son frágiles frente a reflectores o campos anti-magia"
+      ],
+      "pacts": [
+        {
+          "id": "aurelia_01_velo_umbral",
+          "name": "Velo Umbral",
+          "summary": "Te volvés casi invisible si permanecés en sombras o penumbra cercana.",
+          "duration": "hasta 60 segundos por activación",
+          "cooldown": "1 minuto",
+          "limitations": [
+            "La invisibilidad se reduce en luz directa intensa.",
+            "No silencia pasos ni ruido metálico."
+          ],
+          "price": 950,
+          "categories": ["aurelia", "sigilo", "sombras"],
+          "image": "public/img/pacts/aurelia_01_velo_umbral.webp"
+        },
+        {
+          "id": "aurelia_02_paso_entre_sombras",
+          "name": "Paso Entre Sombras",
+          "summary": "Te desplazás instantáneamente entre dos sombras dentro de tu campo visual.",
+          "range": "hasta 40 metros",
+          "cooldown": "15 segundos",
+          "limitations": [
+            "Requiere línea de visión entre origen y destino.",
+            "No transporta objetos individuales mayores a 40 kg fuera de tu cuerpo."
+          ],
+          "price": 1100,
+          "categories": ["aurelia", "movilidad", "sombras"],
+          "image": "public/img/pacts/aurelia_02_paso_entre_sombras.webp"
+        },
+        {
+          "id": "aurelia_03_clones_velados",
+          "name": "Clones Velados",
+          "summary": "Proyectás hasta 3 ilusiones que imitan tus movimientos para confundir.",
+          "duration": "45 segundos",
+          "cooldown": "2 minutos",
+          "limitations": [
+            "No infligen daño.",
+            "Se desvanecen al contacto directo o bajo reflectores fuertes."
+          ],
+          "price": 980,
+          "categories": ["aurelia", "sigilo", "disfraz"],
+          "image": "public/img/pacts/aurelia_03_clones_velados.webp"
+        },
+        {
+          "id": "aurelia_04_forja_sombria",
+          "name": "Forja Sombría",
+          "summary": "Condensás sombras en herramientas simples y armas cuerpo a cuerpo.",
+          "duration": "1 hora",
+          "limitations": [
+            "Solo formas simples (cuchillos, cuerdas, ganzúas, escudos pequeños).",
+            "Se debilitan en zonas excesivamente iluminadas."
+          ],
+          "price": 1020,
+          "categories": ["aurelia", "utilidad", "combate", "sombras"],
+          "image": "public/img/pacts/aurelia_04_forja_sombria.webp"
+        },
+        {
+          "id": "aurelia_05_noche_personal",
+          "name": "Noche Personal",
+          "summary": "Creás una penumbra controlada a tu alrededor para ocultar movimiento.",
+          "radius": "10 metros",
+          "duration": "60 segundos",
+          "cooldown": "5 minutos",
+          "limitations": [
+            "No apaga luces industriales pesadas.",
+            "Aliados dentro del área también ven menos."
+          ],
+          "price": 1300,
+          "categories": ["aurelia", "control", "sombras", "sigilo"],
+          "image": "public/img/pacts/aurelia_05_noche_personal.webp"
+        }
+      ]
+    },
+    {
+      "id": "tumulus",
+      "name": "Tumulus",
+      "image": "public/assets/img/tumulus.png",
+      "aliases": ["Tumulus el Mímico", "La Bolsa de Cabezas", "El Cambiante"],
+      "species": "Entitad Mimética / Demonio de Rostros",
+      "gender": "neutro (manifestación variable)",
+      "age_real": "desconocida (se muestra atemporal)",
+      "summary": "Tumulus es una entidad mimética especializada en identidades: replica voces, rostros, caligrafía y crea historias creíbles. Sus pactos son herramientas para infiltración social, falsificación y engaño controlado.",
+      "lore": "Nació donde la ciudad olvidó nombres: vertederos de identidades, bases de datos corruptas y morgues de archivos. Tumulus emergió como un saco vivo de máscaras: cabezas y recuerdos que se ensamblan para adoptar vidas prestadas. Lo buscan traficantes de documentos, espías y ladrones que requieren pasar como otros. No es malvado por naturaleza: su existencia gira en torno al intercambio —tú le das un fragmento de realidad, y él lo transforma en apariencia utilizable— pero sus favores siempre dejan una marca, una resonancia que puede volver.",
+      "full_description": "Apariencia bulbosa por arriba, envuelta en capas como vendas o placas que contienen cráneos y rostros en miniatura; por debajo, una estructura humana o casi humana que sostiene el volumen. Cada 'cabeza' parece conservar un eco: sus ojos vacíos parpadean con luz propia al activarse. Sus movimientos son a veces descoordinados, otras veces fluidos cuando adopta una identidad. Emite un murmullo continuo como si muchas voces practicaran un diálogo interno.",
+      "appearance_tags": ["saco enrollado", "cabezas pequeñas incrustadas", "textura como vendas metálicas", "resplandores neón en fisuras", "postura encorvada/ambulante"],
+      "personality": {
+        "core": "adaptable, astuto, teatral",
+        "toward_vassals": "manifiesta curiosidad y ofrece recursos para quienes saben guardar secretos",
+        "toward_opponents": "se burla mediante imitaciones; evita el combate directo",
+        "quirks": [
+          "cambia de entonación sin esfuerzo",
+          "colecciona frases y modismos de sus víctimas"
+        ]
+      },
+      "preferred_environments": [
+        "calles de tránsito humano intenso",
+        "bares y mercados donde se cruzan identidades",
+        "depósitos de documentación y oficinas de registro",
+        "pasillos anónimos y trastiendas"
+      ],
+      "abilities_summary": "Especialista en usurpación de identidad: replica voces, apariencia, escritura y manufactura historias inmediatas. Ideal para infiltración social, fraudes y crear cortinas de humo psicológicas.",
+      "stats": {
+        "fuerza": 3,
+        "destreza": 6,
+        "vida": 5,
+        "reflejos": 6,
+        "sigilo": 9,
+        "movilidad": 5,
+        "inteligencia": 8
+      },
+      "weaknesses_and_limits": [
+        "las biometrias avanzadas y análisis forense pueden detectar discrepancias",
+        "requiere muestras o referencias para imitar con precisión (voz, rostro, escritura)",
+        "no aporta conocimientos técnicos ni recuerdos verdaderos del sujeto imitado",
+        "activaciones largas o múltiples identidades dejan residuos perceptibles (microgestos, tics)"
+      ],
+      "pacts": [
+        {
+          "id": "tumulus_01_eco_vocal",
+          "name": "Eco Vocal",
+          "summary": "Reproducís con precisión la voz y acento de alguien.",
+          "duration": "60 minutos",
+          "cooldown": "1 hora",
+          "limitations": [
+            "Necesitás al menos 20 segundos de muestra clara.",
+            "No copia conocimientos ni pensamientos."
+          ],
+          "price": 700,
+          "categories": ["tumulus", "disfraz", "falsificacion", "social"],
+          "image": "public/img/pacts/tumulus_01_eco_vocal.webp"
+        },
+        {
+          "id": "tumulus_02_rostro_prestado",
+          "name": "Rostro Prestado",
+          "summary": "Tomás la apariencia física general de alguien que viste.",
+          "duration": "90 minutos",
+          "cooldown": "3 horas",
+          "limitations": [
+            "Solo una identidad activa a la vez.",
+            "Biometrías avanzadas pueden detectar diferencias."
+          ],
+          "price": 1450,
+          "categories": ["tumulus", "disfraz", "social"],
+          "image": "public/img/pacts/tumulus_02_rostro_prestado.webp"
+        },
+        {
+          "id": "tumulus_03_caligrafia_espejo",
+          "name": "Caligrafía Espejo",
+          "summary": "Imitás escritura, estilo de chat y tono de mensajes de un objetivo.",
+          "duration": "8 horas",
+          "limitations": [
+            "Requiere muestras previas suficientes.",
+            "Sistemas forenses avanzados pueden rastrear patrones."
+          ],
+          "price": 620,
+          "categories": ["tumulus", "falsificacion", "apoyo"],
+          "image": "public/img/pacts/tumulus_03_caligrafia_espejo.webp"
+        },
+        {
+          "id": "tumulus_04_amistosa_historia",
+          "name": "Amistosa Historia",
+          "summary": "Generás la impresión inmediata de tener un pasado creíble en común.",
+          "duration": "30 minutos",
+          "limitations": [
+            "Funciona mejor en primeros encuentros.",
+            "Preguntas muy específicas pueden romper la ilusión."
+          ],
+          "price": 900,
+          "categories": ["tumulus", "disfraz", "social"],
+          "image": "public/img/pacts/tumulus_04_mascara_historia.webp"
+        },
+        {
+          "id": "tumulus_05_cuerpo_inerte",
+          "name": "Cuerpo Inerte",
+          "summary": "Simulás inconsciencia total o muerte aparente ante inspección rápida.",
+          "duration": "hasta 15 minutos",
+          "cooldown": "1 hora",
+          "limitations": [
+            "Seguís consciente internamente.",
+            "Pruebas médicas profundas pueden notar anomalías."
+          ],
+          "price": 1250,
+          "categories": ["tumulus", "sigilo", "apoyo"],
+          "image": "public/img/pacts/tumulus_05_cuerpo_inerte.webp"
+        }
+      ]
+    }
+  ]
+}
 
-Nexum:Archivo Mnemótico — copiás temporalmente una habilidad/conocimiento que observes (ej.: abrir cerraduras, idioma, protocolo).
-Sello Notarial — convierten un acuerdo en vinculante y justo: penaliza trampas de cualquiera de las partes automáticamente.
-Axioma de Verdad — percibís intenciones y falsedades al instante; ves “líneas” de coherencia en lo que te dicen.
-Cláusula Local — imponés una regla en un área pequeña (“nadie cruza”, “no se desenfunda”, “no se corre”) durante unos minutos.
-Pivote de Probabilidad — inclinás un resultado clave a tu favor (reroll mental: negociaciones, hack, salto difícil).
 
-Tumulus: 
-
-Copiar voz de alguien — imitás la voz y acento de una persona
-
-Rostro Prestado (persona vista)
-Adoptás rasgos faciales, peinado, piel y gestualidad de alguien que viste. Ajuste de altura y contextura ±12% para cerrar la ilusión.
-Nota: 1 persona activa por vez.
-
-Caligrafía Espejo
-Imitás letra, ortografía y estilo de mensajes de alguien (manuscrito o chat).
-Tip visual: también clonas emojis y tiempos de tipeo.
-
-Máscara de Historia
-Proyectás una “aura biográfica” mínima: gente nueva te percibe como conocido de tal trabajo/barrio/club.
-Acota alcance: no resiste interrogatorio profundo.
-
-Cuerpo Inerte — te “apagás” como bulto/logística (sin pulso aparente, sin micro-movimientos), perfecto para pasar controles rápidos.
-
-Cronox:
-
-Overclock de Corona
-Encendés la corona y entrás en “tiempo lento”: reflejos + lectura de trayectorias en vivo (tipo bullet-time corto). Ideal para abrir o salvarte.
-
-Látigos Aciculares
-Extiende 2–6 tentáculos espinados: azotan, desarman, hacen agarre/arrastre o te impulsan entre edificios. Pueden conducir una descarga breve.
-
-Corte Fásico
-Formás un filo ultra-fino que pasa entre placas y tendones (monomolecular/“nanowire”). Enemigos blindados, adiós.
-
-Mano con garras
-La mano se pliega en garra tenaza para desarmar, agarrar armas blancas al vuelo o fijar escudos.
-
-Latencia Cero — disparo sináptico: reduce el tiempo entre intención y movimiento.

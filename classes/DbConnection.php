@@ -12,7 +12,7 @@ class DbConnection
 
         $host = getenv('DB_HOST') ?: 'mysql';
         $port = getenv('DB_PORT') ?: '3306';
-        $db   = getenv('DB_NAME') ?: 'demons';
+        $db   = getenv('DB_NAME') ?: 'abyssum';
         $user = getenv('DB_USER') ?: 'root';
         $pass = getenv('DB_PASS') ?: 'secret';
 

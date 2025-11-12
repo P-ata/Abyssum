@@ -9,7 +9,7 @@ services:
     environment:
       - DB_HOST=mysql
       - DB_PORT=3306
-      - DB_NAME=demons
+      - DB_NAME=abyssum
       - DB_USER=root
       - DB_PASS=secret
 
@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=secret
-      - MYSQL_DATABASE=demons
+      - MYSQL_DATABASE=abyssum
     ports:
       - "3306:3306"
     volumes:
@@ -53,5 +53,19 @@ services:
     command: sh -c "npm install && npm run tw:all:watch"
     restart: unless-stopped
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+      - PMA_USER=root
+      - PMA_PASSWORD=secret
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
 volumes:
   mysql-data:
+

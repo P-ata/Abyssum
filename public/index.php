@@ -9,7 +9,7 @@ define('BASE_PATH', dirname(__DIR__));
 // Includes con ruta absoluta
 require_once BASE_PATH . '/classes/Sections.php';
 require_once BASE_PATH . '/admin/classes/AdminSections.php';
-require_once BASE_PATH . '/admin/auth.php';
+require_once BASE_PATH . '/includes/auth.php';
 
 // =======================
 // RESOLVER RUTA UNA SOLA VEZ
@@ -34,28 +34,36 @@ if ($route !== null && str_starts_with($route, 'admin')) {
     // se saca el admin/ para ver que le sigue
     $adminRoute = trim(substr($route, strlen('admin')), '/');
 
-    // /admin/login
-    if ($adminRoute === 'login') {
-        require BASE_PATH . '/admin/login.php';
+    // /admin/actions/login (POST handler - NO requiere auth)
+    if ($adminRoute === 'actions/login' || $adminRoute === 'actions/login') {
+        require BASE_PATH . '/admin/actions/login.php';
         exit;
     }
 
-    // /admin/logout
+    // /admin/actions/logout (session destroy - NO requiere auth)
+    if ($adminRoute === 'actions/logout' || $adminRoute === 'actions/logout') {
+        require BASE_PATH . '/admin/actions/logout.php';
+        exit;
+    }
+
+    // /admin/login (GET form view - NO requiere auth)
+    if ($adminRoute === 'login') {
+        require BASE_PATH . '/admin/views/login.php';
+        exit;
+    }
+
+    // /admin/logout (legacy, redirect to action)
     if ($adminRoute === 'logout') {
-        require BASE_PATH . '/admin/logout.php';
+        require BASE_PATH . '/admin/actions/logout.php';
         exit;
     }
 
     // resto del admin requiere estar logueado
-    if (!isAdmin()) {
-        header('Location: /admin/login');
-        exit;
-    }
+    requireAdmin();
 
     // /admin → redirigir a /admin/dashboard para URL consistente
     if ($adminRoute === '') {
-        header('Location: /admin/dashboard');
-        exit;
+        $adminRoute = 'dashboard';
     }
 
     // misma lógica que público pero con AdminSections
