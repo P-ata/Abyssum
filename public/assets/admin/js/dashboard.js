@@ -5,18 +5,75 @@ import { gsap } from 'gsap';
 	const onReady = (fn) => (document.readyState !== 'loading') ? fn() : document.addEventListener('DOMContentLoaded', fn);
 
 	onReady(() => {
-		// Entrance timeline (single run)
-		const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-		tl.from('#dashTitle span', { y: 40, opacity: 0, stagger: 0.15, duration: 0.9 })
-			.from('#quickStats [data-stat]', { y: 30, opacity: 0, stagger: 0.12, duration: 0.6 }, '-=0.5')
-			.from('#toolbar', { y: 25, opacity: 0, duration: 0.5 }, '-=0.35')
-			.from('#pactsGrid .pact-card', { y: 50, opacity: 0, stagger: 0.07, duration: 0.55 }, '-=0.25');
+		// Title animation with stagger
+		const title = document.getElementById('dashTitle');
+		if (title && title.children.length) {
+			gsap.from(title.children, {
+				y: -30,
+				opacity: 0,
+				duration: 1.2,
+				stagger: 0.15,
+				ease: 'power3.out'
+			});
+		} else if (title) {
+			gsap.from(title, { y: 20, opacity: 0, duration: 0.6, ease: 'power3.out' });
+		}
 
-		// Ensure visible in any case
+		// Stats cards animation
+		const statCards = document.querySelectorAll('[data-stat]');
+		if (statCards.length) {
+			gsap.from(statCards, {
+				scale: 0.85,
+				opacity: 0,
+				duration: 0.9,
+				stagger: 0.12,
+				ease: 'back.out(1.4)',
+				delay: 0.3
+			});
+
+			// Animate stat bars
+			const statBars = document.querySelectorAll('[data-bar]');
+			gsap.from(statBars, {
+				scaleX: 0,
+				transformOrigin: 'left center',
+				duration: 1.2,
+				stagger: 0.15,
+				ease: 'power2.out',
+				delay: 0.6
+			});
+		}
+
+		// Toolbar animation
+		const toolbar = document.getElementById('toolbar');
+		if (toolbar) {
+			gsap.from(toolbar, {
+				y: -20,
+				opacity: 0,
+				duration: 0.8,
+				ease: 'power2.out',
+				delay: 0.5
+			});
+		}
+
+		// Ensure all cards are visible (fallback)
 		document.querySelectorAll('.pact-card').forEach(el => {
 			el.style.opacity = '1';
 			el.style.transform = 'translateY(0)';
 		});
+
+		// Animate pact cards entrance
+		const pactCards = document.querySelectorAll('#pactsGrid .pact-card');
+		if (pactCards.length > 0) {
+			gsap.from(pactCards, { 
+				y: 50, 
+				opacity: 0, 
+				stagger: 0.08, 
+				duration: 0.9,
+				ease: 'power3.out',
+				delay: 0.7,
+				clearProps: 'all' // Clear inline styles after animation
+			});
+		}
 
 		// Hover animations (idempotent)
 		document.querySelectorAll('.pact-card').forEach(card => {
@@ -24,17 +81,13 @@ import { gsap } from 'gsap';
 			card.addEventListener('mouseleave', () => gsap.to(card, { scale: 1, duration: 0.3, ease: 'power2.out' }));
 		});
 
-		// Clear button
+		// Clear button functionality
 		const clearBtn = document.getElementById('clearBtn');
 		if (clearBtn) {
 			clearBtn.addEventListener('click', () => {
-				const input = document.querySelector('input[placeholder*="buscar pacto"]');
-				if (input) {
-					input.value = '';
-					gsap.fromTo(input, { opacity: 0.4 }, { opacity: 1, duration: 0.25 });
-				}
+				const searchInput = document.querySelector('input[type="text"]');
+				if (searchInput) searchInput.value = '';
 			});
 		}
 	});
 })();
-

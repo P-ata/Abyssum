@@ -12,6 +12,16 @@ require_once BASE_PATH . '/admin/classes/AdminSections.php';
 require_once BASE_PATH . '/includes/auth.php';
 
 // =======================
+// RUTA ESPECIAL: SERVIR ARCHIVOS DESDE BD
+// =======================
+if (isset($_GET['file_id'])) {
+    require_once BASE_PATH . '/admin/classes/File.php';
+    $fileId = (int)$_GET['file_id'];
+    File::serve($fileId);
+    exit;
+}
+
+// =======================
 // RESOLVER RUTA UNA SOLA VEZ
 // =======================
 
@@ -43,6 +53,42 @@ if ($route !== null && str_starts_with($route, 'admin')) {
     // /admin/actions/logout (session destroy - NO requiere auth)
     if ($adminRoute === 'actions/logout' || $adminRoute === 'actions/logout') {
         require BASE_PATH . '/admin/actions/logout.php';
+        exit;
+    }
+
+    // /admin/actions/edit-pact (POST)
+    if ($adminRoute === 'actions/edit-pact') {
+        require BASE_PATH . '/admin/actions/edit-pact.php';
+        exit;
+    }
+
+    // /admin/actions/delete-pact (GET/POST)
+    if ($adminRoute === 'actions/delete-pact') {
+        require BASE_PATH . '/admin/actions/delete-pact.php';
+        exit;
+    }
+
+    // /admin/actions/create-demon (POST)
+    if ($adminRoute === 'actions/create-demon') {
+        require BASE_PATH . '/admin/actions/create-demon.php';
+        exit;
+    }
+
+    // /admin/actions/edit-demon (POST)
+    if ($adminRoute === 'actions/edit-demon') {
+        require BASE_PATH . '/admin/actions/edit-demon.php';
+        exit;
+    }
+
+    // /admin/actions/delete-demon (GET/POST)
+    if ($adminRoute === 'actions/delete-demon') {
+        require BASE_PATH . '/admin/actions/delete-demon.php';
+        exit;
+    }
+
+    // /admin/actions/delete-demon (GET/POST)
+    if ($adminRoute === 'actions/delete-demon') {
+        require BASE_PATH . '/admin/actions/delete-demon.php';
         exit;
     }
 

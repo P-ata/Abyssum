@@ -2,5 +2,14 @@
     <!-- Admin footer placeholder -->
     // ABYSSUM_ADMIN :: v1.0
   </footer>
+  
+  <!-- Toast data injection -->
+  <?php
+  require_once __DIR__ . '/../../classes/Toast.php';
+  if (Toast::hasToasts()) {
+    $toasts = Toast::getAll();
+    echo '<script>window.TOAST_DATA = ' . json_encode($toasts) . ';</script>';
+  }
+  ?>
 </body>
 </html>

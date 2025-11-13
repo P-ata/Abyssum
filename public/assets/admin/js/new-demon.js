@@ -1,23 +1,22 @@
 import { gsap } from 'gsap';
 
-// new-pact page interactions
+// new-demon page interactions
 (() => {
-  const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
   const $  = (sel, ctx=document) => ctx.querySelector(sel);
   const onReady = (fn) => (document.readyState !== 'loading') ? fn() : document.addEventListener('DOMContentLoaded', fn);
 
   onReady(() => {
     // Entrance animations
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    const title = $('#npTitle');
+    const title = $('#ndTitle');
     if (title && title.children.length) {
       tl.from(title.children, { y: 40, opacity: 0, stagger: 0.12, duration: 0.8 })
         .from('#mediaCard', { x: -50, opacity: 0, duration: 0.7 }, '-=0.4')
-        .from('#newPactForm', { x: 50, opacity: 0, duration: 0.7 }, '-=0.6')
-        .from('#newPactForm .form-section', { y: 20, opacity: 0, stagger: 0.06, duration: 0.4 }, '-=0.3');
+        .from('#newDemonForm', { x: 50, opacity: 0, duration: 0.7 }, '-=0.6')
+        .from('#newDemonForm .form-section', { y: 20, opacity: 0, stagger: 0.05, duration: 0.4 }, '-=0.3');
     }
 
-    // Drag & Drop image uploader (single image for pact)
+    // Drag & Drop image uploader (single image for demons)
     const dropZone  = $('#dropZone');
     const fileInput = $('#fileInput');
     const thumbs    = $('#thumbs');
@@ -59,7 +58,7 @@ import { gsap } from 'gsap';
       if (files.length > 0) {
         // Use DataTransfer to properly set files on input (works cross-browser)
         const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(files[0]); // Only first file for pact
+        dataTransfer.items.add(files[0]); // Only first file for demon
         fileInput.files = dataTransfer.files;
         previewFile(files[0]);
       }
@@ -122,6 +121,7 @@ import { gsap } from 'gsap';
 
         wrapper.appendChild(img);
         wrapper.appendChild(removeBtn);
+        thumbs.innerHTML = ''; // Clear previous
         thumbs.appendChild(wrapper);
 
         // Entrance animation
@@ -135,7 +135,7 @@ import { gsap } from 'gsap';
     }
 
     // Clear file on form reset
-    const form = $('#newPactForm');
+    const form = $('#newDemonForm');
     if (form) {
       form.addEventListener('reset', () => {
         fileInput.value = '';

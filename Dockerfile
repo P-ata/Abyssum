@@ -3,6 +3,12 @@ FROM php:8.3-apache
 # (Opcional) extensiones que podrías usar más adelante
 RUN docker-php-ext-install pdo pdo_mysql
 
+# Aumentar límites de subida de archivos para imágenes
+RUN echo "upload_max_filesize = 10M" > /usr/local/etc/php/conf.d/uploads.ini \
+ && echo "post_max_size = 10M" >> /usr/local/etc/php/conf.d/uploads.ini \
+ && echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/uploads.ini \
+ && echo "max_execution_time = 60" >> /usr/local/etc/php/conf.d/uploads.ini
+
 # Apache listo para URLs lindas (.htaccess)
 RUN a2enmod rewrite \
  && sed -ri 's/AllowOverride None/AllowOverride All/i' /etc/apache2/apache2.conf
