@@ -1,4 +1,4 @@
-import { gsap } from 'gsap';
+/* import { gsap } from 'gsap';
 
 // Demon Carousel with GSAP
 class DemonCarousel {
@@ -268,3 +268,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+ */

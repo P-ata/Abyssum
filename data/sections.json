@@ -12,33 +12,33 @@
         "isInMenu": true
     },
     {
-        "url": "demons",
-        "text": "Entidades",
-        "title": "Entidades del Abismo",
-        "isInMenu": true
+        "url": "car",
+        "text": "Carrito",
+        "title": "Tu Carrito",
+        "isInMenu": false
+    },
+    {
+        "url": "profile",
+        "text": "Mi Cuenta",
+        "title": "Mi Perfil",
+        "isInMenu": false
+    },
+    {
+        "url": "register",
+        "text": "Registro",
+        "title": "Registro de Usuario",
+        "isInMenu": false
+    },
+    {
+        "url": "login",
+        "text": "Login",
+        "title": "Iniciar Sesión",
+        "isInMenu": false
     },
     {
         "url": "404",
         "text": "Error 404",
         "title": "Página no encontrada",
-        "isInMenu": false
-    },
-    {
-        "url": "enviado",
-        "text": "Formulario Enviado",
-        "title": "Formulario enviado con éxito", 
-        "isInMenu": false
-    },
-    {
-        "url": "alumno",
-        "text": "Alumno",
-        "title": "Datos del Alumno", 
-        "isInMenu": true
-    },              
-    {
-        "url": "404",
-        "text": "Error 404",
-        "title": "Página no encontrada", 
         "isInMenu": false
     }
 ]

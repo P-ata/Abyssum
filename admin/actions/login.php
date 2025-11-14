@@ -7,6 +7,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 }
 
 require_once __DIR__ . '/../../includes/auth.php';
+require_once __DIR__ . '/../../classes/User.php';
 
 // Solo aceptar POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -21,29 +22,38 @@ if (isAdmin()) {
 }
 
 $email = trim($_POST['email'] ?? '');
-$pass  = trim($_POST['password'] ?? '');
+$password = trim($_POST['password'] ?? '');
 
-// Credenciales de ejemplo (TODO: mover a DB)
-$validEmail = 'admin@demons.test';
-$validPass  = 'secreto123';
+// Verificar credenciales
+$user = User::verifyPassword($email, $password);
 
-if ($email === $validEmail && $pass === $validPass) {
-    // Login exitoso
-    // Regenerar session ID PRIMERO por seguridad
-    session_regenerate_id(true);
-    
-    // Luego setear datos
-    $_SESSION['admin_id'] = 1;
-    $_SESSION['admin_email'] = $email;
-    
-    // Redirect a dashboard (PRG)
-    header('Location: /admin/dashboard');
-    exit;
-} else {
-    // Login fallido — guardar error en sesión (flash message)
-    $_SESSION['login_error'] = 'Credenciales inválidas. Verifica tu email y contraseña.';
-    
-    // Redirect de vuelta al formulario (PRG)
+if (!$user) {
+    $_SESSION['login_error'] = 'Email o contraseña incorrectos';
     header('Location: /admin/login');
     exit;
 }
+
+// Verificar si está activo
+if (!$user->is_active) {
+    $_SESSION['login_error'] = 'Tu cuenta está desactivada';
+    header('Location: /admin/login');
+    exit;
+}
+
+// Verificar si es admin
+if (!$user->isAdmin()) {
+    $_SESSION['login_error'] = 'No tienes permisos de administrador';
+    header('Location: /admin/login');
+    exit;
+}
+
+// Login exitoso
+session_regenerate_id(true);
+$_SESSION['admin_id'] = $user->id;
+$_SESSION['admin_email'] = $user->email;
+
+// Actualizar último login
+User::updateLastLogin($user->id);
+
+header('Location: /admin/dashboard');
+exit;

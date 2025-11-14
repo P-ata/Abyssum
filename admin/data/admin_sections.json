@@ -12,6 +12,12 @@
     "isInMenu": true
   },
   {
+    "url": "users",
+    "text": "Users",
+    "title": "Listado de usuarios",
+    "isInMenu": true
+  },
+  {
     "url": "new-pact",
     "text": "New Pact",
     "title": "Crear un nuevo Pact",

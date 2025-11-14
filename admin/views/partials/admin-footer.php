@@ -5,10 +5,11 @@
   
   <!-- Toast data injection -->
   <?php
-  require_once __DIR__ . '/../../classes/Toast.php';
+  require_once BASE_PATH . '/admin/classes/Toast.php';
   if (Toast::hasToasts()) {
     $toasts = Toast::getAll();
     echo '<script>window.TOAST_DATA = ' . json_encode($toasts) . ';</script>';
+    echo '<script src="/assets/admin/js/toast.js"></script>';
   }
   ?>
 </body>

@@ -98,6 +98,30 @@ if ($route !== null && str_starts_with($route, 'admin')) {
         exit;
     }
 
+    // /admin/actions/toggle-user-status (POST)
+    if ($adminRoute === 'actions/toggle-user-status') {
+        require BASE_PATH . '/admin/actions/toggle-user-status.php';
+        exit;
+    }
+
+    // /admin/actions/assign-role (POST)
+    if ($adminRoute === 'actions/assign-role') {
+        require BASE_PATH . '/admin/actions/assign-role.php';
+        exit;
+    }
+
+    // /admin/actions/remove-role (POST)
+    if ($adminRoute === 'actions/remove-role') {
+        require BASE_PATH . '/admin/actions/remove-role.php';
+        exit;
+    }
+
+    // /admin/actions/update-roles (POST)
+    if ($adminRoute === 'actions/update-roles') {
+        require BASE_PATH . '/admin/actions/update-roles.php';
+        exit;
+    }
+
     // /admin/login (GET form view - NO requiere auth)
     if ($adminRoute === 'login') {
         require BASE_PATH . '/admin/views/login.php';
@@ -145,6 +169,36 @@ if ($route !== null && str_starts_with($route, 'admin')) {
 // RUTAS PÚBLICAS (MISMA IDEA QUE YA TENÍAS)
 // =======================
 
+// /actions/login (POST - autenticación pública)
+if ($route === 'actions/login') {
+    require BASE_PATH . '/actions/login.php';
+    exit;
+}
+
+// /actions/register (POST - registro de usuario)
+if ($route === 'actions/register') {
+    require BASE_PATH . '/actions/register.php';
+    exit;
+}
+
+// /actions/update-profile (POST - actualizar perfil)
+if ($route === 'actions/update-profile') {
+    require BASE_PATH . '/actions/update-profile.php';
+    exit;
+}
+
+// /actions/change-password (POST - cambiar contraseña)
+if ($route === 'actions/change-password') {
+    require BASE_PATH . '/actions/change-password.php';
+    exit;
+}
+
+// /actions/logout (GET/POST - cerrar sesión)
+if ($route === 'actions/logout') {
+    require BASE_PATH . '/actions/logout.php';
+    exit;
+}
+
 $validSections = Sections::validSections();
 $menuSections  = Sections::menuSections();
 
@@ -165,6 +219,7 @@ foreach ($sections as $value) {
 }
 ?>
 <?php require BASE_PATH . '/views/partials/head.php'; ?>
+<?php require BASE_PATH . '/views/partials/header.php'; ?>
 <main>
     <?php require BASE_PATH . '/views/' . $view . '.php'; ?>
 </main>

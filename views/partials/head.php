@@ -6,7 +6,7 @@
   <title><?= htmlspecialchars($sectionTitle ?? '') ?></title>
   <link rel="canonical" href="https://tailwindcss.com" />
   <!-- Tailwind CSS (público) -->
-  <link rel="stylesheet" href="/assets/css/tailwind.css" />
+  <link rel="stylesheet" href="/assets/css/tailwind.css?v=<?= time() ?>" />
   
   <!-- Vite dev server para módulos ES (development) -->
   <?php if (($_SERVER['SERVER_NAME'] ?? 'localhost') === 'localhost'): ?>
