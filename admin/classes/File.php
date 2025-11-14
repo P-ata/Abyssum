@@ -63,8 +63,8 @@ class File
         $existing = $checkDuplicate->fetch(PDO::FETCH_ASSOC);
         
         if ($existing) {
-            // File already exists, return existing ID instead of duplicating
-            return (int)$existing['id'];
+            // File already exists, throw exception with special code
+            throw new Exception('DUPLICATE_FILE:' . $existing['id']);
         }
 
         // Insert into database

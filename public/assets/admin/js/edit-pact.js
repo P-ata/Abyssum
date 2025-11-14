@@ -1,8 +1,9 @@
 import { gsap } from 'gsap';
 
+console.log('[EDIT-PACT] Script cargado - versión 2.0 con X pequeña');
+
 // edit-pact page interactions
 (() => {
-  const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
   const $  = (sel, ctx=document) => ctx.querySelector(sel);
   const onReady = (fn) => (document.readyState !== 'loading') ? fn() : document.addEventListener('DOMContentLoaded', fn);
 
@@ -83,28 +84,52 @@ import { gsap } from 'gsap';
       thumbs.innerHTML = '';
       const reader = new FileReader();
       reader.onload = (ev) => {
+        console.log('[EDIT-PACT] Creando preview de nueva imagen');
+        thumbs.innerHTML = ''; // Clear previous
+        
+        const wrapper = document.createElement('div');
+        wrapper.className = 'relative group border border-amber-600/30 rounded-lg overflow-hidden';
+        console.log('[EDIT-PACT] Wrapper className:', wrapper.className);
+        
         const img = document.createElement('img');
         img.src = ev.target.result;
-        img.className = 'w-full h-64 object-cover rounded-md border-2 border-amber-600/30';
-        thumbs.appendChild(img);
+        img.className = 'h-auto max-h-screen';
+        wrapper.appendChild(img);
 
-        gsap.from(img, { scale: 0.9, opacity: 0, duration: 0.5, ease: 'back.out(1.7)' });
-
-        // Create remove button
+        // Create remove button (visible on hover)
         const removeBtn = document.createElement('button');
-        removeBtn.textContent = '✕ Eliminar';
         removeBtn.type = 'button';
-        removeBtn.className = 'mt-2 text-xs text-red-500 border border-red-600/40 px-3 py-1 rounded hover:bg-red-600/20 transition w-full';
+        removeBtn.className = 'absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500';
+        console.log('[EDIT-PACT] Botón className:', removeBtn.className);
+        removeBtn.innerHTML = `
+          <svg class="w-7 h-7 text-amber-500 drop-shadow-lg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        `;
+        console.log('[EDIT-PACT] SVG creado con clase w-7 h-7');
+        removeBtn.title = 'Quitar imagen';
         removeBtn.addEventListener('click', () => {
-          thumbs.innerHTML = '';
-          uploadedFile = null;
-          fileInput.value = '';
-          // Restore current image preview
-          if (currentPreview) {
-            currentPreview.style.display = 'block';
-          }
+          gsap.to(wrapper, {
+            scale: 0.8,
+            opacity: 0,
+            duration: 0.6,
+            ease: 'power2.in',
+            onComplete: () => {
+              thumbs.innerHTML = '';
+              uploadedFile = null;
+              fileInput.value = '';
+              // Restore current image preview
+              if (currentPreview) {
+                currentPreview.style.display = 'block';
+              }
+            }
+          });
         });
-        thumbs.appendChild(removeBtn);
+        
+        wrapper.appendChild(removeBtn);
+        thumbs.appendChild(wrapper);
+        
+        gsap.from(wrapper, { scale: 0.9, opacity: 0, duration: 0.5, ease: 'back.out(1.7)' });
       };
       reader.readAsDataURL(file);
     }

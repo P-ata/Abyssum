@@ -37,7 +37,7 @@ $demons = Demon::all();
             <h2 class="text-amber-500 tracking-widest text-sm">// IMÁGENES DEL PACTO</h2>
           </div>
           <div class="p-6 xl:p-7">
-            <div id="dropZone" class="group relative flex flex-col items-center justify-center gap-4 border-2 border-dashed border-amber-600/30 rounded-xl bg-black/50 hover:border-amber-500/60 transition cursor-pointer p-10 text-center">
+            <div id="dropZone" class="group relative flex flex-col items-center justify-center gap-4 border-2 border-dashed border-amber-600/30 rounded-xl bg-black/50 hover:border-amber-500/60 transition cursor-pointer p-10 text-center mb-7">
               <svg class="w-12 h-12 text-amber-600/60" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V8.25m0 0-3 3m3-3 3 3M6.75 19.5A4.5 4.5 0 0 1 2.25 15V7.5a4.5 4.5 0 0 1 4.5-4.5h10.5a4.5 4.5 0 0 1 4.5 4.5V15a4.5 4.5 0 0 1-4.5 4.5H6.75Z"/>
               </svg>
@@ -45,7 +45,7 @@ $demons = Demon::all();
               <p class="text-xs text-amber-600/60">o <span class="underline">elegí archivos</span> desde tu dispositivo</p>
               <div class="absolute inset-0 rounded-xl pointer-events-none opacity-0 group-hover:opacity-100 transition shadow-[inset_0_0_50px_rgba(251,191,36,0.12)]"></div>
             </div>
-            <div id="thumbs" class="mt-7 grid grid-cols-2 gap-5"></div>
+            <div id="thumbs"></div>
           </div>
         </div>
       </section>

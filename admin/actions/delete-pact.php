@@ -11,9 +11,9 @@ requireAdmin();
 require_once __DIR__ . '/../../classes/Pact.php';
 require_once __DIR__ . '/../classes/Toast.php';
 
-$id = $_GET['id'] ?? null;
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-if ($id === null) {
+if ($id === 0) {
     Toast::error('ID de pacto requerido');
     header('Location: /admin/dashboard');
     exit;

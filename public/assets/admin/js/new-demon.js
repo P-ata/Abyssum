@@ -91,18 +91,18 @@ import { gsap } from 'gsap';
       reader.readAsDataURL(file);
       reader.onloadend = () => {
         const wrapper = document.createElement('div');
-        wrapper.className = 'relative group bg-black/70 border border-amber-600/30 rounded-lg overflow-hidden aspect-square cursor-pointer hover:border-amber-500/60 transition';
+        wrapper.className = 'relative group border border-amber-600/30 rounded-lg overflow-hidden';
         
         const img = document.createElement('img');
         img.src = reader.result;
-        img.className = 'w-full h-full object-cover';
+        img.className = 'h-auto max-h-screen';
         img.alt = file.name;
         
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
-        removeBtn.className = 'absolute inset-0 flex items-center justify-center bg-black/80 opacity-0 group-hover:opacity-100 transition';
+        removeBtn.className = 'absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500';
         removeBtn.innerHTML = `
-          <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="w-7 h-7 text-amber-500 drop-shadow-lg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         `;
@@ -113,7 +113,7 @@ import { gsap } from 'gsap';
           gsap.to(wrapper, {
             scale: 0.8,
             opacity: 0,
-            duration: 0.3,
+            duration: 0.6,
             ease: 'power2.in',
             onComplete: () => wrapper.remove()
           });

@@ -62,6 +62,12 @@ if ($route !== null && str_starts_with($route, 'admin')) {
         exit;
     }
 
+    // /admin/actions/create-pact (POST)
+    if ($adminRoute === 'actions/create-pact') {
+        require BASE_PATH . '/admin/actions/create-pact.php';
+        exit;
+    }
+
     // /admin/actions/delete-pact (GET/POST)
     if ($adminRoute === 'actions/delete-pact') {
         require BASE_PATH . '/admin/actions/delete-pact.php';

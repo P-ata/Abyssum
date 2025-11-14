@@ -60,14 +60,25 @@ if (!empty($_FILES['image']['tmp_name'])) {
     try {
         $imageFileId = File::upload($_FILES['image']);
         
-        // Delete old image from DB if exists
-        if ($currentImageFileId) {
+        // Delete old image from DB if exists and it's different
+        if ($currentImageFileId && $currentImageFileId !== $imageFileId) {
             File::delete($currentImageFileId);
         }
     } catch (Exception $e) {
-        Toast::error('Error al subir imagen: ' . $e->getMessage());
-        header('Location: /admin/edit-pact?id=' . $id);
-        exit;
+        // Check if it's a duplicate file
+        if (str_starts_with($e->getMessage(), 'DUPLICATE_FILE:')) {
+            $imageFileId = (int)substr($e->getMessage(), strlen('DUPLICATE_FILE:'));
+            Toast::info('Imagen ya existente en la base de datos, reutilizando archivo');
+            
+            // Delete old image if it's different
+            if ($currentImageFileId && $currentImageFileId !== $imageFileId) {
+                File::delete($currentImageFileId);
+            }
+        } else {
+            Toast::error('Error al subir imagen: ' . $e->getMessage());
+            header('Location: /admin/edit-pact?id=' . urlencode((string)$id));
+            exit;
+        }
     }
 }
 

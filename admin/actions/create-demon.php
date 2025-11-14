@@ -84,9 +84,15 @@ if (!empty($_FILES['image']['tmp_name'])) {
     try {
         $imageFileId = File::upload($_FILES['image']);
     } catch (Exception $e) {
-        Toast::error('Error al subir la imagen: ' . $e->getMessage());
-        header('Location: /admin/new-demon');
-        exit;
+        // Check if it's a duplicate file
+        if (str_starts_with($e->getMessage(), 'DUPLICATE_FILE:')) {
+            $imageFileId = (int)substr($e->getMessage(), strlen('DUPLICATE_FILE:'));
+            Toast::info('Imagen ya existente en la base de datos, reutilizando archivo');
+        } else {
+            Toast::error('Error al subir la imagen: ' . $e->getMessage());
+            header('Location: /admin/new-demon');
+            exit;
+        }
     }
 }
 
