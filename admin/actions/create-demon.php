@@ -82,7 +82,7 @@ $stats = [
 $imageFileId = null;
 if (!empty($_FILES['image']['tmp_name'])) {
     try {
-        $imageFileId = File::upload($_FILES['image']);
+        $imageFileId = File::upload($_FILES['image'], 'demon');
     } catch (Exception $e) {
         // Check if it's a duplicate file
         if (str_starts_with($e->getMessage(), 'DUPLICATE_FILE:')) {

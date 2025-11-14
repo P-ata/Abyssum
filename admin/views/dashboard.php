@@ -95,9 +95,9 @@ $totalDemons = count($demons);
 		</div>
 
 		<!-- Pactos Grid -->
-		<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3" id="pactsGrid">
+		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4" id="pactsGrid">
 			<?php if (empty($pacts)): ?>
-				<div class="md:col-span-2 lg:col-span-3 bg-black/70 border border-amber-600/30 rounded-xl p-6 text-amber-400 text-center">
+				<div class="md:col-span-2 lg:col-span-4 bg-black/70 border border-amber-600/30 rounded-xl p-6 text-amber-400 text-center">
 					No hay pactos cargados. <a href="/admin/new-pact" class="underline">Creá uno nuevo</a>.
 				</div>
 			<?php else: ?>
@@ -105,23 +105,32 @@ $totalDemons = count($demons);
 					$d = Demon::find($p->demon_id);
 				?>
 					<div class="group relative bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden hover:shadow-[0_0_25px_-4px_rgba(251,191,36,0.35)] transition-all pact-card">
-						<div class="p-5 flex flex-col h-full">
-							<div class="flex items-start justify-between mb-4">
-								<h3 class="text-amber-500 font-semibold tracking-wide text-xl"><?= htmlspecialchars($p->name) ?></h3>
-								<span class="text-xs px-2 py-1 rounded border border-amber-600/40 text-amber-600/70 tracking-wider"><?= (int)($p->price_credits ?? 0) ?> CR</span>
+				<!-- Image -->
+				<?php if (!empty($p->image_file_id)): ?>
+					<div class="w-full h-32 overflow-hidden bg-black/50 border-b border-amber-600/20">
+						<img src="/?file_id=<?= $p->image_file_id ?>" alt="<?= htmlspecialchars($p->name) ?>" class="w-full h-full object-cover" />
+					</div>
+				<?php else: ?>
+					<div class="w-full h-32 flex items-center justify-center bg-gradient-to-br from-black/80 to-amber-950/20 border-b border-amber-600/20">
+						<svg class="w-12 h-12 text-amber-600/30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+								</svg>
 							</div>
-							<div class="text-xs text-amber-600/70 mb-2">
-								Demonio: <span class="text-amber-400 font-semibold"><?= htmlspecialchars($d?->name ?? 'Unknown') ?></span>
-							</div>
-							<p class="text-xs leading-relaxed text-gray-400 mb-4 flex-1"><?= htmlspecialchars(substr($p->summary ?? '', 0, 120)) ?><?= strlen($p->summary ?? '') > 120 ? '...' : '' ?></p>
-							<div class="mt-auto space-y-2">
-								<div class="flex justify-between text-xs text-amber-600/70"><span>DURACIÓN</span><span class="text-amber-500"><?= htmlspecialchars($p->duration ?? '-') ?></span></div>
-								<div class="flex justify-between text-xs text-amber-600/70"><span>COOLDOWN</span><span class="text-amber-500"><?= htmlspecialchars($p->cooldown ?? '-') ?></span></div>
-							</div>
-							<div class="mt-5 flex gap-3">
-								<button class="flex-1 text-xs px-3 py-2 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition">VER</button>
-								<a href="/admin/edit-pact?id=<?= urlencode($p->id) ?>" class="flex-1 text-xs px-3 py-2 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">EDITAR</a>
-								<a href="/admin/actions/delete-pact?id=<?= urlencode($p->id) ?>" onclick="return confirm('¿Eliminar este pacto?')" class="flex-1 text-xs px-3 py-2 rounded border border-red-600/40 text-red-500 bg-black/50 hover:bg-red-600/20 transition text-center">ELIMINAR</a>
+						<?php endif; ?>
+						
+					<div class="p-4">
+						<div class="flex items-start justify-between mb-3">
+							<h3 class="text-amber-500 font-semibold tracking-wide text-lg"><?= htmlspecialchars($p->name) ?></h3>
+							<span class="text-xs px-2 py-1 rounded border border-amber-600/40 text-amber-600/70 tracking-wider"><?= (int)($p->price_credits ?? 0) ?> CR</span>
+						</div>
+					<div class="text-xs text-amber-600/70 mb-2">
+						Demonio: <span class="text-amber-400 font-semibold"><?= htmlspecialchars($d?->name ?? 'Unknown') ?></span>
+					</div>
+					<p class="text-xs leading-relaxed text-gray-400 mb-4"><?= htmlspecialchars(substr($p->summary ?? '', 0, 120)) ?><?= strlen($p->summary ?? '') > 120 ? '...' : '' ?></p>
+					<div class="flex gap-2">
+							<button class="flex-1 text-xs px-2 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition">VER</button>
+							<a href="/admin/edit-pact?id=<?= urlencode($p->id) ?>" class="flex-1 text-xs px-2 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">EDITAR</a>
+							<a href="/admin/actions/delete-pact?id=<?= urlencode($p->id) ?>" onclick="return confirm('¿Eliminar este pacto?')" class="flex-1 text-xs px-2 py-1.5 rounded border border-red-600/40 text-red-500 bg-black/50 hover:bg-red-600/20 transition text-center">ELIMINAR</a>
 							</div>
 						</div>
 						<div class="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 group-hover:w-full transition-all"></div>
@@ -139,7 +148,20 @@ $totalDemons = count($demons);
 				</div>
 				<div class="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
 					<?php foreach ($demons as $d): ?>
-						<div class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden hover:border-amber-500/50 transition group">
+					<div class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden hover:border-amber-500/50 transition group">
+						<!-- Image -->
+						<?php if (!empty($d->image_file_id)): ?>
+							<div class="w-full h-32 overflow-hidden bg-black/50 border-b border-amber-600/20">
+								<img src="/?file_id=<?= $d->image_file_id ?>" alt="<?= htmlspecialchars($d->name) ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+							</div>
+						<?php else: ?>
+							<div class="w-full h-32 flex items-center justify-center bg-gradient-to-br from-black/80 to-amber-950/20 border-b border-amber-600/20">
+									<svg class="w-12 h-12 text-amber-600/30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+									</svg>
+								</div>
+							<?php endif; ?>
+							
 							<div class="p-5">
 								<div class="text-sm text-amber-500 font-semibold mb-1"><?= htmlspecialchars($d->name) ?></div>
 								<div class="text-xs text-amber-600/70 mb-2">ID: <?= htmlspecialchars($d->slug) ?></div>

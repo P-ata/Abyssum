@@ -56,7 +56,7 @@ $imageFileId = $currentImageFileId;
 
 if (!empty($_FILES['image']['tmp_name'])) {
     try {
-        $imageFileId = File::upload($_FILES['image']);
+        $imageFileId = File::upload($_FILES['image'], 'demon');
         
         // Delete old image from DB if exists and it's different
         if ($currentImageFileId && $currentImageFileId !== $imageFileId) {

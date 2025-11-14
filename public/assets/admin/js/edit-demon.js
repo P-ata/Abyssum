@@ -108,7 +108,35 @@ console.log('[EDIT-DEMON] Script cargado - versión 2.0');
         `;
         console.log('[EDIT-DEMON] SVG creado con clase w-7 h-7');
         removeBtn.title = 'Quitar imagen';
-        removeBtn.addEventListener('click', () => {
+        removeBtn.addEventListener('click', async () => {
+          // Get the file ID from the hidden input
+          const fileIdInput = document.querySelector('input[name="current_image_file_id"]');
+          const fileId = fileIdInput ? parseInt(fileIdInput.value) : null;
+          
+          // Delete from DB if file ID exists
+          if (fileId) {
+            try {
+              const formData = new FormData();
+              formData.append('id', fileId);
+              
+              const response = await fetch('/admin/actions/delete-file', {
+                method: 'POST',
+                body: formData
+              });
+              
+              if (!response.ok) {
+                console.error('Error al eliminar archivo:', response.statusText);
+              }
+            } catch (error) {
+              console.error('Error en la solicitud:', error);
+            }
+          }
+          
+          // Clear the hidden input
+          if (fileIdInput) {
+            fileIdInput.value = '';
+          }
+          
           gsap.to(wrapper, {
             scale: 0.8,
             opacity: 0,
