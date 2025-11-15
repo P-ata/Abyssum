@@ -29,17 +29,24 @@ class AdminSections
 
     public static function sectionsOfSite(): array
     {
+        require_once BASE_PATH . '/classes/DbConnection.php';
+        
         $sections = [];
+        $db = DbConnection::get();
 
-        $JSON = file_get_contents(BASE_PATH . '/admin/data/admin_sections.json');
-        $JSONData = json_decode($JSON);
+        $query = "SELECT slug, title, icon, sort_order 
+                  FROM admin_sections 
+                  ORDER BY sort_order ASC";
+        
+        $stmt = $db->query($query);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($JSONData as $value) {
+        foreach ($rows as $row) {
             $section = new self();
-            $section->url      = $value->url;
-            $section->text     = $value->text;
-            $section->title    = $value->title;
-            $section->isInMenu = (bool)$value->isInMenu;
+            $section->url      = $row['slug'];
+            $section->text     = $row['title'];
+            $section->title    = $row['title'];
+            $section->isInMenu = true;
 
             $sections[] = $section;
         }
@@ -49,31 +56,25 @@ class AdminSections
 
     public static function validSections(): array
     {
-        $validSections = [];
-
-        $JSON = file_get_contents(BASE_PATH . '/admin/data/admin_sections.json');
-        $JSONData = json_decode($JSON, true);
-
-        foreach ($JSONData as $value) {
-            $validSections[] = $value['url'];
-        }
-
-        return $validSections;
+        require_once BASE_PATH . '/classes/DbConnection.php';
+        
+        $db = DbConnection::get();
+        
+        $query = "SELECT slug FROM admin_sections";
+        $stmt = $db->query($query);
+        
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
     public static function menuSections(): array
     {
-        $menuSections = [];
-
-        $JSON = file_get_contents(BASE_PATH . '/admin/data/admin_sections.json');
-        $JSONData = json_decode($JSON, true);
-
-        foreach ($JSONData as $value) {
-            if (!empty($value['isInMenu'])) {
-                $menuSections[] = $value['url'];
-            }
-        }
-
-        return $menuSections;
+        require_once BASE_PATH . '/classes/DbConnection.php';
+        
+        $db = DbConnection::get();
+        
+        $query = "SELECT slug FROM admin_sections ORDER BY sort_order ASC";
+        $stmt = $db->query($query);
+        
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 }

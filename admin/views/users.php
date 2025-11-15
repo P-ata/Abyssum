@@ -82,7 +82,7 @@ $users = User::all();
 							<td class="px-6 py-4">
 								<div class="flex gap-2 justify-center">
 									<!-- Toggle Active -->
-									<form action="/admin/actions/toggle-user-status" method="POST" class="inline">
+									<form action="/?sec=admin&action=toggle-user-status" method="POST" class="inline">
 										<input type="hidden" name="user_id" value="<?= $user->id ?>">
 										<input type="hidden" name="active" value="<?= $user->is_active ? '0' : '1' ?>">
 										<button type="submit" class="px-3 py-1 text-xs rounded border <?= $user->is_active ? 'border-red-600/40 bg-red-600/10 text-red-500 hover:bg-red-600/20' : 'border-green-600/40 bg-green-600/10 text-green-500 hover:bg-green-600/20' ?> transition">
@@ -91,7 +91,7 @@ $users = User::all();
 									</form>
 								
 								<!-- Role Selector -->
-								<form action="/admin/actions/update-roles" method="POST" class="inline">
+								<form action="/?sec=admin&action=update-roles" method="POST" class="inline">
 									<input type="hidden" name="user_id" value="<?= $user->id ?>">
 									<select name="is_admin" onchange="this.form.submit()" class="px-3 py-1 text-xs rounded border border-amber-600/40 bg-black text-amber-500 hover:bg-amber-600/10 transition cursor-pointer">
 										<option value="0" <?= !$user->isAdmin() ? 'selected' : '' ?>>CUSTOMER</option>

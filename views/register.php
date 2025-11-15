@@ -10,7 +10,7 @@
       </div>
     <?php endif; ?>
     
-    <form action="/actions/register" method="POST" class="space-y-4">
+    <form action="/?sec=actions&action=register" method="POST" class="space-y-4">
       <!-- NOMBRE -->
       <div>
         <label class="block text-gray-300 mb-2 font-bold">Nombre:</label>
@@ -60,7 +60,7 @@
     <!-- LINKS -->
     <div class="mt-6 text-center">
       <p class="text-gray-400 text-sm">
-        ¿Ya tenés cuenta? <a href="/login" class="text-amber-500 hover:text-amber-400">Iniciá sesión</a>
+        ¿Ya tenés cuenta? <a href="/?sec=login" class="text-amber-500 hover:text-amber-400">Iniciá sesión</a>
       </p>
     </div>
   </div>

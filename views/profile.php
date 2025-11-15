@@ -20,6 +20,20 @@ if (!$user) {
             <p class="text-gray-400">Gestiona tu información personal</p>
         </div>
 
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <a href="/?sec=orders" class="bg-amber-600/20 border border-amber-600/40 hover:bg-amber-600/30 rounded-lg p-4 text-center transition">
+                <div class="text-3xl mb-2">📜</div>
+                <div class="text-amber-500 font-bold">MIS COMPRAS</div>
+                <div class="text-amber-600/70 text-xs mt-1">Ver historial de órdenes</div>
+            </a>
+            <a href="/?sec=pacts" class="bg-amber-600/20 border border-amber-600/40 hover:bg-amber-600/30 rounded-lg p-4 text-center transition">
+                <div class="text-3xl mb-2">⛧</div>
+                <div class="text-amber-500 font-bold">EXPLORAR PACTOS</div>
+                <div class="text-amber-600/70 text-xs mt-1">Ver pactos disponibles</div>
+            </a>
+        </div>
+
         <!-- User Info Card -->
         <div class="bg-gray-900 border border-amber-600 rounded-lg p-6 mb-6">
             <h2 class="text-xl font-bold text-amber-500 mb-4">INFORMACIÓN DE CUENTA</h2>
@@ -66,7 +80,7 @@ if (!$user) {
         <!-- Update Profile Form -->
         <div class="bg-gray-900 border border-amber-600 rounded-lg p-6 mb-6">
             <h2 class="text-xl font-bold text-amber-500 mb-4">ACTUALIZAR PERFIL</h2>
-            <form action="/actions/update-profile" method="POST" class="space-y-4">
+            <form action="/?sec=actions&action=update-profile" method="POST" class="space-y-4">
                 <div>
                     <label class="block text-gray-300 mb-2 font-bold">Nombre:</label>
                     <input 
@@ -98,7 +112,7 @@ if (!$user) {
         <!-- Change Password Form -->
         <div class="bg-gray-900 border border-amber-600 rounded-lg p-6 mb-6">
             <h2 class="text-xl font-bold text-amber-500 mb-4">CAMBIAR CONTRASEÑA</h2>
-            <form action="/actions/change-password" method="POST" class="space-y-4">
+            <form action="/?sec=actions&action=change-password" method="POST" class="space-y-4">
                 <div>
                     <label class="block text-gray-300 mb-2 font-bold">Contraseña Actual:</label>
                     <input 
@@ -140,7 +154,7 @@ if (!$user) {
 
         <!-- Logout Button -->
         <div class="text-center">
-            <a href="/actions/logout" class="inline-block bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded transition">
+            <a href="/?sec=actions&action=logout" class="inline-block bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded transition">
                 CERRAR SESIÓN
             </a>
         </div>

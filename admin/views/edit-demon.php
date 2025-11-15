@@ -29,7 +29,7 @@ $weaknesses = $demon->weaknesses_limits ?? [];
         <span class="block text-xl md:text-2xl mt-3 tracking-wide text-amber-600/80">// DEMONIOS :: EDITAR</span>
       </h1>
       <div class="flex flex-wrap gap-3">
-        <a href="/admin/dashboard" class="px-5 py-2.5 rounded border border-amber-600/30 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">VOLVER</a>
+        <a href="/?sec=admin&page=dashboard" class="px-5 py-2.5 rounded border border-amber-600/30 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">VOLVER</a>
       </div>
     </div>
 
@@ -79,7 +79,7 @@ $weaknesses = $demon->weaknesses_limits ?? [];
 
       <!-- Right: Form fields -->
       <section class="md:col-span-1">
-        <form action="/admin/actions/edit-demon" method="post" enctype="multipart/form-data" class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden" id="editDemonForm">
+        <form action="/?sec=admin&action=edit-demon" method="post" enctype="multipart/form-data" class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden" id="editDemonForm">
           <input type="hidden" name="id" value="<?= htmlspecialchars($demon->slug) ?>" />
           <input type="hidden" name="current_image_file_id" value="<?= $demon->image_file_id ?? '' ?>" />
           
@@ -182,7 +182,7 @@ $weaknesses = $demon->weaknesses_limits ?? [];
             </div>
           </div>
           <div class="px-6 xl:px-8 py-5 border-t border-amber-600/20 flex flex-wrap items-center justify-end gap-4">
-            <a href="/admin/dashboard" class="px-5 py-2 rounded border border-amber-600/30 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">CANCELAR</a>
+            <a href="/?sec=admin&page=dashboard" class="px-5 py-2 rounded border border-amber-600/30 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">CANCELAR</a>
             <button type="submit" class="px-5 py-2 rounded border border-amber-600/40 bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 text-sm tracking-wide transition">ACTUALIZAR</button>
           </div>
         </form>

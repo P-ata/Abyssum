@@ -30,8 +30,8 @@ foreach ($pacts as $p) {
 				<span class="block text-xl mt-2 tracking-wide text-amber-600/80">// PACTOS :: LISTADO</span>
 			</h1>
 			<div class="flex gap-3">
-				<a href="/admin/new-pact" class="px-5 py-2.5 rounded border border-amber-600/40 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">+ NUEVO</a>
-				<a href="/admin" class="px-5 py-2.5 rounded border border-amber-600/30 bg-black/60 hover:bg-amber-600/10 text-amber-500 text-sm tracking-wide transition">VOLVER</a>
+				<a href="/?sec=admin&page=new-pact" class="px-5 py-2.5 rounded border border-amber-600/40 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">+ NUEVO</a>
+				<a href="/?sec=admin" class="px-5 py-2.5 rounded border border-amber-600/30 bg-black/60 hover:bg-amber-600/10 text-amber-500 text-sm tracking-wide transition">VOLVER</a>
 			</div>
 		</div>
 

@@ -3,6 +3,12 @@
     // ABYSSUM :: portal infernal experimental
   </footer>
   
+  <!-- GSAP Library for animations -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  
+  <!-- Cart Animations -->
+  <script src="/assets/js/cart-animations.js"></script>
+  
   <!-- Toast System -->
   <?php
   require_once BASE_PATH . '/admin/classes/Toast.php';

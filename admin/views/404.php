@@ -5,8 +5,8 @@
     <p class="mt-4 text-amber-500/90 text-sm tracking-widest">// RECURSO NO ENCONTRADO</p>
     <p class="mt-2 text-amber-600/70 text-xs">El pacto o recurso al que intentaste acceder no existe o fue movido.</p>
     <div class="mt-8 flex items-center justify-center gap-4">
-      <a href="/admin" class="px-5 py-2 rounded border border-amber-600/40 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">VOLVER AL PANEL</a>
-      <a href="/admin/new-pact" class="px-5 py-2 rounded border border-amber-600/60 bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 text-sm tracking-wide transition">CREAR NUEVO PACTO</a>
+      <a href="/?sec=admin" class="px-5 py-2 rounded border border-amber-600/40 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">VOLVER AL PANEL</a>
+      <a href="/?sec=admin&page=new-pact" class="px-5 py-2 rounded border border-amber-600/60 bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 text-sm tracking-wide transition">CREAR NUEVO PACTO</a>
     </div>
   </div>
 </div>

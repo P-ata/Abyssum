@@ -113,6 +113,25 @@ class Demon
     }
 
     /**
+     * Find multiple demons by IDs
+     * @param int[] $ids
+     * @return Demon[]
+     */
+    public static function findMultiple(array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        $pdo = DbConnection::get();
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $stmt = $pdo->prepare("SELECT * FROM demons WHERE id IN ($placeholders)");
+        $stmt->execute($ids);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map([self::class, 'fromRow'], $rows ?: []);
+    }
+
+    /**
      * @param array<string, mixed> $data
      */
     public static function create(array $data): void

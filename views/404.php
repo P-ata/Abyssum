@@ -12,7 +12,7 @@
 
 		<div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
 			<a href="/" class="px-6 py-3 rounded border border-amber-600/40 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">VOLVER AL ABYSSUM</a>
-			<a href="/pacts" class="px-6 py-3 rounded border border-amber-600/60 bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 text-sm tracking-wide transition">VER PACTOS</a>
+			<a href="/?sec=pacts" class="px-6 py-3 rounded border border-amber-600/60 bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 text-sm tracking-wide transition">VER PACTOS</a>
 		</div>
 	</div>
 

@@ -10,7 +10,7 @@
       </div>
     <?php endif; ?>
     
-    <form action="/actions/login" method="POST" class="space-y-4">
+    <form action="/?sec=actions&action=login" method="POST" class="space-y-4">
       <!-- EMAIL -->
       <div>
         <label class="block text-gray-300 mb-2 font-bold">Email:</label>
@@ -47,7 +47,7 @@
     <!-- LINKS -->
     <div class="mt-6 text-center space-y-2">
       <p class="text-gray-400 text-sm">
-        ¿No tenés cuenta? <a href="/register" class="text-amber-500 hover:text-amber-400">Registrate</a>
+        ¿No tenés cuenta? <a href="/?sec=register" class="text-amber-500 hover:text-amber-400">Registrate</a>
       </p>
     </div>
   </div>

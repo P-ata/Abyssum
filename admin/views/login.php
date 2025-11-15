@@ -28,7 +28,7 @@ unset($_SESSION['login_error']); // Clear flash message
     <div class="cyber-grid absolute inset-0 opacity-10"></div>
     <div class="scanlines absolute inset-0 pointer-events-none opacity-30"></div>
     
-    <form method="post" action="/admin/actions/login" class="relative z-10 p-8 border-2 border-cyan-500/30 rounded-xl bg-black/80 backdrop-blur-sm space-y-6 w-full max-w-md">
+    <form method="post" action="/?sec=admin&action=login" class="relative z-10 p-8 border-2 border-cyan-500/30 rounded-xl bg-black/80 backdrop-blur-sm space-y-6 w-full max-w-md">
         <header class="text-center mb-6">
             <h1 class="text-3xl font-bold glitch-text text-cyan-400 mb-2" data-text="ADMIN ACCESS">ADMIN ACCESS</h1>
             <p class="text-sm text-gray-500 font-mono">&gt; Panel de control ABYSSUM_</p>

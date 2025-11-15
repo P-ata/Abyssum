@@ -83,11 +83,11 @@ $totalDemons = count($demons);
 				<button class="px-4 py-2 bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 rounded transition text-sm tracking-wide" type="button" id="clearBtn">LIMPIAR</button>
 			</div>
 			<div class="flex gap-4">
-				<a href="/admin/new-pact" class="group relative inline-flex items-center gap-2 px-5 py-2 rounded border border-amber-600/40 bg-black/60 hover:bg-amber-600/20 transition overflow-hidden">
+				<a href="/?sec=admin&page=new-pact" class="group relative inline-flex items-center gap-2 px-5 py-2 rounded border border-amber-600/40 bg-black/60 hover:bg-amber-600/20 transition overflow-hidden">
 					<span class="text-amber-500 text-sm tracking-wide font-semibold">+ CREAR PACTO</span>
 					<span class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition bg-gradient-to-r from-amber-600/0 via-amber-600/20 to-amber-600/0"></span>
 				</a>
-				<a href="/admin/new-demon" class="group relative inline-flex items-center gap-2 px-5 py-2 rounded border border-amber-600/40 bg-black/60 hover:bg-amber-600/20 transition overflow-hidden">
+				<a href="/?sec=admin&page=new-demon" class="group relative inline-flex items-center gap-2 px-5 py-2 rounded border border-amber-600/40 bg-black/60 hover:bg-amber-600/20 transition overflow-hidden">
 					<span class="text-amber-500 text-sm tracking-wide font-semibold">+ CREAR DEMONIO</span>
 					<span class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition bg-gradient-to-r from-amber-600/0 via-amber-600/20 to-amber-600/0"></span>
 				</a>
@@ -98,7 +98,7 @@ $totalDemons = count($demons);
 		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4" id="pactsGrid">
 			<?php if (empty($pacts)): ?>
 				<div class="md:col-span-2 lg:col-span-4 bg-black/70 border border-amber-600/30 rounded-xl p-6 text-amber-400 text-center">
-					No hay pactos cargados. <a href="/admin/new-pact" class="underline">Creá uno nuevo</a>.
+					No hay pactos cargados. <a href="/?sec=admin&page=new-pact" class="underline">Creá uno nuevo</a>.
 				</div>
 			<?php else: ?>
 				<?php foreach ($pacts as $p): 
@@ -129,8 +129,8 @@ $totalDemons = count($demons);
 					<p class="text-xs leading-relaxed text-gray-400 mb-4"><?= htmlspecialchars(substr($p->summary ?? '', 0, 120)) ?><?= strlen($p->summary ?? '') > 120 ? '...' : '' ?></p>
 					<div class="flex gap-2">
 							<button class="flex-1 text-xs px-2 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition">VER</button>
-							<a href="/admin/edit-pact?id=<?= urlencode($p->id) ?>" class="flex-1 text-xs px-2 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">EDITAR</a>
-							<a href="/admin/actions/delete-pact?id=<?= urlencode($p->id) ?>" onclick="return confirm('¿Eliminar este pacto?')" class="flex-1 text-xs px-2 py-1.5 rounded border border-red-600/40 text-red-500 bg-black/50 hover:bg-red-600/20 transition text-center">ELIMINAR</a>
+							<a href="/?sec=admin&page=edit-pact&id=<?= urlencode($p->id) ?>" class="flex-1 text-xs px-2 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">EDITAR</a>
+							<a href="/?sec=admin&action=delete-pact&id=<?= urlencode($p->id) ?>" onclick="return confirm('¿Eliminar este pacto?')" class="flex-1 text-xs px-2 py-1.5 rounded border border-red-600/40 text-red-500 bg-black/50 hover:bg-red-600/20 transition text-center">ELIMINAR</a>
 							</div>
 						</div>
 						<div class="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 group-hover:w-full transition-all"></div>
@@ -144,7 +144,7 @@ $totalDemons = count($demons);
 			<div class="mt-16">
 				<div class="flex items-center justify-between mb-8">
 					<h2 class="text-3xl font-bold text-amber-500 tracking-widest">// DEMONIOS</h2>
-					<a href="/admin/new-demon" class="px-5 py-2 rounded border border-amber-600/40 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">+ CREAR</a>
+					<a href="/?sec=admin&page=new-demon" class="px-5 py-2 rounded border border-amber-600/40 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">+ CREAR</a>
 				</div>
 				<div class="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
 					<?php foreach ($demons as $d): ?>
@@ -167,8 +167,8 @@ $totalDemons = count($demons);
 								<div class="text-xs text-amber-600/70 mb-2">ID: <?= htmlspecialchars($d->slug) ?></div>
 								<div class="text-xs text-gray-400 mb-3 line-clamp-2"><?= htmlspecialchars(substr($d->summary ?? '', 0, 80)) ?><?= strlen($d->summary ?? '') > 80 ? '...' : '' ?></div>
 								<div class="flex gap-2">
-									<a href="/admin/edit-demon?id=<?= urlencode($d->slug) ?>" class="flex-1 text-xs px-3 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">EDITAR</a>
-									<a href="/admin/actions/delete-demon?id=<?= urlencode($d->slug) ?>" onclick="return confirm('¿Eliminar este demonio?')" class="flex-1 text-xs px-3 py-1.5 rounded border border-red-600/40 text-red-500 bg-black/50 hover:bg-red-600/20 transition text-center">ELIMINAR</a>
+									<a href="/?sec=admin&page=edit-demon&id=<?= urlencode($d->slug) ?>" class="flex-1 text-xs px-3 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">EDITAR</a>
+									<a href="/?sec=admin&action=delete-demon&id=<?= urlencode($d->slug) ?>" onclick="return confirm('¿Eliminar este demonio?')" class="flex-1 text-xs px-3 py-1.5 rounded border border-red-600/40 text-red-500 bg-black/50 hover:bg-red-600/20 transition text-center">ELIMINAR</a>
 								</div>
 							</div>
 						</div>

@@ -1,7 +1,16 @@
-RewriteEngine On
+# =======================
+# URL REWRITING (Pretty URLs)
+# =======================
+# Descomentá estas líneas para usar URLs lindas (/pacts en lugar de ?r=pacts)
+# Asegurate que mod_rewrite esté habilitado en Apache
 
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
+# RewriteEngine On
+# RewriteCond %{REQUEST_FILENAME} -f [OR]
+# RewriteCond %{REQUEST_FILENAME} -d
+# RewriteRule ^ - [L]
+# RewriteRule ^ index.php [QSA,L]
 
-RewriteRule ^ index.php [QSA,L]
+# =======================
+# MODO ACTUAL: URLs con parámetros (?r=pacts)
+# Para activar URLs lindas, descomentá las líneas de arriba (quita el #)
+# =======================

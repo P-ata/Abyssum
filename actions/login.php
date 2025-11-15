@@ -28,6 +28,7 @@ if (!$user->is_active) {
     exit;
 }
 
+
 // Login exitoso
 session_regenerate_id(true);
 $_SESSION['user_id'] = $user->id;
@@ -38,6 +39,11 @@ $_SESSION['is_admin'] = $user->isAdmin();
 // Actualizar último login
 User::updateLastLogin($user->id);
 
+// Cargar carrito pendiente desde BD si existe
+require_once __DIR__ . '/../classes/Cart.php';
+Cart::loadFromDatabase($user->id);
+
 // Login público siempre redirige al home
 header('Location: /');
 exit;
+
