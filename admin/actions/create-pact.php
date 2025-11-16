@@ -14,7 +14,7 @@ require_once __DIR__ . '/../classes/Toast.php';
 require_once __DIR__ . '/../includes/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /admin');
+    header('Location: /?sec=admin');
     exit;
 }
 
@@ -34,7 +34,7 @@ if (!empty($_POST['limitation_3'])) $limitations[] = trim($_POST['limitation_3']
 
 if ($demon_id === 0 || $name === '') {
     Toast::error('Demonio y nombre son requeridos');
-    header('Location: /admin/new-pact');
+    header('Location: /?sec=admin&page=new-pact');
     exit;
 }
 
@@ -55,7 +55,7 @@ if (!empty($_FILES['image']['tmp_name'])) {
             Toast::info('Imagen ya existente en la base de datos, reutilizando archivo');
         } else {
             Toast::error('Error al subir imagen: ' . $e->getMessage());
-            header('Location: /admin/new-pact');
+            header('Location: /?sec=admin&page=new-pact');
             exit;
         }
     }
@@ -84,5 +84,5 @@ try {
     Toast::error('Error al crear el pacto: ' . $e->getMessage());
 }
 
-header('Location: /admin/dashboard');
+header('Location: /?sec=admin&page=dashboard');
 exit;

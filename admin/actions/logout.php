@@ -27,5 +27,5 @@ if (ini_get("session.use_cookies")) {
 }
 
 // Redirect al login (PRG)
-header('Location: /admin/login');
+header('Location: /?sec=admin&page=login');
 exit;

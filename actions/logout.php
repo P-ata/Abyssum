@@ -5,5 +5,5 @@ declare(strict_types=1);
 session_destroy();
 
 // Redirigir a home
-header('Location: /');
+header('Location: /?sec=abyssum');
 exit;

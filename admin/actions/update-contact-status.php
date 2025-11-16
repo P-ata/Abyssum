@@ -8,7 +8,7 @@ require_once __DIR__ . '/../../includes/auth.php';
 requireAdmin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /admin/contacts');
+    header('Location: /?sec=admin&page=contacts');
     exit;
 }
 
@@ -17,7 +17,7 @@ $status = $_POST['status'] ?? '';
 
 if ($contactId <= 0 || !in_array($status, ['new', 'in_progress', 'resolved', 'spam'])) {
     Toast::error('Datos inválidos');
-    header('Location: /admin/contacts');
+    header('Location: /?sec=admin&page=contacts');
     exit;
 }
 
@@ -25,7 +25,7 @@ $contact = Contact::find($contactId);
 
 if (!$contact) {
     Toast::error('Contacto no encontrado');
-    header('Location: /admin/contacts');
+    header('Location: /?sec=admin&page=contacts');
     exit;
 }
 
@@ -46,5 +46,5 @@ try {
     Toast::error('Error al actualizar el estado');
 }
 
-header('Location: /admin/contacts');
+header('Location: /?sec=admin&page=contacts');
 exit;

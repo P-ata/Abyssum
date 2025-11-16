@@ -9,7 +9,7 @@ function isAdmin(): bool
 function requireAdmin(): void
 {
     if (!isAdmin()) {
-        header('Location: /admin/login');
+        header('Location: /?sec=admin&page=login');
         exit;
     }
 }
@@ -23,7 +23,7 @@ function requireLogin(): void
 {
     if (!isLoggedIn()) {
         $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
-        header('Location: /login');
+        header('Location: /?sec=login');
         exit;
     }
 }

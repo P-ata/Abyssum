@@ -5,7 +5,7 @@ require_once __DIR__ . '/../classes/Contact.php';
 require_once __DIR__ . '/../admin/classes/Toast.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /contact');
+    header('Location: /?sec=contact');
     exit;
 }
 
@@ -17,13 +17,13 @@ $message = trim($_POST['message'] ?? '');
 // Validaciones
 if (empty($name) || empty($email) || empty($message)) {
     Toast::error('Por favor completá todos los campos obligatorios');
-    header('Location: /contact');
+    header('Location: /?sec=contact');
     exit;
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     Toast::error('Email inválido');
-    header('Location: /contact');
+    header('Location: /?sec=contact');
     exit;
 }
 
@@ -40,11 +40,11 @@ try {
     ]);
 
     Toast::success('Mensaje enviado correctamente. Te responderemos pronto.');
-    header('Location: /contact');
+    header('Location: /?sec=contact');
     exit;
 
 } catch (Exception $e) {
     Toast::error('Error al enviar el mensaje. Intentá de nuevo.');
-    header('Location: /contact');
+    header('Location: /?sec=contact');
     exit;
 }

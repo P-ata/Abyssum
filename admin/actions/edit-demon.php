@@ -14,7 +14,7 @@ require_once __DIR__ . '/../classes/Toast.php';
 require_once __DIR__ . '/../includes/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /admin/dashboard');
+    header('Location: /?sec=admin&page=dashboard');
     exit;
 }
 
@@ -23,7 +23,7 @@ $slug = isset($_POST['id']) ? trim($_POST['id']) : '';
 
 if ($slug === '') {
     Toast::error('ID de demonio inválido');
-    header('Location: /admin/dashboard');
+    header('Location: /?sec=admin&page=dashboard');
     exit;
 }
 
@@ -31,7 +31,7 @@ if ($slug === '') {
 $demon = Demon::find($slug);
 if (!$demon) {
     Toast::error('Demonio no encontrado');
-    header('Location: /admin/dashboard');
+    header('Location: /?sec=admin&page=dashboard');
     exit;
 }
 
@@ -41,7 +41,7 @@ $newSlug = trim($_POST['slug'] ?? '');
 
 if ($name === '') {
     Toast::error('El nombre es requerido');
-    header('Location: /admin/edit-demon?id=' . urlencode($slug));
+    header('Location: /?sec=admin&page=edit-demon&id=' . urlencode($slug));
     exit;
 }
 
@@ -74,7 +74,7 @@ if (!empty($_FILES['image']['tmp_name'])) {
             }
         } else {
             Toast::error('Error al subir imagen: ' . $e->getMessage());
-            header('Location: /admin/edit-demon?id=' . urlencode($slug));
+            header('Location: /?sec=admin&page=edit-demon&id=' . urlencode($slug));
             exit;
         }
     }
@@ -158,5 +158,5 @@ try {
     Toast::error('Error al actualizar el demonio: ' . $e->getMessage());
 }
 
-header('Location: /admin/dashboard');
+header('Location: /?sec=admin&page=dashboard');
 exit;

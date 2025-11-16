@@ -15,7 +15,7 @@ $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id === 0) {
     Toast::error('ID de pacto requerido');
-    header('Location: /admin/dashboard');
+    header('Location: /?sec=admin&page=dashboard');
     exit;
 }
 
@@ -31,5 +31,5 @@ try {
     Toast::error('Error al eliminar el pacto: ' . $e->getMessage());
 }
 
-header('Location: /admin/dashboard');
+header('Location: /?sec=admin&page=dashboard');
 exit;

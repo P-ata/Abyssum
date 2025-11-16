@@ -5,7 +5,7 @@ require_once __DIR__ . '/../classes/Cart.php';
 require_once __DIR__ . '/../admin/classes/Toast.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /cart');
+    header('Location: /?sec=cart');
     exit;
 }
 
@@ -13,7 +13,7 @@ $pactId = isset($_POST['pact_id']) ? (int)$_POST['pact_id'] : 0;
 
 if ($pactId <= 0) {
     Toast::error('Pacto inválido');
-    header('Location: /cart');
+    header('Location: /?sec=cart');
     exit;
 }
 
@@ -26,6 +26,6 @@ if (isset($_SESSION['user_id'])) {
 
 Toast::info('Pacto eliminado del carrito');
 
-header('Location: /cart');
+header('Location: /?sec=cart');
 exit;
 

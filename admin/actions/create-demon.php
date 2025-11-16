@@ -14,7 +14,7 @@ require_once __DIR__ . '/../classes/Toast.php';
 require_once __DIR__ . '/../includes/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /admin/new-demon');
+    header('Location: /?sec=admin&page=new-demon');
     exit;
 }
 
@@ -24,7 +24,7 @@ $slug = trim($_POST['slug'] ?? '');
 
 if ($name === '') {
     Toast::error('El nombre es requerido');
-    header('Location: /admin/new-demon');
+    header('Location: /?sec=admin&page=new-demon');
     exit;
 }
 
@@ -90,7 +90,7 @@ if (!empty($_FILES['image']['tmp_name'])) {
             Toast::info('Imagen ya existente en la base de datos, reutilizando archivo');
         } else {
             Toast::error('Error al subir la imagen: ' . $e->getMessage());
-            header('Location: /admin/new-demon');
+            header('Location: /?sec=admin&page=new-demon');
             exit;
         }
     }
@@ -133,5 +133,5 @@ try {
     Toast::error('Error al crear el demonio: ' . $e->getMessage());
 }
 
-header('Location: /admin/dashboard');
+header('Location: /?sec=admin&page=dashboard');
 exit;

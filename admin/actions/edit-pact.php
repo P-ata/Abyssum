@@ -15,7 +15,7 @@ require_once __DIR__ . '/../classes/Toast.php';
 require_once __DIR__ . '/../includes/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /admin/dashboard');
+    header('Location: /?sec=admin&page=dashboard');
     exit;
 }
 
@@ -24,7 +24,7 @@ $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 
 if ($id <= 0) {
     Toast::error('ID de pacto inválido');
-    header('Location: /admin/dashboard');
+    header('Location: /?sec=admin&page=dashboard');
     exit;
 }
 
@@ -32,7 +32,7 @@ if ($id <= 0) {
 $pact = Pact::find($id);
 if (!$pact) {
     Toast::error('Pacto no encontrado');
-    header('Location: /admin/pacts');
+    header('Location: /?sec=admin&page=pacts');
     exit;
 }
 
@@ -43,7 +43,7 @@ $slug = trim($_POST['slug'] ?? '');
 
 if ($demon_id === 0 || $name === '') {
     Toast::error('Demonio y nombre son requeridos');
-    header('Location: /admin/edit-pact?id=' . $id);
+    header('Location: /?sec=admin&page=edit-pact&id=' . $id);
     exit;
 }
 
@@ -76,7 +76,7 @@ if (!empty($_FILES['image']['tmp_name'])) {
             }
         } else {
             Toast::error('Error al subir imagen: ' . $e->getMessage());
-            header('Location: /admin/edit-pact?id=' . urlencode((string)$id));
+            header('Location: /?sec=admin&page=edit-pact&id=' . urlencode((string)$id));
             exit;
         }
     }
@@ -118,5 +118,5 @@ try {
     Toast::error('Error al actualizar el pacto: ' . $e->getMessage());
 }
 
-header('Location: /admin/dashboard');
+header('Location: /?sec=admin&page=dashboard');
 exit;

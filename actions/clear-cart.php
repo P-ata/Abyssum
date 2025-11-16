@@ -5,7 +5,7 @@ require_once __DIR__ . '/../classes/Cart.php';
 require_once __DIR__ . '/../admin/classes/Toast.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /cart');
+    header('Location: /?sec=cart');
     exit;
 }
 
@@ -18,6 +18,6 @@ if (isset($_SESSION['user_id'])) {
 
 Toast::info('Carrito vaciado');
 
-header('Location: /cart');
+header('Location: /?sec=cart');
 exit;
 

@@ -6,13 +6,14 @@
 INSERT INTO public_sections (slug, title, sort_order) VALUES
 ('abyssum', 'Abyssum: Pactos de Demonios', 1),
 ('pacts', 'Pacts', 2),
-('contact', 'Contacto', 3),
-('cart', 'Tu Carrito', 4),
-('profile', 'Mi Perfil', 5),
-('orders', 'Mis Órdenes', 6),
-('register', 'Registro de Usuario', 7),
-('login', 'Iniciar Sesión', 8),
-('404', 'Página no encontrada', 9);
+('pact-detail', 'Detalle de Pacto', 3),
+('contact', 'Contacto', 4),
+('cart', 'Tu Carrito', 5),
+('profile', 'Mi Perfil', 6),
+('orders', 'Mis Órdenes', 7),
+('register', 'Registro de Usuario', 8),
+('login', 'Iniciar Sesión', 9),
+('404', 'Página no encontrada', 10);
 
 -- Insertar secciones de admin desde admin_sections.json
 INSERT INTO admin_sections (slug, title, icon, required_role, sort_order) VALUES

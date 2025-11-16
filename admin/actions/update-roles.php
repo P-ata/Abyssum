@@ -8,7 +8,7 @@ require_once __DIR__ . '/../classes/Toast.php';
 requireAdmin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-	header('Location: /admin/users');
+	header('Location: /?sec=admin&page=users');
 	exit;
 }
 
@@ -17,7 +17,7 @@ $isAdmin = (int)($_POST['is_admin'] ?? 0);
 
 if ($userId === 0) {
 	Toast::error('ID de usuario inválido');
-	header('Location: /admin/users');
+	header('Location: /?sec=admin&page=users');
 	exit;
 }
 
@@ -30,5 +30,5 @@ if ($isAdmin === 1) {
 	Toast::success('Rol de administrador removido correctamente');
 }
 
-header('Location: /admin/users');
+header('Location: /?sec=admin&page=users');
 exit;

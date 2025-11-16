@@ -4,12 +4,12 @@ declare(strict_types=1);
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../classes/User.php';
 require_once __DIR__ . '/../classes/DbConnection.php';
-require_once __DIR__ . '/../admin/classes/Toast.php';
+require_once __DIR__ . '/../classes/Toast.php';
 
 requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /profile');
+    header('Location: /?sec=profile');
     exit;
 }
 
@@ -21,19 +21,19 @@ $confirmPassword = trim($_POST['confirm_password'] ?? '');
 // Validaciones
 if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
     Toast::error('Todos los campos son obligatorios');
-    header('Location: /profile');
+    header('Location: /?sec=profile');
     exit;
 }
 
 if (strlen($newPassword) < 6) {
     Toast::error('La nueva contraseña debe tener al menos 6 caracteres');
-    header('Location: /profile');
+    header('Location: /?sec=profile');
     exit;
 }
 
 if ($newPassword !== $confirmPassword) {
     Toast::error('Las contraseñas no coinciden');
-    header('Location: /profile');
+    header('Location: /?sec=profile');
     exit;
 }
 
@@ -46,7 +46,7 @@ try {
     
     if (!$row || !password_verify($currentPassword, $row['password_hash'])) {
         Toast::error('La contraseña actual es incorrecta');
-        header('Location: /profile');
+        header('Location: /?sec=profile');
         exit;
     }
     
@@ -56,11 +56,11 @@ try {
     $stmt->execute([$newHash, $userId]);
     
     Toast::success('Contraseña actualizada correctamente');
-    header('Location: /profile');
+    header('Location: /?sec=profile');
     exit;
     
 } catch (Exception $e) {
     Toast::error('Error al cambiar la contraseña');
-    header('Location: /profile');
+    header('Location: /?sec=profile');
     exit;
 }

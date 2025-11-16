@@ -107,7 +107,7 @@ $totalDemons = count($demons);
 					<div class="group relative bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden hover:shadow-[0_0_25px_-4px_rgba(251,191,36,0.35)] transition-all pact-card">
 				<!-- Image -->
 				<?php if (!empty($p->image_file_id)): ?>
-					<div class="w-full h-32 overflow-hidden bg-black/50 border-b border-amber-600/20">
+					<div class="w-full overflow-hidden bg-black/50 border-b border-amber-600/20">
 						<img src="/?file_id=<?= $p->image_file_id ?>" alt="<?= htmlspecialchars($p->name) ?>" class="w-full h-full object-cover" />
 					</div>
 				<?php else: ?>
@@ -151,7 +151,7 @@ $totalDemons = count($demons);
 					<div class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden hover:border-amber-500/50 transition group">
 						<!-- Image -->
 						<?php if (!empty($d->image_file_id)): ?>
-							<div class="w-full h-32 overflow-hidden bg-black/50 border-b border-amber-600/20">
+							<div class="w-full overflow-hidden bg-black/50 border-b border-amber-600/20">
 								<img src="/?file_id=<?= $d->image_file_id ?>" alt="<?= htmlspecialchars($d->name) ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
 							</div>
 						<?php else: ?>

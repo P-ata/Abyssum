@@ -51,6 +51,83 @@ class Pact
         return array_map([self::class, 'fromRow'], $rows ?: []);
     }
 
+    /**
+     * Filter pacts by multiple criteria
+     * @param array<string, mixed> $filters
+     * @return Pact[]
+     */
+    public static function filter(array $filters = []): array
+    {
+        $pdo = DbConnection::get();
+        
+        $sql = 'SELECT DISTINCT p.id, p.slug, p.demon_id, p.name, p.summary, p.duration, p.cooldown, p.limitations, p.price_credits, p.image_file_id, p.created_at, p.updated_at FROM pacts p';
+        $where = [];
+        $params = [];
+        $joins = [];
+
+        // Filter by demon
+        if (!empty($filters['demon_id'])) {
+            $where[] = 'p.demon_id = ?';
+            $params[] = (int)$filters['demon_id'];
+        }
+
+        // Filter by category
+        if (!empty($filters['category'])) {
+            $joins[] = 'INNER JOIN pact_categories pc ON p.id = pc.pact_id';
+            $where[] = 'pc.category_slug = ?';
+            $params[] = $filters['category'];
+        }
+
+        // Price range
+        if (isset($filters['min_price'])) {
+            $where[] = 'p.price_credits >= ?';
+            $params[] = (int)$filters['min_price'];
+        }
+        if (isset($filters['max_price'])) {
+            $where[] = 'p.price_credits <= ?';
+            $params[] = (int)$filters['max_price'];
+        }
+
+        // Build SQL
+        if (!empty($joins)) {
+            $sql .= ' ' . implode(' ', $joins);
+        }
+        if (!empty($where)) {
+            $sql .= ' WHERE ' . implode(' AND ', $where);
+        }
+
+        // Sorting
+        $orderBy = 'p.created_at DESC'; // Default
+        if (!empty($filters['sort'])) {
+            switch ($filters['sort']) {
+                case 'price_asc':
+                    $orderBy = 'p.price_credits ASC, p.name ASC';
+                    break;
+                case 'price_desc':
+                    $orderBy = 'p.price_credits DESC, p.name ASC';
+                    break;
+                case 'name_asc':
+                    $orderBy = 'p.name ASC';
+                    break;
+                case 'name_desc':
+                    $orderBy = 'p.name DESC';
+                    break;
+                case 'newest':
+                    $orderBy = 'p.created_at DESC';
+                    break;
+                case 'oldest':
+                    $orderBy = 'p.created_at ASC';
+                    break;
+            }
+        }
+        $sql .= ' ORDER BY ' . $orderBy;
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map([self::class, 'fromRow'], $rows ?: []);
+    }
+
     public static function find(int $id): ?self
     {
         $pdo = DbConnection::get();

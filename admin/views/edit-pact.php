@@ -6,7 +6,7 @@ $pactId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $pact = $pactId > 0 ? Pact::find($pactId) : null;
 
 if (!$pact) {
-    header('Location: /admin/dashboard');
+    header('Location: /?sec=admin&page=dashboard');
     exit;
 }
 

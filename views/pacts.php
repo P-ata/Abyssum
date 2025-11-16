@@ -3,8 +3,18 @@ require_once BASE_PATH . '/classes/Pact.php';
 require_once BASE_PATH . '/classes/Demon.php';
 require_once BASE_PATH . '/classes/Cart.php';
 require_once BASE_PATH . '/classes/Order.php';
+require_once BASE_PATH . '/classes/Category.php';
+require_once BASE_PATH . '/classes/PactFilter.php';
 
-$pacts = Pact::all();
+// Inicializar filtros
+$pactFilter = new PactFilter();
+$pactFilter->showToastIfNeeded();
+
+// Obtener pactos filtrados
+$pacts = $pactFilter->getPacts();
+
+// Variable para el template
+$hasActiveFilters = $pactFilter->hasActiveFilters();
 
 // Pre-cargar todos los demonios de una vez (evita N+1 queries)
 $demonIds = array_unique(array_filter(array_column($pacts, 'demon_id')));
@@ -18,6 +28,10 @@ if (!empty($demonIds)) {
     }
 }
 
+// Obtener todas las categorías y demonios para los filtros
+$allCategories = Category::allExcludingDemons();
+$allDemons = Demon::all();
+
 // Obtener pactos ya comprados por el usuario
 $purchasedPactIds = [];
 if (isset($_SESSION['user_id'])) {
@@ -25,34 +39,114 @@ if (isset($_SESSION['user_id'])) {
 }
 ?>
 
-<div class="min-h-screen bg-black relative overflow-hidden py-20 px-4">
-  <!-- Grid cyberpunk background -->
-  <div class="fixed inset-0 opacity-20 pointer-events-none">
-    <div class="absolute inset-0" style="background-image: linear-gradient(cyan 1px, transparent 1px), linear-gradient(90deg, cyan 1px, transparent 1px); background-size: 50px 50px;"></div>
+<div class="min-h-screen bg-black relative overflow-hidden py-20 px-4 font-mono">
+  <!-- Ambient background grid & glow -->
+  <div class="pointer-events-none fixed inset-0 opacity-5">
+    <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
   </div>
+  <div class="pointer-events-none fixed top-0 left-0 w-96 h-96 rounded-full blur-3xl opacity-20" style="background: radial-gradient(circle at center, rgba(251,191,36,0.45), transparent 70%);"></div>
+  <div class="pointer-events-none fixed bottom-0 right-0 w-[28rem] h-[28rem] rounded-full blur-3xl opacity-10" style="background: radial-gradient(circle at center, rgba(251,191,36,0.35), transparent 70%);"></div>
   
-  <!-- Glowing orbs -->
-  <div class="fixed top-20 left-20 w-96 h-96 bg-cyan-500 rounded-full blur-3xl opacity-20 animate-pulse"></div>
-  <div class="fixed bottom-20 right-20 w-96 h-96 bg-fuchsia-500 rounded-full blur-3xl opacity-20 animate-pulse" style="animation-delay: 1s;"></div>
-  
-  <div class="max-w-7xl mx-auto relative z-10">
-    <h1 class="text-6xl font-bold text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-purple-600 font-mono tracking-wider">
-      <span class="drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]">ABYSSUM</span>
-    </h1>
-    <p class="text-center text-cyan-300 mb-4 text-xl font-mono uppercase tracking-widest">
-      // Pactos Demoníacos v2.0
-    </p>
-    <p class="text-center text-fuchsia-400 mb-12 text-sm font-mono">
-      &gt; Explora_los_pactos_antiguos.exe
-    </p>
+  <div class="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 relative z-10">
+    
+    <!-- Título -->
+    <div class="text-center mb-6 pacts-title">
+      <h1 class="text-6xl font-bold tracking-widest text-amber-500 font-mono">
+        PACTOS
+      </h1>
+    </div>
+
+    <!-- Instrucciones arriba -->
+    <div class="text-center mb-8 pacts-instructions">
+      <p class="text-amber-600/70 text-sm font-mono uppercase tracking-widest">
+        // Pasa el cursor sobre una carta para revelar detalles
+      </p>
+    </div>
+
+    <!-- Filtros -->
+    <div class="mb-8 bg-black/70 border border-amber-600/30 rounded-xl p-6 filters-container">
+      <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <input type="hidden" name="sec" value="pacts">
+        
+        <!-- Filtro por Demonio -->
+        <div class="filter-item group">
+          <label class="block text-amber-500 text-xs font-mono mb-2 uppercase tracking-wider">
+            <i class="fa-solid fa-skull mr-2"></i>Demonio
+          </label>
+          <div class="relative">
+            <select name="demon" class="w-full bg-black/60 border border-amber-600/40 text-amber-300 rounded px-3 py-2 pr-10 text-sm font-mono focus:border-amber-500 focus:outline-none appearance-none cursor-pointer">
+              <option value="">Todos</option>
+              <?php foreach ($allDemons as $demon): ?>
+                <option value="<?= $demon->id ?>" <?= (isset($_GET['demon']) && (int)$_GET['demon'] === $demon->id) ? 'selected' : '' ?>>
+                  <?= htmlspecialchars($demon->name) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+            <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-amber-500/70 text-xs pointer-events-none transition-transform duration-300"></i>
+          </div>
+        </div>
+
+        <!-- Filtro por Categoría -->
+        <div class="filter-item group">
+          <label class="block text-amber-500 text-xs font-mono mb-2 uppercase tracking-wider">
+            <i class="fa-solid fa-tag mr-2"></i>Categoría
+          </label>
+          <div class="relative">
+            <select name="category" class="w-full bg-black/60 border border-amber-600/40 text-amber-300 rounded px-3 py-2 pr-10 text-sm font-mono focus:border-amber-500 focus:outline-none appearance-none cursor-pointer">
+              <option value="">Todas</option>
+              <?php foreach ($allCategories as $cat): ?>
+                <option value="<?= htmlspecialchars($cat->slug) ?>" <?= (isset($_GET['category']) && $_GET['category'] === $cat->slug) ? 'selected' : '' ?>>
+                  <?= htmlspecialchars($cat->display_name) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+            <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-amber-500/70 text-xs pointer-events-none transition-transform duration-300"></i>
+          </div>
+        </div>
+
+        <!-- Ordenar por -->
+        <div class="filter-item group">
+          <label class="block text-amber-500 text-xs font-mono mb-2 uppercase tracking-wider">
+            <i class="fa-solid fa-arrow-down-short-wide mr-2"></i>Ordenar
+          </label>
+          <div class="relative">
+            <select name="sort" class="w-full bg-black/60 border border-amber-600/40 text-amber-300 rounded px-3 py-2 pr-10 text-sm font-mono focus:border-amber-500 focus:outline-none appearance-none cursor-pointer">
+              <option value="newest" <?= (!isset($_GET['sort']) || $_GET['sort'] === 'newest') ? 'selected' : '' ?>>Más reciente</option>
+              <option value="oldest" <?= (isset($_GET['sort']) && $_GET['sort'] === 'oldest') ? 'selected' : '' ?>>Más antiguo</option>
+              <option value="price_asc" <?= (isset($_GET['sort']) && $_GET['sort'] === 'price_asc') ? 'selected' : '' ?>>Precio: Menor a Mayor</option>
+              <option value="price_desc" <?= (isset($_GET['sort']) && $_GET['sort'] === 'price_desc') ? 'selected' : '' ?>>Precio: Mayor a Menor</option>
+              <option value="name_asc" <?= (isset($_GET['sort']) && $_GET['sort'] === 'name_asc') ? 'selected' : '' ?>>Nombre: A-Z</option>
+              <option value="name_desc" <?= (isset($_GET['sort']) && $_GET['sort'] === 'name_desc') ? 'selected' : '' ?>>Nombre: Z-A</option>
+            </select>
+            <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-amber-500/70 text-xs pointer-events-none transition-transform duration-300"></i>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="flex items-end gap-2 filter-buttons">
+          <button type="submit" class="flex-1 bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 text-xs font-bold py-2 px-4 rounded font-mono transition-all">
+            <i class="fa-solid fa-filter mr-2"></i>FILTRAR
+          </button>
+          <?php if ($hasActiveFilters): ?>
+            <a href="/?sec=pacts" class="bg-black/60 hover:bg-black/80 border border-amber-600/40 text-amber-600 text-xs font-bold py-2 px-4 rounded font-mono transition-all" title="Limpiar filtros" onclick="window.toastCleared = true;">
+              <i class="fa-solid fa-xmark"></i>
+            </a>
+          <?php else: ?>
+            <button type="button" class="bg-black/40 border border-amber-600/20 text-amber-600/50 text-xs font-bold py-2 px-4 rounded font-mono cursor-not-allowed" disabled title="No hay filtros activos">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          <?php endif; ?>
+        </div>
+      </form>
+    </div>
 
     <?php if (empty($pacts)): ?>
-      <div class="text-center text-cyan-300 font-mono text-lg py-12">
-        // NO_PACTS_FOUND
+      <div class="text-center text-amber-400 font-mono text-lg py-12">
+        // NO HAY PACTOS DISPONIBLES
       </div>
     <?php else: ?>
       <!-- Container de las cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         
         <?php foreach ($pacts as $pact): ?>
           <?php 
@@ -86,10 +180,12 @@ if (isset($_SESSION['user_id'])) {
           ?>
           
           <div class="expandable-card-container">
-            <div class="expandable-card" data-pact="pact-<?= $pact->id ?>">
+            <div class="expandable-card group" data-pact="pact-<?= $pact->id ?>">
               
               <!-- Imagen principal -->
-              <div class="card-image">
+              <div class="card-image relative overflow-hidden rounded-xl border-2 border-amber-600/30 bg-black shadow-2xl shadow-amber-500/20">
+
+
                 <img 
                   src="<?= htmlspecialchars($imagePath) ?>" 
                   alt="<?= htmlspecialchars($pact->name) ?>" 
@@ -99,90 +195,83 @@ if (isset($_SESSION['user_id'])) {
                 
                 <!-- Info discreta en la esquina -->
                 <div class="card-info">
-                  <p class="text-cyan-400 text-xs font-mono opacity-60"><?= htmlspecialchars($demonName) ?></p>
-                  <p class="text-fuchsia-400 text-sm font-mono font-semibold"><?= htmlspecialchars($pact->name) ?></p>
+                  <p class="text-amber-500 text-xs font-mono font-semibold"><?= htmlspecialchars($demonName) ?></p>
+                  <p class="text-amber-300 text-sm font-mono font-bold"><?= htmlspecialchars($pact->name) ?></p>
                 </div>
               </div>
 
               <!-- Menú expandible -->
               <div class="card-menu">
-                <!-- Panel izquierdo -->
-                <div class="menu-panel menu-left">
-                  <div class="p-4">
-                    <h4 class="text-cyan-300 font-mono text-sm mb-3 border-b border-cyan-500/30 pb-2">// STATS_</h4>
-                    <ul class="space-y-2 text-xs text-cyan-200 font-mono">
-                      <li class="flex justify-between">
-                        <span class="text-fuchsia-400">⏱ Duración:</span>
-                        <span><?= htmlspecialchars($pact->duration ?? 'N/A') ?></span>
-                      </li>
-                      <li class="flex justify-between">
-                        <span class="text-fuchsia-400">🔄 Cooldown:</span>
-                        <span><?= htmlspecialchars($pact->cooldown ?? 'N/A') ?></span>
-                      </li>
-                      <?php if (!empty($categories)): ?>
-                        <li class="flex justify-between">
-                          <span class="text-fuchsia-400">🏷 Tags:</span>
-                          <span><?= count($categories) ?></span>
-                        </li>
-                      <?php endif; ?>
-                    </ul>
+                <!-- Panel izquierdo - Precio -->
+                <div class="menu-panel menu-left bg-black/95 border-2 border-amber-600/40 backdrop-blur-sm h-38">
+                  <div class="p-4 h-full flex flex-col">
+                    <h4 class="text-amber-500 font-mono text-sm mb-3 border-b border-amber-600/30 pb-2 uppercase tracking-wider text-center">
+                      <i class="fa-solid fa-coins mr-2"></i>Precio
+                    </h4>
+                    <div class="flex-1 flex items-center justify-center">
+                      <span class="text-3xl font-bold text-amber-500 font-mono">
+                        <?= $pact->price_credits ?>
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                <!-- Panel derecho -->
-                <div class="menu-panel menu-right">
+                <!-- Panel derecho - Acciones -->
+                <div class="menu-panel menu-right bg-black/95 border-2 border-amber-600/40 backdrop-blur-sm h-38">
                   <div class="p-4">
-                    <h4 class="text-cyan-300 font-mono text-sm mb-3 border-b border-cyan-500/30 pb-2">// ACTIONS_</h4>
+                    <h4 class="text-amber-500 font-mono text-sm mb-3 border-b border-amber-600/30 pb-2 uppercase tracking-wider text-center">
+                      <i class="fa-solid fa-bolt mr-2"></i>Acciones
+                    </h4>
                     <div class="space-y-2">
                       <?php 
                       $isPurchased = in_array($pact->id, $purchasedPactIds);
                       $inCart = Cart::has($pact->id);
                       ?>
                       
+                      <!-- Botón agregar al carrito -->
                       <?php if ($isPurchased): ?>
-                        <div class="w-full bg-amber-900/50 text-amber-400 text-xs font-bold py-2 px-3 rounded font-mono border border-amber-500/50 text-center">
-                          ⛧ PACTO ADQUIRIDO
+                        <div class="w-full bg-green-900/30 text-green-400 text-xs font-bold py-2 px-3 rounded font-mono border border-green-500/50 text-center flex items-center justify-center gap-2">
+                          <i class="fa-solid fa-check-circle"></i> ADQUIRIDO
                         </div>
                       <?php elseif ($inCart): ?>
-                        <div class="w-full bg-green-900/50 text-green-400 text-xs font-bold py-2 px-3 rounded font-mono border border-green-500/50 text-center">
-                          ✓ EN CARRITO
+                        <div class="w-full bg-blue-900/30 text-blue-400 text-xs font-bold py-2 px-3 rounded font-mono border border-blue-500/50 text-center flex items-center justify-center gap-2">
+                          <i class="fa-solid fa-cart-shopping"></i> EN CARRITO
                         </div>
                       <?php else: ?>
                         <form method="POST" action="/?sec=actions&action=add-to-cart">
                           <input type="hidden" name="pact_id" value="<?= $pact->id ?>">
-                          <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 to-fuchsia-600 hover:from-cyan-400 hover:to-fuchsia-500 text-black text-xs font-bold py-2 px-3 rounded font-mono shadow-[0_0_15px_rgba(0,255,255,0.5)]">
-                            [AGREGAR AL CARRITO]
+                          <button type="submit" class="w-full bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 text-xs font-bold py-2 px-3 rounded font-mono transition-all hover:shadow-lg hover:shadow-amber-500/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> AGREGAR
                           </button>
                         </form>
                       <?php endif; ?>
                       
-                      <?php if (!empty($categories)): ?>
-                        <div class="text-[10px] text-cyan-300 font-mono">
-                          <?php foreach (array_slice($categories, 0, 3) as $cat): ?>
-                            <span class="inline-block bg-cyan-900/30 border border-cyan-500/30 px-2 py-1 rounded mr-1 mb-1">
-                              <?= htmlspecialchars($cat->display_name) ?>
-                            </span>
-                          <?php endforeach; ?>
-                        </div>
-                      <?php endif; ?>
+                      <!-- Botón ver detalles -->
+                      <a href="/?sec=pact-detail&pact_id=<?= $pact->id ?>" class="block w-full bg-black/60 hover:bg-black/80 border border-amber-600/40 text-amber-600 hover:text-amber-500 text-xs font-bold py-2 px-3 rounded font-mono transition-all text-center">
+                        VER
+                      </a>
                     </div>
                   </div>
                 </div>
 
-                <!-- Panel superior -->
-                <div class="menu-panel menu-top">
+                <!-- Panel superior - Nombre y Demonio -->
+                <div class="menu-panel menu-top bg-black/95 border-2 border-amber-600/40 backdrop-blur-sm">
                   <div class="p-3 text-center">
-                    <p class="text-cyan-300 text-xs font-mono">
-                      &gt; <?= htmlspecialchars($pact->summary ?? 'Pacto demoníaco') ?> // <?= htmlspecialchars($demonName) ?>.sys
+                    <p class="text-amber-500 font-bold text-sm font-mono mb-1 uppercase tracking-wider">
+                      <?= htmlspecialchars($pact->name) ?>
+                    </p>
+                    <p class="text-amber-600/70 text-xs font-mono flex items-center justify-center gap-1">
+                      <i class="fa-solid fa-skull"></i> <?= htmlspecialchars($demonName) ?>
                     </p>
                   </div>
                 </div>
 
-                <!-- Panel inferior -->
-                <div class="menu-panel menu-bottom">
-                  <div class="p-3 flex justify-between items-center">
-                    <span class="text-fuchsia-400 text-xs font-mono">PRECIO:</span>
-                    <span class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500 font-mono"><?= $pact->price_credits ?> ⛧</span>
+                <!-- Panel inferior - Resumen -->
+                <div class="menu-panel menu-bottom bg-black/95 border-2 border-amber-600/40 backdrop-blur-sm">
+                  <div class="p-3">
+                    <p class="text-amber-400 text-xs font-mono text-center">
+                      <?= htmlspecialchars($pact->summary ?? 'Pacto demoníaco disponible') ?>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -194,11 +283,5 @@ if (isset($_SESSION['user_id'])) {
       </div>
     <?php endif; ?>
 
-    <!-- Instrucciones -->
-    <div class="mt-12 text-center relative z-10">
-      <p class="text-cyan-400 text-sm font-mono">
-        [ HOVER_CARD_TO_REVEAL ] // &gt;_
-      </p>
-    </div>
   </div>
 </div>

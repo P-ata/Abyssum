@@ -2,10 +2,11 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../classes/User.php';
+require_once __DIR__ . '/../classes/Toast.php';
 
 // Solo POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /login');
+    header('Location: /?sec=login');
     exit;
 }
 
@@ -16,15 +17,15 @@ $password = trim($_POST['password'] ?? '');
 $user = User::verifyPassword($email, $password);
 
 if (!$user) {
-    $_SESSION['error'] = 'Email o contraseña incorrectos';
-    header('Location: /login');
+    Toast::error('Email o contraseña incorrectos');
+    header('Location: /?sec=login');
     exit;
 }
 
 // Verificar si está activo
 if (!$user->is_active) {
-    $_SESSION['error'] = 'Tu cuenta está desactivada. Contactá al administrador.';
-    header('Location: /login');
+    Toast::error('Tu cuenta está desactivada. Contactá al administrador.');
+    header('Location: /?sec=login');
     exit;
 }
 
@@ -44,6 +45,6 @@ require_once __DIR__ . '/../classes/Cart.php';
 Cart::loadFromDatabase($user->id);
 
 // Login público siempre redirige al home
-header('Location: /');
+header('Location: /?sec=abyssum');
 exit;
 

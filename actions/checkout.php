@@ -3,18 +3,18 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../classes/Cart.php';
 require_once __DIR__ . '/../classes/DbConnection.php';
-require_once __DIR__ . '/../admin/classes/Toast.php';
+require_once __DIR__ . '/../classes/Toast.php';
 require_once __DIR__ . '/../includes/auth.php';
 
 // Requiere estar logueado
 if (!isLoggedIn()) {
     Toast::error('Debes iniciar sesión para completar la compra');
-    header('Location: /login?return=' . urlencode('/cart'));
+    header('Location: /?sec=login&return=' . urlencode('/?sec=cart'));
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /cart');
+    header('Location: /?sec=cart');
     exit;
 }
 
@@ -24,7 +24,7 @@ $total = Cart::getTotal();
 
 if (empty($pacts)) {
     Toast::error('El carrito está vacío');
-    header('Location: /cart');
+    header('Location: /?sec=cart');
     exit;
 }
 
@@ -66,6 +66,11 @@ try {
         // Insertar en cart_items
         $stmtCartItem->execute([$cartId, $pact->id, $price, $price]);
         
+        // Obtener el nombre del demonio
+        $stmtDemon = $pdo->prepare('SELECT name FROM demons WHERE id = ?');
+        $stmtDemon->execute([$pact->demon_id]);
+        $demonName = $stmtDemon->fetchColumn();
+        
         // Crear snapshot JSON del pacto
         $snapshot = json_encode([
             'name' => $pact->name,
@@ -73,7 +78,9 @@ try {
             'duration' => $pact->duration,
             'cooldown' => $pact->cooldown,
             'limitations' => $pact->limitations,
-            'demon_id' => $pact->demon_id
+            'demon_id' => $pact->demon_id,
+            'demon_name' => $demonName,
+            'image_file_id' => $pact->image_file_id
         ]);
         
         // Insertar en order_items
@@ -86,13 +93,13 @@ try {
     Cart::clear();
 
     Toast::success("¡Compra completada! Orden #{$orderId} - Total: {$total} ⛧");
-    header('Location: /profile');
+    header('Location: /?sec=orders');
     exit;
 
 } catch (Exception $e) {
     $pdo->rollBack();
     
     Toast::error('Error al procesar la compra: ' . $e->getMessage());
-    header('Location: /cart');
+    header('Location: /?sec=cart');
     exit;
 }

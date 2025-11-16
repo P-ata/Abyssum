@@ -2,10 +2,11 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../classes/User.php';
+require_once __DIR__ . '/../classes/Toast.php';
 
 // Solo POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /register');
+    header('Location: /?sec=register');
     exit;
 }
 
@@ -15,27 +16,27 @@ $displayName = trim($_POST['display_name'] ?? '');
 
 // Validaciones
 if (empty($email) || empty($password) || empty($displayName)) {
-    $_SESSION['error'] = 'Todos los campos son obligatorios';
-    header('Location: /register');
+    Toast::error('Todos los campos son obligatorios');
+    header('Location: /?sec=register');
     exit;
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $_SESSION['error'] = 'Email inválido';
-    header('Location: /register');
+    Toast::error('Email inválido');
+    header('Location: /?sec=register');
     exit;
 }
 
 if (strlen($password) < 6) {
-    $_SESSION['error'] = 'La contraseña debe tener al menos 6 caracteres';
-    header('Location: /register');
+    Toast::error('La contraseña debe tener al menos 6 caracteres');
+    header('Location: /?sec=register');
     exit;
 }
 
 // Verificar si el email ya existe
 if (User::findByEmail($email)) {
-    $_SESSION['error'] = 'Este email ya está registrado';
-    header('Location: /register');
+    Toast::error('Este email ya está registrado');
+    header('Location: /?sec=register');
     exit;
 }
 
@@ -53,12 +54,12 @@ try {
     $_SESSION['user_name'] = $displayName;
     $_SESSION['is_admin'] = false;
     
-    $_SESSION['success'] = '¡Cuenta creada exitosamente!';
-    header('Location: /');
+    Toast::success('¡Cuenta creada exitosamente!');
+    header('Location: /?sec=abyssum');
     exit;
     
 } catch (Exception $e) {
     $_SESSION['error'] = 'Error al crear la cuenta. Intentá de nuevo.';
-    header('Location: /register');
+    header('Location: /?sec=register');
     exit;
 }

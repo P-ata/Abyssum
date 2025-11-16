@@ -1,0 +1,220 @@
+<?php
+require_once BASE_PATH . '/classes/Pact.php';
+require_once BASE_PATH . '/classes/Demon.php';
+require_once BASE_PATH . '/classes/Category.php';
+require_once BASE_PATH . '/classes/Cart.php';
+require_once BASE_PATH . '/classes/Order.php';
+require_once BASE_PATH . '/classes/Toast.php';
+
+// Obtener ID del pacto
+$pactId = isset($_GET['pact_id']) ? (int)$_GET['pact_id'] : null;
+
+if (!$pactId) {
+    header('Location: /?sec=pacts');
+    exit;
+}
+
+// Obtener el pacto
+$pact = Pact::find($pactId);
+
+if (!$pact) {
+    Toast::error('Pacto no encontrado');
+    header('Location: /?sec=pacts');
+    exit;
+}
+
+// Obtener el demonio
+$pdo = DbConnection::get();
+$stmtDemon = $pdo->prepare('SELECT id, name FROM demons WHERE id = ?');
+$stmtDemon->execute([$pact->demon_id]);
+$demon = $stmtDemon->fetch(PDO::FETCH_ASSOC);
+$demonName = $demon ? $demon['name'] : 'Desconocido';
+
+// Obtener imagen
+$pactImage = null;
+if ($pact->image_file_id) {
+    $stmt = $pdo->prepare('SELECT filename FROM files WHERE id = ?');
+    $stmt->execute([$pact->image_file_id]);
+    $file = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($file) {
+        $pactImage = '/assets/img/' . $file['filename'];
+    }
+}
+
+// Obtener categorías del pacto
+$categories = $pact->categories();
+
+// Verificar si el usuario ya compró este pacto
+$isPurchased = false;
+$inCart = false;
+if (isset($_SESSION['user_id'])) {
+    $purchasedPactIds = Order::getPurchasedPactIds((int)$_SESSION['user_id']);
+    $isPurchased = in_array($pact->id, $purchasedPactIds);
+    $inCart = Cart::has($pact->id);
+}
+?>
+
+<div class="min-h-screen bg-black relative overflow-hidden py-20 px-4 font-mono">
+  <!-- Ambient background grid & glow -->
+  <div class="pointer-events-none fixed inset-0 opacity-5">
+    <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
+  </div>
+  <div class="pointer-events-none fixed top-0 left-0 w-96 h-96 rounded-full blur-3xl opacity-20" style="background: radial-gradient(circle at center, rgba(251,191,36,0.45), transparent 70%);"></div>
+  <div class="pointer-events-none fixed bottom-0 right-0 w-[28rem] h-[28rem] rounded-full blur-3xl opacity-10" style="background: radial-gradient(circle at center, rgba(251,191,36,0.35), transparent 70%);"></div>
+
+  <div class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 relative z-10">
+    
+    <!-- Botón volver -->
+    <div class="mb-8 pact-back">
+      <a href="/?sec=pacts" class="inline-flex items-center gap-2 text-amber-500 hover:text-amber-400 transition-colors">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span class="font-bold text-sm uppercase tracking-wider">Volver a Pactos</span>
+      </a>
+    </div>
+
+    <!-- Grid principal -->
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:items-start">
+      
+      <!-- Columna izquierda: Imagen (2/5 del ancho) -->
+      <div class="pact-image lg:col-span-2 lg:sticky lg:top-24">
+        <div class="bg-black/70 border-2 border-amber-600/40 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl shadow-amber-500/20">
+          <?php if ($pactImage): ?>
+            <img 
+              src="<?= htmlspecialchars($pactImage) ?>" 
+              alt="<?= htmlspecialchars($pact->name) ?>"
+              class="w-full object-cover"
+              onerror="this.src='/assets/img/pacts/16861331.png'"
+            >
+          <?php else: ?>
+            <div class="flex items-center justify-center bg-black/60 w-full aspect-square">
+              <i class="fa-solid fa-scroll text-amber-600/30 text-9xl"></i>
+            </div>
+          <?php endif; ?>
+        </div>
+      </div>
+
+      <!-- Columna derecha: Información (3/5 del ancho) -->
+      <div class="pact-info space-y-6 lg:col-span-3">
+        
+        <!-- Título y Demonio -->
+        <div class="pact-header">
+          <h1 class="text-5xl font-bold text-amber-500 mb-3 tracking-wider"><?= htmlspecialchars($pact->name) ?></h1>
+          <p class="text-amber-600/80 text-lg flex items-center gap-2">
+            <i class="fa-solid fa-skull"></i>
+            <span>Demonio: <strong class="text-amber-500"><?= htmlspecialchars($demonName) ?></strong></span>
+          </p>
+        </div>
+
+        <!-- Categorías -->
+        <?php if (!empty($categories)): ?>
+          <div class="pact-categories">
+            <h3 class="text-amber-500 text-sm font-bold uppercase tracking-wider mb-2">
+              <i class="fa-solid fa-tags mr-2"></i>Categorías
+            </h3>
+            <div class="flex flex-wrap gap-2">
+              <?php foreach ($categories as $category): ?>
+                <span class="px-3 py-1 bg-amber-600/20 border border-amber-600/40 rounded-full text-amber-400 text-xs font-mono">
+                  <?= htmlspecialchars($category->display_name) ?>
+                </span>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        <?php endif; ?>
+
+        <!-- Resumen -->
+        <?php if ($pact->summary): ?>
+          <div class="pact-summary bg-black/70 border border-amber-600/30 rounded-xl p-6">
+            <h3 class="text-amber-500 text-sm font-bold uppercase tracking-wider mb-3">
+              <i class="fa-solid fa-file-lines mr-2"></i>Resumen
+            </h3>
+            <p class="text-amber-300/90 text-sm leading-relaxed">
+              <?= nl2br(htmlspecialchars($pact->summary)) ?>
+            </p>
+          </div>
+        <?php endif; ?>
+
+        <!-- Detalles técnicos -->
+        <div class="pact-details grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- Duración -->
+          <?php if ($pact->duration): ?>
+            <div class="bg-black/70 border border-amber-600/30 rounded-xl p-4">
+              <h4 class="text-amber-500 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-clock"></i>Duración
+              </h4>
+              <p class="text-amber-300 text-sm font-mono"><?= htmlspecialchars($pact->duration) ?></p>
+            </div>
+          <?php endif; ?>
+
+          <!-- Cooldown -->
+          <?php if ($pact->cooldown): ?>
+            <div class="bg-black/70 border border-amber-600/30 rounded-xl p-4">
+              <h4 class="text-amber-500 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-hourglass-half"></i>Cooldown
+              </h4>
+              <p class="text-amber-300 text-sm font-mono"><?= htmlspecialchars($pact->cooldown) ?></p>
+            </div>
+          <?php endif; ?>
+
+          <!-- Precio -->
+          <div class="bg-black/70 border border-amber-600/30 rounded-xl p-4 md:col-span-2">
+            <h4 class="text-amber-500 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
+              <i class="fa-solid fa-coins"></i>Precio
+            </h4>
+            <p class="text-amber-500 text-3xl font-bold font-mono">
+              <?= $pact->price_credits ?> <span class="text-xl">CR</span>
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Limitaciones -->
+        <?php if (!empty($pact->limitations)): ?>
+          <div class="pact-limitations bg-black/70 border border-amber-600/30 rounded-xl p-6">
+            <h3 class="text-amber-500 text-sm font-bold uppercase tracking-wider mb-3">
+              <i class="fa-solid fa-exclamation-triangle mr-2"></i>Limitaciones
+            </h3>
+            <ul class="space-y-2">
+              <?php foreach ($pact->limitations as $limitation): ?>
+                <li class="text-amber-300/90 text-sm flex items-start gap-2">
+                  <i class="fa-solid fa-circle text-amber-600/50 text-[6px] mt-1.5"></i>
+                  <span><?= htmlspecialchars($limitation) ?></span>
+                </li>
+              <?php endforeach; ?>
+            </ul>
+          </div>
+        <?php endif; ?>
+
+        <!-- Botones de acción -->
+        <div class="pact-actions flex flex-col sm:flex-row gap-3">
+          <?php if ($isPurchased): ?>
+            <div class="flex-1 bg-green-900/30 text-green-400 text-sm font-bold py-3 px-6 rounded-lg border border-green-500/50 text-center flex items-center justify-center gap-2">
+              <i class="fa-solid fa-check-circle"></i>
+              YA ADQUIRIDO
+            </div>
+          <?php elseif ($inCart): ?>
+            <div class="flex-1 bg-blue-900/30 text-blue-400 text-sm font-bold py-3 px-6 rounded-lg border border-blue-500/50 text-center flex items-center justify-center gap-2">
+              <i class="fa-solid fa-shopping-cart"></i>
+              EN CARRITO
+            </div>
+          <?php else: ?>
+            <form action="/?sec=actions&action=add-to-cart" method="POST" class="flex-1">
+              <input type="hidden" name="pact_id" value="<?= $pact->id ?>">
+              <button type="submit" class="w-full bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 text-sm font-bold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-cart-plus"></i>
+                AGREGAR AL CARRITO
+              </button>
+            </form>
+          <?php endif; ?>
+          
+          <a href="/?sec=pacts" class="bg-black/60 hover:bg-black/80 border border-amber-600/40 text-amber-600 hover:text-amber-500 text-sm font-bold py-3 px-6 rounded-lg transition-all text-center">
+            VER MÁS PACTOS
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

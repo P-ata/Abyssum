@@ -29,6 +29,22 @@ class Category
         return array_map([self::class, 'fromRow'], $rows ?: []);
     }
 
+    /**
+     * Get all categories excluding demon names (for filters)
+     * @return Category[]
+     */
+    public static function allExcludingDemons(): array
+    {
+        $pdo = DbConnection::get();
+        $sql = 'SELECT c.slug, c.display_name, c.created_at 
+                FROM categories c
+                WHERE c.slug NOT IN (SELECT slug FROM demons)
+                ORDER BY c.display_name';
+        $stmt = $pdo->query($sql);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map([self::class, 'fromRow'], $rows ?: []);
+    }
+
     public static function find(string $slug): ?self
     {
         $pdo = DbConnection::get();

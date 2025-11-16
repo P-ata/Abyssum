@@ -156,7 +156,7 @@ foreach ($sections as $value) {
 ?>
 <?php require BASE_PATH . '/views/partials/head.php'; ?>
 <?php require BASE_PATH . '/views/partials/header.php'; ?>
-<main>
+<main class="flex-grow">
     <?php require BASE_PATH . '/views/' . $view . '.php'; ?>
 </main>
 <?php require BASE_PATH . '/views/partials/footer.php'; ?>

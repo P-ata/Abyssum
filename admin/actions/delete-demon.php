@@ -15,7 +15,7 @@ $id = $_GET['id'] ?? null;
 
 if ($id === null) {
     Toast::error('ID de demonio requerido');
-    header('Location: /admin/dashboard');
+    header('Location: /?sec=admin&page=dashboard');
     exit;
 }
 
@@ -31,5 +31,5 @@ try {
     Toast::error('Error al eliminar el demonio: ' . $e->getMessage());
 }
 
-header('Location: /admin/dashboard');
+header('Location: /?sec=admin&page=dashboard');
 exit;

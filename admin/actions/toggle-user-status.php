@@ -8,7 +8,7 @@ require_once __DIR__ . '/../classes/Toast.php';
 requireAdmin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-	header('Location: /admin/users');
+	header('Location: /?sec=admin&page=users');
 	exit;
 }
 
@@ -17,18 +17,18 @@ $active = (int)($_POST['active'] ?? 0);
 
 if ($userId === 0) {
 	Toast::error('ID de usuario inválido');
-	header('Location: /admin/users');
+	header('Location: /?sec=admin&page=users');
 	exit;
 }
 
 if ($userId === $_SESSION['admin_id']) {
 	Toast::error('No puedes desactivar tu propia cuenta');
-	header('Location: /admin/users');
+	header('Location: /?sec=admin&page=users');
 	exit;
 }
 
 User::setActive($userId, (bool)$active);
 
 Toast::success($active ? 'Usuario activado correctamente' : 'Usuario desactivado correctamente');
-header('Location: /admin/users');
+header('Location: /?sec=admin&page=users');
 exit;

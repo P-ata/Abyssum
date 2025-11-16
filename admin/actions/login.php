@@ -11,13 +11,13 @@ require_once __DIR__ . '/../../classes/User.php';
 
 // Solo aceptar POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /admin/login');
+    header('Location: /?sec=admin&page=login');
     exit;
 }
 
 // Si ya está logueado, redirigir al dashboard
 if (isAdmin()) {
-    header('Location: /admin/dashboard');
+    header('Location: /?sec=admin&page=dashboard');
     exit;
 }
 
@@ -29,21 +29,21 @@ $user = User::verifyPassword($email, $password);
 
 if (!$user) {
     $_SESSION['login_error'] = 'Email o contraseña incorrectos';
-    header('Location: /admin/login');
+    header('Location: /?sec=admin&page=login');
     exit;
 }
 
 // Verificar si está activo
 if (!$user->is_active) {
     $_SESSION['login_error'] = 'Tu cuenta está desactivada';
-    header('Location: /admin/login');
+    header('Location: /?sec=admin&page=login');
     exit;
 }
 
 // Verificar si es admin
 if (!$user->isAdmin()) {
     $_SESSION['login_error'] = 'No tienes permisos de administrador';
-    header('Location: /admin/login');
+    header('Location: /?sec=admin&page=login');
     exit;
 }
 
@@ -55,5 +55,5 @@ $_SESSION['admin_email'] = $user->email;
 // Actualizar último login
 User::updateLastLogin($user->id);
 
-header('Location: /admin/dashboard');
+header('Location: /?sec=admin&page=dashboard');
 exit;

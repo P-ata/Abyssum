@@ -5,7 +5,7 @@ $demonSlug = isset($_GET['id']) ? trim($_GET['id']) : '';
 $demon = $demonSlug !== '' ? Demon::find($demonSlug) : null;
 
 if (!$demon) {
-    header('Location: /admin/dashboard');
+    header('Location: /?sec=admin&page=dashboard');
     exit;
 }
 

@@ -81,6 +81,18 @@ class Order
     }
 
     /**
+     * Contar órdenes de un usuario
+     */
+    public static function countByUser(int $userId): int
+    {
+        $pdo = DbConnection::get();
+        $sql = 'SELECT COUNT(*) FROM orders WHERE user_id = ?';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$userId]);
+        return (int)$stmt->fetchColumn();
+    }
+
+    /**
      * Encontrar orden por ID
      */
     public static function find(int $id): ?self
