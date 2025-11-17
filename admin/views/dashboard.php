@@ -9,14 +9,12 @@ $totalDemons = count($demons);
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden px-6 py-12 font-mono">
-	<!-- Ambient background grid & glow -->
 	<div class="pointer-events-none fixed inset-0 opacity-5">
 		<div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
 	</div>
 	<div class="pointer-events-none fixed top-0 left-0 w-96 h-96 rounded-full blur-3xl opacity-20" style="background: radial-gradient(circle at center, rgba(251,191,36,0.45), transparent 70%);"></div>
 	<div class="pointer-events-none fixed bottom-0 right-0 w-[28rem] h-[28rem] rounded-full blur-3xl opacity-10" style="background: radial-gradient(circle at center, rgba(251,191,36,0.35), transparent 70%);"></div>
 
-	<!-- Header / Title Row -->
 	<div class="max-w-7xl mx-auto relative z-10">
 		<?php if (isset($_SESSION['flash_success'])): ?>
 			<div class="mb-6 p-4 bg-green-900/30 border border-green-600/50 rounded text-green-400 text-sm">
@@ -39,7 +37,7 @@ $totalDemons = count($demons);
 				</h1>
 			</div>
 			<div class="flex flex-col sm:flex-row gap-4 w-full lg:w-auto" id="quickStats">
-				<!-- Stat card -->
+				<!-- stats cards -->
 				<div class="group bg-black/70 border border-amber-600/30 rounded-xl p-4 flex-1 min-w-[180px] backdrop-filter" data-stat>
 					<div class="text-xs uppercase tracking-widest text-amber-600/70 mb-1">TOTAL PACTOS</div>
 					<div class="flex items-end justify-between">
@@ -72,8 +70,8 @@ $totalDemons = count($demons);
 				</div>
 			</div>
 		</div>
-
-		<!-- Toolbar Row -->
+		
+		<!-- herramientas -->
 		<div class="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between mb-10" id="toolbar">
 			<div class="flex items-center gap-3 w-full md:w-auto">
 				<div class="relative flex-1 md:flex-none md:w-72">
@@ -94,7 +92,7 @@ $totalDemons = count($demons);
 			</div>
 		</div>
 
-		<!-- Pactos Grid -->
+		<!-- pactos -->
 		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4" id="pactsGrid">
 			<?php if (empty($pacts)): ?>
 				<div class="md:col-span-2 lg:col-span-4 bg-black/70 border border-amber-600/30 rounded-xl p-6 text-amber-400 text-center">
@@ -106,7 +104,7 @@ $totalDemons = count($demons);
 				?>
 					<div class="group relative bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden hover:shadow-[0_0_25px_-4px_rgba(251,191,36,0.35)] transition-all pact-card"
 						 data-searchable="<?= htmlspecialchars(strtolower($p->name . ' ' . ($d?->name ?? ''))) ?>">
-				<!-- Image -->
+				<!-- imagen -->
 				<?php if (!empty($p->image_file_id)): ?>
 					<div class="w-full overflow-hidden bg-black/50 border-b border-amber-600/20">
 						<img src="/?file_id=<?= $p->image_file_id ?>" alt="<?= htmlspecialchars($p->name) ?>" class="w-full h-full object-cover" />
@@ -129,9 +127,9 @@ $totalDemons = count($demons);
 					</div>
 					<p class="text-xs leading-relaxed text-gray-400 mb-4"><?= htmlspecialchars(substr($p->summary ?? '', 0, 120)) ?><?= strlen($p->summary ?? '') > 120 ? '...' : '' ?></p>
 					<div class="flex gap-2">
-							<a href="/?sec=admin&page=pact-detail&id=<?= urlencode((string)$p->id) ?>&return_to=dashboard" class="flex-1 text-xs px-2 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">VER</a>
-							<a href="/?sec=admin&page=edit-pact&id=<?= urlencode($p->id) ?>" class="flex-1 text-xs px-2 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">EDITAR</a>
-							<a href="/?sec=admin&action=delete-pact&id=<?= urlencode($p->id) ?>" onclick="return confirm('¿Eliminar este pacto?')" class="flex-1 text-xs px-2 py-1.5 rounded border border-red-600/40 text-red-500 bg-black/50 hover:bg-red-600/20 transition text-center">ELIMINAR</a>
+					<a href="/?sec=admin&page=pact-detail&id=<?= urlencode((string)$p->id) ?>&return_to=dashboard" class="flex-1 text-xs px-2 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">VER</a>
+						<a href="/?sec=admin&page=edit-pact&id=<?= urlencode($p->id) ?>" class="flex-1 text-xs px-2 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">EDITAR</a>
+						<a href="#" onclick="showDeleteModal('/?sec=admin&action=delete-pact&id=<?= urlencode($p->id) ?>', '¿Eliminar el pacto <?= htmlspecialchars($p->name) ?>?'); return false;" class="flex-1 text-xs px-2 py-1.5 rounded border border-red-600/40 text-red-500 bg-black/50 hover:bg-red-600/20 transition text-center">ELIMINAR</a>
 							</div>
 						</div>
 						<div class="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 group-hover:w-full transition-all"></div>
@@ -140,7 +138,7 @@ $totalDemons = count($demons);
 			<?php endif; ?>
 		</div>
 
-		<!-- Demons Section -->
+		<!-- demonios -->
 		<?php if (!empty($demons)): ?>
 			<div class="mt-16">
 				<div class="flex items-center justify-between mb-8">
@@ -155,22 +153,18 @@ $totalDemons = count($demons);
 							<div class="w-full overflow-hidden bg-black/50 border-b border-amber-600/20">
 								<img src="/?file_id=<?= $d->image_file_id ?>" alt="<?= htmlspecialchars($d->name) ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
 							</div>
-						<?php else: ?>
-							<div class="w-full h-32 flex items-center justify-center bg-gradient-to-br from-black/80 to-amber-950/20 border-b border-amber-600/20">
-									<svg class="w-12 h-12 text-amber-600/30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-									</svg>
-								</div>
-							<?php endif; ?>
-							
-							<div class="p-5">
+					<?php else: ?>
+						<div class="w-full h-32 flex items-center justify-center bg-gradient-to-br from-black/80 to-amber-950/20 border-b border-amber-600/20">
+							<i class="fas fa-skull text-5xl text-amber-600/30"></i>
+						</div>
+					<?php endif; ?>							<div class="p-5">
 								<div class="text-sm text-amber-500 font-semibold mb-1"><?= htmlspecialchars($d->name) ?></div>
 								<div class="text-xs text-amber-600/70 mb-2">ID: <?= htmlspecialchars($d->slug) ?></div>
 						<div class="text-xs text-gray-400 mb-3 line-clamp-2"><?= htmlspecialchars(substr($d->summary ?? '', 0, 80)) ?><?= strlen($d->summary ?? '') > 80 ? '...' : '' ?></div>
 						<div class="flex gap-2">
-							<a href="/?sec=admin&page=demon-detail&id=<?= urlencode($d->slug) ?>&return_to=dashboard" class="flex-1 text-xs px-3 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">VER</a>
-							<a href="/?sec=admin&page=edit-demon&id=<?= urlencode($d->slug) ?>" class="flex-1 text-xs px-3 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">EDITAR</a>
-									<a href="/?sec=admin&action=delete-demon&id=<?= urlencode($d->slug) ?>" onclick="return confirm('¿Eliminar este demonio?')" class="flex-1 text-xs px-3 py-1.5 rounded border border-red-600/40 text-red-500 bg-black/50 hover:bg-red-600/20 transition text-center">ELIMINAR</a>
+						<a href="/?sec=admin&page=demon-detail&id=<?= urlencode($d->slug) ?>&return_to=dashboard" class="flex-1 text-xs px-3 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">VER</a>
+						<a href="/?sec=admin&page=edit-demon&id=<?= urlencode($d->slug) ?>" class="flex-1 text-xs px-3 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">EDITAR</a>
+									<a href="#" onclick="showDeleteModal('/?sec=admin&action=delete-demon&id=<?= urlencode($d->slug) ?>', '¿Eliminar el demonio <?= htmlspecialchars($d->name) ?>?'); return false;" class="flex-1 text-xs px-3 py-1.5 rounded border border-red-600/40 text-red-500 bg-black/50 hover:bg-red-600/20 transition text-center">ELIMINAR</a>
 								</div>
 							</div>
 						</div>
@@ -178,8 +172,6 @@ $totalDemons = count($demons);
 				</div>
 			</div>
 		<?php endif; ?>
-
-		<!-- Footer info strip -->
 		<div class="mt-14 text-center text-xs tracking-widest text-amber-600/50">
 			// DATABASE_DRIVEN :: ABYSSUM_ADMIN :: v1.0
 		</div>
@@ -187,7 +179,7 @@ $totalDemons = count($demons);
 </div>
 
 <script>
-// Fallback: ensure pact cards stay visible even if GSAP fails
+// si falla gsap que la cards se vean
 document.querySelectorAll('.pact-card').forEach(el => {
   el.style.opacity = '1';
   el.style.transform = 'translateY(0)';

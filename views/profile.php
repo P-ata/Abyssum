@@ -12,7 +12,6 @@ if (!$user) {
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden py-20 px-4 font-mono">
-    <!-- Ambient background grid & glow -->
     <div class="pointer-events-none fixed inset-0 opacity-5">
         <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
     </div>

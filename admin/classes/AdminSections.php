@@ -78,3 +78,4 @@ class AdminSections
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 }
+

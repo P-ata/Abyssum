@@ -1,6 +1,5 @@
 import { gsap } from 'gsap';
 
-console.log('[EDIT-PACT] Script cargado - versión 2.0 con X pequeña');
 
 // edit-pact page interactions
 (() => {
@@ -8,7 +7,7 @@ console.log('[EDIT-PACT] Script cargado - versión 2.0 con X pequeña');
   const onReady = (fn) => (document.readyState !== 'loading') ? fn() : document.addEventListener('DOMContentLoaded', fn);
 
   onReady(() => {
-    // Entrance animations
+    // Animar entrada de elementos
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     const title = $('#epTitle');
     if (title && title.children.length) {
@@ -18,7 +17,7 @@ console.log('[EDIT-PACT] Script cargado - versión 2.0 con X pequeña');
         .from('#editPactForm .form-section', { y: 20, opacity: 0, stagger: 0.06, duration: 0.4 }, '-=0.3');
     }
 
-    // Drag & Drop image uploader (single image for pact)
+    // Cargador de imágenes con arrastrar y soltar
     const dropZone  = $('#dropZone');
     const fileInput = $('#fileInput');
     const thumbs    = $('#thumbs');
@@ -38,13 +37,13 @@ console.log('[EDIT-PACT] Script cargado - versión 2.0 con X pequeña');
       }
     };
 
-    // Prevent defaults on drag events
+    // Evitar comportamiento predeterminado en eventos de arrastre
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(evt => {
       dropZone.addEventListener(evt, prevent, false);
       document.body.addEventListener(evt, prevent, false);
     });
 
-    // Highlight on drag
+    // Resaltar al arrastrar
     ['dragenter', 'dragover'].forEach(evt => {
       dropZone.addEventListener(evt, () => setHover(true), false);
     });
@@ -52,7 +51,7 @@ console.log('[EDIT-PACT] Script cargado - versión 2.0 con X pequeña');
       dropZone.addEventListener(evt, () => setHover(false), false);
     });
 
-    // Handle drop
+    // Manejar soltar archivo
     dropZone.addEventListener('drop', (e) => {
       const files = e.dataTransfer.files;
       if (files.length > 0) {
@@ -63,7 +62,7 @@ console.log('[EDIT-PACT] Script cargado - versión 2.0 con X pequeña');
       }
     });
 
-    // Click to browse
+    // Abrir navegador al hacer clic
     dropZone.addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', (e) => {
       if (e.target.files.length > 0) handleFile(e.target.files[0]);
@@ -75,21 +74,19 @@ console.log('[EDIT-PACT] Script cargado - versión 2.0 con X pequeña');
       dt.items.add(file);
       fileInput.files = dt.files;
 
-      // Hide current image preview and show new upload preview
+      // Ocultar preview actual y mostrar nueva imagen
       if (currentPreview) {
         currentPreview.style.display = 'none';
       }
 
-      // Show new thumbnail
+      // Mostrar nueva miniatura
       thumbs.innerHTML = '';
       const reader = new FileReader();
       reader.onload = (ev) => {
-        console.log('[EDIT-PACT] Creando preview de nueva imagen');
         thumbs.innerHTML = ''; // Clear previous
         
         const wrapper = document.createElement('div');
         wrapper.className = 'relative group border border-amber-600/30 rounded-lg overflow-hidden';
-        console.log('[EDIT-PACT] Wrapper className:', wrapper.className);
         
         const img = document.createElement('img');
         img.src = ev.target.result;
@@ -100,7 +97,6 @@ console.log('[EDIT-PACT] Script cargado - versión 2.0 con X pequeña');
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.className = 'absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500';
-        console.log('[EDIT-PACT] Botón className:', removeBtn.className);
         removeBtn.innerHTML = `
           <svg class="w-7 h-7 text-amber-500 drop-shadow-lg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>

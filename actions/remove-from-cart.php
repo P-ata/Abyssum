@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../classes/Cart.php';
 require_once __DIR__ . '/../admin/classes/Toast.php';
 
+// solo por post
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /?sec=cart');
     exit;
@@ -19,7 +20,7 @@ if ($pactId <= 0) {
 
 Cart::remove($pactId);
 
-// Sincronizar con BD si hay usuario logueado
+// se sincroniza con la BD
 if (isset($_SESSION['user_id'])) {
     Cart::syncToDatabase((int)$_SESSION['user_id']);
 }

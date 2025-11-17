@@ -6,13 +6,14 @@ require_once __DIR__ . '/../classes/DbConnection.php';
 require_once __DIR__ . '/../classes/Toast.php';
 require_once __DIR__ . '/../includes/auth.php';
 
-// Requiere estar logueado
+// logueado para carrito
 if (!isLoggedIn()) {
     Toast::error('Debes iniciar sesión para completar la compra');
     header('Location: /?sec=login&return=' . urlencode('/?sec=cart'));
     exit;
 }
 
+//solo por post
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /?sec=cart');
     exit;
@@ -32,7 +33,7 @@ try {
     $pdo = DbConnection::get();
     $pdo->beginTransaction();
 
-    // 1. Crear el carrito en la tabla carts
+    // se crea el cart 
     $stmtCart = $pdo->prepare('
         INSERT INTO carts (user_id, status, total_credits, currency)
         VALUES (?, ?, ?, ?)
@@ -40,7 +41,7 @@ try {
     $stmtCart->execute([$userId, 'completed', $total, 'CREDITOS']);
     $cartId = (int)$pdo->lastInsertId();
 
-    // 2. Crear la orden
+    // se crea la orden
     $stmtOrder = $pdo->prepare('
         INSERT INTO orders (user_id, cart_id, status, total_credits, currency, placed_at, paid_at)
         VALUES (?, ?, ?, ?, ?, NOW(), NOW())
@@ -48,13 +49,13 @@ try {
     $stmtOrder->execute([$userId, $cartId, 'paid', $total, 'CREDITOS']);
     $orderId = (int)$pdo->lastInsertId();
 
-    // 3. Insertar items del carrito
+    // se insertan items del carrito
     $stmtCartItem = $pdo->prepare('
         INSERT INTO cart_items (cart_id, pact_id, quantity, unit_price_credits, subtotal_credits)
         VALUES (?, ?, 1, ?, ?)
     ');
 
-    // 4. Insertar items de la orden (con snapshot del pacto)
+    // se insertan items de la orden (con snapshot del pacto para que no se cambie)
     $stmtOrderItem = $pdo->prepare('
         INSERT INTO order_items (order_id, pact_id, unit_price_credits, subtotal_credits, snapshot)
         VALUES (?, ?, ?, ?, ?)
@@ -63,15 +64,15 @@ try {
     foreach ($pacts as $pact) {
         $price = $pact->price_credits;
         
-        // Insertar en cart_items
+        // se insertan en cart_items
         $stmtCartItem->execute([$cartId, $pact->id, $price, $price]);
         
-        // Obtener el nombre del demonio
+        // se obtiene el nombre del demonio
         $stmtDemon = $pdo->prepare('SELECT name FROM demons WHERE id = ?');
         $stmtDemon->execute([$pact->demon_id]);
         $demonName = $stmtDemon->fetchColumn();
         
-        // Crear snapshot JSON del pacto
+        // aca se crea la snapshot JSON del pacto
         $snapshot = json_encode([
             'name' => $pact->name,
             'summary' => $pact->summary,
@@ -83,13 +84,13 @@ try {
             'image_file_id' => $pact->image_file_id
         ]);
         
-        // Insertar en order_items
+        // se inserta ahora si en order_items
         $stmtOrderItem->execute([$orderId, $pact->id, $price, $price, $snapshot]);
     }
 
     $pdo->commit();
 
-    // Vaciar el carrito de la sesión
+    // se vacia el carrito de la sesion
     Cart::clear();
 
     Toast::success("¡Compra completada! Orden #{$orderId} - Total: {$total} ⛧");

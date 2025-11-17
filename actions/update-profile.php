@@ -17,7 +17,7 @@ $userId = $_SESSION['user_id'];
 $email = trim($_POST['email'] ?? '');
 $displayName = trim($_POST['display_name'] ?? '');
 
-// Validaciones
+// validaciones
 if (empty($email) || empty($displayName)) {
     Toast::error('Todos los campos son obligatorios');
     header('Location: /?sec=profile');
@@ -30,7 +30,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-// Verificar si el email ya existe (y no es el del usuario actual)
+// se verifica si el email ya existe (y no es el del usuario actual)
 $existingUser = User::findByEmail($email);
 if ($existingUser && $existingUser->id !== $userId) {
     Toast::error('Este email ya está en uso por otra cuenta');
@@ -43,7 +43,7 @@ try {
     $stmt = $pdo->prepare('UPDATE users SET email = ?, display_name = ? WHERE id = ?');
     $stmt->execute([$email, $displayName, $userId]);
     
-    // Actualizar sesión
+    // actualizamos la sesión
     $_SESSION['email'] = $email;
     $_SESSION['user_name'] = $displayName;
     

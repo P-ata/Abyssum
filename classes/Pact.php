@@ -52,7 +52,7 @@ class Pact
     }
 
     /**
-     * Filter pacts by multiple criteria
+     * filtrar pactos por varios criterios
      * @param array<string, mixed> $filters
      * @return Pact[]
      */
@@ -65,20 +65,20 @@ class Pact
         $params = [];
         $joins = [];
 
-        // Filter by demon
+        // filtrar por demonio
         if (!empty($filters['demon_id'])) {
             $where[] = 'p.demon_id = ?';
             $params[] = (int)$filters['demon_id'];
         }
 
-        // Filter by category
+        // filtrar por categoría
         if (!empty($filters['category'])) {
             $joins[] = 'INNER JOIN pact_categories pc ON p.id = pc.pact_id';
             $where[] = 'pc.category_slug = ?';
             $params[] = $filters['category'];
         }
 
-        // Price range
+        // rango de precios
         if (isset($filters['min_price'])) {
             $where[] = 'p.price_credits >= ?';
             $params[] = (int)$filters['min_price'];
@@ -88,7 +88,7 @@ class Pact
             $params[] = (int)$filters['max_price'];
         }
 
-        // Build SQL
+        // construir SQL
         if (!empty($joins)) {
             $sql .= ' ' . implode(' ', $joins);
         }
@@ -96,8 +96,8 @@ class Pact
             $sql .= ' WHERE ' . implode(' AND ', $where);
         }
 
-        // Sorting
-        $orderBy = 'p.created_at DESC'; // Default
+        // ordenar
+        $orderBy = 'p.created_at DESC'; // por defecto
         if (!empty($filters['sort'])) {
             switch ($filters['sort']) {
                 case 'price_asc':
@@ -148,11 +148,11 @@ class Pact
     /**
      * @param array<string, mixed> $data
      */
-    public static function create(array $data): void
+    public static function create(array $data): int
     {
         $pdo = DbConnection::get();
-        $sql = 'INSERT INTO pacts (slug, demon_id, name, summary, duration, cooldown, limitations, price_credits)
-                VALUES (:slug, :demon_id, :name, :summary, :duration, :cooldown, :limitations, :price_credits)';
+        $sql = 'INSERT INTO pacts (slug, demon_id, name, summary, duration, cooldown, limitations, price_credits, image_file_id)
+                VALUES (:slug, :demon_id, :name, :summary, :duration, :cooldown, :limitations, :price_credits, :image_file_id)';
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             ':slug' => $data['slug'] ?? null,
@@ -163,7 +163,10 @@ class Pact
             ':cooldown' => $data['cooldown'] ?? null,
             ':limitations' => isset($data['limitations']) ? json_encode($data['limitations']) : null,
             ':price_credits' => (int)($data['price_credits'] ?? 0),
+            ':image_file_id' => isset($data['image_file_id']) ? (int)$data['image_file_id'] : null,
         ]);
+        
+        return (int)$pdo->lastInsertId();
     }
 
     /**
@@ -173,11 +176,11 @@ class Pact
     {
         $pdo = DbConnection::get();
         
-        // Build dynamic UPDATE based on provided fields
+        // construir UPDATE dinámico 
         $setClauses = [];
         $values = [':id' => $id];
 
-        // All possible fields
+        // Todos los campos posibles
         $fields = [
             'slug', 'demon_id', 'name', 'summary', 'duration', 
             'cooldown', 'price_credits', 'image'
@@ -194,7 +197,7 @@ class Pact
             }
         }
 
-        // Handle limitations JSON field
+        // manejar campo JSON de limitaciones
         if (isset($data['limitations'])) {
             $setClauses[] = 'limitations = :limitations';
             $values[':limitations'] = json_encode($data['limitations']);
@@ -221,6 +224,12 @@ class Pact
 
     public function delete(): void
     {
+        // eliminar imagen asociada si existe
+        if ($this->image_file_id !== null) {
+            require_once __DIR__ . '/../admin/classes/File.php';
+            File::deleteById($this->image_file_id);
+        }
+        
         $pdo = DbConnection::get();
         $stmt = $pdo->prepare('DELETE FROM pacts WHERE id = ?');
         $stmt->execute([$this->id]);

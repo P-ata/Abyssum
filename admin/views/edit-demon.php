@@ -9,20 +9,20 @@ if (!$demon) {
     exit;
 }
 
-// JSON fields already decoded by fromRow()
+// preparar campos JSON
 $aliases = $demon->aliases ?? [];
 $personality = $demon->personality ?? [];
 $weaknesses = $demon->weaknesses_limits ?? [];
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden px-6 py-14 xl:py-16 font-mono">
-  <!-- Ambient background grid & glow -->
+  
   <div class="pointer-events-none fixed inset-0 opacity-5">
     <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.10) 1px, transparent 1px); background-size: 60px 60px;"></div>
   </div>
 
   <div class="max-w-7xl mx-auto relative z-10">
-    <!-- Title -->
+    <!-- titulo -->
     <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-10 mb-14">
       <h1 id="edTitle" class="text-5xl md:text-6xl font-bold tracking-widest leading-tight text-amber-500">
         <span class="block">ABYSSUM</span>
@@ -50,9 +50,9 @@ $weaknesses = $demon->weaknesses_limits ?? [];
       </div>
     <?php endif; ?>
 
-    <!-- Form layout -->
+    <!-- layout -->
     <div class="grid gap-10 xl:gap-16 md:grid-cols-2 items-start">
-      <!-- Left: Media uploader -->
+      <!-- izquierda el drag and drop -->
       <section class="md:col-span-1 space-y-8">
         <div class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden" id="mediaCard">
           <div class="p-6 xl:p-7 border-b border-amber-600/20">
@@ -73,7 +73,7 @@ $weaknesses = $demon->weaknesses_limits ?? [];
                 <p class="text-xs text-amber-600/70 mb-3">IMAGEN ACTUAL:</p>
                 <div class="relative group border border-amber-600/30 rounded-lg overflow-hidden">
                   <img src="/?file_id=<?= $demon->image_file_id ?>" alt="Current" class="h-auto max-h-screen" />
-                  <button type="button" onclick="document.getElementById('currentImagePreview').style.display='none';" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" title="Eliminar imagen">
+                  <button type="button" onclick="document.getElementById('currentImagePreview').style.display='none'; document.getElementById('deleteCurrentImage').value='1';" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" title="Eliminar imagen">
                     <svg class="w-7 h-7 text-amber-500 drop-shadow-lg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
@@ -87,20 +87,21 @@ $weaknesses = $demon->weaknesses_limits ?? [];
         </div>
       </section>
 
-      <!-- Right: Form fields -->
+      <!-- derecha -->
       <section class="md:col-span-1">
         <form action="/?sec=admin&action=edit-demon<?= isset($_GET['return_to']) ? '&return_to=' . htmlspecialchars($_GET['return_to']) : '' ?>" method="post" enctype="multipart/form-data" class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden" id="editDemonForm">
           <input type="hidden" name="id" value="<?= htmlspecialchars($demon->slug) ?>" />
           <input type="hidden" name="current_image_file_id" value="<?= $demon->image_file_id ?? '' ?>" />
+          <input type="hidden" name="delete_current_image" id="deleteCurrentImage" value="0" />
           
-          <!-- Hidden file input -->
+          <!-- input de archivo oculto -->
           <input id="fileInput" name="image" type="file" accept="image/*" class="hidden" aria-label="Seleccionar imagen" />
           
           <div class="p-6 xl:p-7 border-b border-amber-600/20">
             <h2 class="text-amber-500 tracking-widest text-sm">// DATOS DEL DEMONIO</h2>
           </div>
           <div class="p-6 xl:p-8 grid gap-8 md:grid-cols-2">
-            <!-- Basic Info -->
+            <!-- información básica -->
             <div class="md:col-span-2 form-section">
               <label class="block text-xs text-amber-600/70 tracking-widest mb-2">NOMBRE *</label>
               <input required name="name" type="text" value="<?= htmlspecialchars($demon->name) ?>" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 placeholder:text-amber-600/40 focus:outline-none focus:border-amber-500 transition" placeholder="Aurelia" />
@@ -155,7 +156,7 @@ $weaknesses = $demon->weaknesses_limits ?? [];
             </div>
 
             <div class="md:col-span-2 form-section">
-              <label class="block text-xs text-amber-600/70 tracking-widest mb-3">ESTADÍSTICAS (0-100)</label>
+              <label class="block text-xs text-amber-600/70 tracking-widest mb-3">ESTADÍSTICAS (0-10)</label>
               <div class="grid grid-cols-2 gap-4">
                 <div>
                   <label class="block text-xs text-amber-600/50 mb-1">Fuerza</label>
@@ -163,23 +164,23 @@ $weaknesses = $demon->weaknesses_limits ?? [];
                 </div>
                 <div>
                   <label class="block text-xs text-amber-600/50 mb-1">Destreza</label>
-                  <input name="stat_dexterity" type="number" min="0" max="100" value="<?= $demon->stat_dexterity ?? '' ?>" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0-100" />
+                  <input name="stat_dexterity" type="number" min="0" max="10" value="<?= $demon->stat_dexterity ?? '' ?>" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0-10" />
                 </div>
                 <div>
                   <label class="block text-xs text-amber-600/50 mb-1">Inteligencia</label>
-                  <input name="stat_intelligence" type="number" min="0" max="100" value="<?= $demon->stat_intelligence ?? '' ?>" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0-100" />
+                  <input name="stat_intelligence" type="number" min="0" max="10" value="<?= $demon->stat_intelligence ?? '' ?>" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0-10" />
                 </div>
                 <div>
                   <label class="block text-xs text-amber-600/50 mb-1">Salud</label>
-                  <input name="stat_health" type="number" min="0" max="100" value="<?= $demon->stat_health ?? '' ?>" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0-100" />
+                  <input name="stat_health" type="number" min="0" max="10" value="<?= $demon->stat_health ?? '' ?>" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0-10" />
                 </div>
                 <div>
                   <label class="block text-xs text-amber-600/50 mb-1">Reflejos</label>
-                  <input name="stat_reflexes" type="number" min="0" max="100" value="<?= $demon->stat_reflexes ?? '' ?>" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0-100" />
+                  <input name="stat_reflexes" type="number" min="0" max="10" value="<?= $demon->stat_reflexes ?? '' ?>" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0-10" />
                 </div>
                 <div>
                   <label class="block text-xs text-amber-600/50 mb-1">Sigilo</label>
-                  <input name="stat_stealth" type="number" min="0" max="100" value="<?= $demon->stat_stealth ?? '' ?>" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0-100" />
+                  <input name="stat_stealth" type="number" min="0" max="10" value="<?= $demon->stat_stealth ?? '' ?>" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0-10" />
                 </div>
               </div>
             </div>

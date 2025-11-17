@@ -2,14 +2,14 @@
 declare(strict_types=1);
 
 /**
- * Toast notification system using $_SESSION
+ * sistema de toasts
  * 
- * Types: success, info, warning, error
+ * Tipos: success, info, warning, error
  */
 class Toast
 {
     /**
-     * Add a success toast
+     * Añade un toast de éxito
      */
     public static function success(string $message): void
     {
@@ -17,7 +17,7 @@ class Toast
     }
 
     /**
-     * Add an error toast
+     * Añade un toast de error
      */
     public static function error(string $message): void
     {
@@ -25,7 +25,7 @@ class Toast
     }
 
     /**
-     * Add a warning toast
+     * Añade un toast de advertencia
      */
     public static function warning(string $message): void
     {
@@ -33,7 +33,7 @@ class Toast
     }
 
     /**
-     * Add an info toast
+     * Añade un toast de información
      */
     public static function info(string $message): void
     {
@@ -41,10 +41,11 @@ class Toast
     }
 
     /**
-     * Add a toast to the session
+     * Añade un toast a la sesión
      */
     private static function add(string $type, string $message): void
-    {
+    {   
+        // iniciar sesión si no está iniciada
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
@@ -61,10 +62,11 @@ class Toast
     }
 
     /**
-     * Get all toasts and clear them
+     * Obtiene todos los toasts y los limpia
      */
     public static function getAll(): array
-    {
+    {   
+        // iniciar sesión si no está iniciada
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
@@ -76,7 +78,7 @@ class Toast
     }
 
     /**
-     * Check if there are toasts
+     * Verifica si hay toasts
      */
     public static function hasToasts(): bool
     {

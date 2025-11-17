@@ -23,7 +23,7 @@ try {
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden py-20 px-4 font-mono">
-  <!-- Ambient background grid & glow -->
+  
   <div class="pointer-events-none fixed inset-0 opacity-5">
     <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
   </div>
@@ -145,7 +145,7 @@ try {
                     $demonName = $snapshot['demon_name'] ?? null;
                     $imageFileId = $snapshot['image_file_id'] ?? null;
                     
-                    // Si no hay image_file_id en el snapshot, obtenerlo del pacto actual
+                    // si no esta el id de la imagen en el snapshot lo agarramos aca
                     if (!$imageFileId && isset($item['pact_id'])) {
                         $pdo = DbConnection::get();
                         $stmtPact = $pdo->prepare('SELECT image_file_id, demon_id FROM pacts WHERE id = ?');
@@ -153,7 +153,7 @@ try {
                         $pactData = $stmtPact->fetch(PDO::FETCH_ASSOC);
                         if ($pactData) {
                             $imageFileId = $pactData['image_file_id'];
-                            // También obtener el nombre del demonio si no está
+                            // agarramos el nombre del demonio si no esta tambien
                             if (!$demonName && $pactData['demon_id']) {
                                 $stmtDemon = $pdo->prepare('SELECT name FROM demons WHERE id = ?');
                                 $stmtDemon->execute([$pactData['demon_id']]);
@@ -162,7 +162,7 @@ try {
                         }
                     }
                     
-                    // Obtener la imagen desde la base de datos usando image_file_id
+                    // obtenemos la imagen de la base de datos
                     $pactImage = null;
                     if ($imageFileId) {
                         $pdo = DbConnection::get();
@@ -191,7 +191,7 @@ try {
                         </div>
                       <?php endif; ?>
                       
-                      <!-- Información del pacto -->
+                      <!-- información del pacto -->
                       <div class="flex-1 p-4 flex flex-col justify-between">
                         <div>
                           <p class="text-amber-300 font-bold text-lg mb-1"><?= htmlspecialchars($pactName) ?></p>
@@ -212,7 +212,7 @@ try {
                   <?php endforeach; ?>
                 </div>
 
-                <!-- Notas o acciones -->
+                <!-- notas o acciones -->
                 <div class="mt-6 pt-4 border-t border-amber-600/30 flex flex-col md:flex-row justify-between md:items-center gap-4">
                   <?php if ($order->notes): ?>
                     <p class="text-yellow-400 text-sm bg-yellow-600/10 border border-yellow-600/30 rounded px-4 py-2">
@@ -244,10 +244,10 @@ try {
   </div>
 </div>
 
-<!-- Modal de confirmación de cancelación -->
+<!-- modal de confirmación de cancelación -->
 <div id="cancelModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center font-mono">
   <div class="bg-black border-2 border-red-600/40 rounded-xl max-w-md w-full mx-4 overflow-hidden shadow-2xl shadow-red-500/20">
-    <!-- Header -->
+    <!-- header -->
     <div class="bg-red-600/20 border-b border-red-600/40 p-6">
       <h3 class="text-2xl font-bold text-red-400 uppercase tracking-wider flex items-center gap-3">
         <i class="fa-solid fa-triangle-exclamation text-3xl"></i>
@@ -255,7 +255,7 @@ try {
       </h3>
     </div>
     
-    <!-- Body -->
+    <!-- body -->
     <div class="p-6 space-y-4">
       <p class="text-amber-300 text-base">
         ¿Estás seguro que querés cancelar esta orden?
@@ -265,7 +265,7 @@ try {
       </p>
     </div>
     
-    <!-- Footer -->
+    <!-- footer -->
     <div class="bg-amber-600/10 border-t border-amber-600/30 p-6 flex gap-4 justify-end">
       <button 
         type="button" 
@@ -305,15 +305,14 @@ function confirmCancel() {
     document.getElementById('cancelForm' + currentOrderId).submit();
   }
 }
-
-// Cerrar modal al hacer click fuera
+// cerrar modal al hacer click fuera del contenido=
 document.getElementById('cancelModal')?.addEventListener('click', function(e) {
   if (e.target === this) {
     closeCancelModal();
   }
 });
 
-// Cerrar modal con ESC
+// cerrar modal con ESC
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     closeCancelModal();

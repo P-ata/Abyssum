@@ -13,20 +13,20 @@ $demonsMap = [];
 $hasActiveFilters = false;
 
 try {
-    // Inicializar filtros
+    // inicializar filtros
     $pactFilter = new PactFilter();
     $pactFilter->showToastIfNeeded();
 
-    // Obtener pactos filtrados
+    // obtener pactos filtrados
     $pacts = $pactFilter->getPacts();
 
-    // Variable para el template
+    // variable para el template
     $hasActiveFilters = $pactFilter->hasActiveFilters();
 
-    // Pre-cargar todos los demonios de una vez (evita N+1 queries)
+    // pre-cargar todos los demonios
     $demonIds = array_unique(array_filter(array_column($pacts, 'demon_id')));
     if (!empty($demonIds)) {
-        // Convertir a array de enteros
+        // convertir a array de enteros
         $demonIds = array_values(array_map('intval', $demonIds));
         $demons = Demon::findMultiple($demonIds);
         foreach ($demons as $demon) {
@@ -38,10 +38,18 @@ try {
     $pacts = [];
 }
 
-// Obtener todas las categorías para los filtros
+// obtener todas las categorías para los filtros
 $allCategories = Category::allExcludingDemons();
 
-// Obtener pactos ya comprados por el usuario
+// obtener todos los demonios para el dropdown de filtro
+$allDemons = [];
+try {
+    $allDemons = Demon::all();
+} catch (Exception $e) {
+    $allDemons = [];
+}
+
+// obtener pactos ya comprados por el usuario
 $purchasedPactIds = [];
 if (isset($_SESSION['user_id'])) {
     $purchasedPactIds = Order::getPurchasedPactIds((int)$_SESSION['user_id']);
@@ -49,7 +57,6 @@ if (isset($_SESSION['user_id'])) {
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden py-20 px-4 font-mono">
-  <!-- Ambient background grid & glow -->
   <div class="pointer-events-none fixed inset-0 opacity-5">
     <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
   </div>
@@ -58,21 +65,21 @@ if (isset($_SESSION['user_id'])) {
   
   <div class="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 relative z-10">
     
-    <!-- Título -->
+    <!-- título -->
     <div class="text-center mb-6 pacts-title">
       <h1 class="text-6xl font-bold tracking-widest text-amber-500 font-mono">
         PACTOS
       </h1>
     </div>
 
-    <!-- Instrucciones arriba -->
+    <!-- instrucciones arriba -->
     <div class="text-center mb-8 pacts-instructions">
       <p class="text-amber-600/70 text-sm font-mono uppercase tracking-widest">
         // Pasa el cursor sobre un pacto para revelar detalles
       </p>
     </div>
 
-    <!-- Buscador sutil -->
+    <!-- buscador sutil -->
     <div class="mb-6 search-container">
       <div class="max-w-lg mx-auto flex items-center gap-3">
         <div class="relative flex-1">
@@ -83,12 +90,30 @@ if (isset($_SESSION['user_id'])) {
       </div>
     </div>
 
-    <!-- Filtros -->
+    <!-- filtros -->
     <div class="mb-8 bg-black/70 border border-amber-600/30 rounded-xl p-6 filters-container">
-      <form method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <input type="hidden" name="sec" value="pacts">
 
-        <!-- Filtro por Categoría -->
+        <!-- filtro por demonio -->
+        <div class="filter-item group">
+          <label class="block text-amber-500 text-xs font-mono mb-2 uppercase tracking-wider">
+            <i class="fa-solid fa-skull mr-2"></i>Demonio
+          </label>
+          <div class="relative">
+            <select name="demon" class="w-full bg-black/60 border border-amber-600/40 text-amber-300 rounded px-3 py-2 pr-10 text-sm font-mono focus:border-amber-500 focus:outline-none appearance-none cursor-pointer">
+              <option value="">Todos</option>
+              <?php foreach ($allDemons as $demon): ?>
+                <option value="<?= $demon->id ?>" <?= (isset($_GET['demon']) && (int)$_GET['demon'] === $demon->id) ? 'selected' : '' ?>>
+                  <?= htmlspecialchars($demon->name) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+            <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-amber-500/70 text-xs pointer-events-none transition-transform duration-300"></i>
+          </div>
+        </div>
+
+        <!-- filtro por categoría -->
         <div class="filter-item group">
           <label class="block text-amber-500 text-xs font-mono mb-2 uppercase tracking-wider">
             <i class="fa-solid fa-tag mr-2"></i>Categoría
@@ -106,7 +131,7 @@ if (isset($_SESSION['user_id'])) {
           </div>
         </div>
 
-        <!-- Ordenar por -->
+        <!-- ordenar por -->
         <div class="filter-item group">
           <label class="block text-amber-500 text-xs font-mono mb-2 uppercase tracking-wider">
             <i class="fa-solid fa-arrow-down-short-wide mr-2"></i>Ordenar
@@ -124,7 +149,7 @@ if (isset($_SESSION['user_id'])) {
           </div>
         </div>
 
-        <!-- Botones -->
+        <!-- botones -->
         <div class="flex items-end gap-2 filter-buttons">
           <button type="submit" class="flex-1 bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 text-xs font-bold py-2 px-4 rounded font-mono transition-all">
             <i class="fa-solid fa-filter mr-2"></i>FILTRAR
@@ -156,7 +181,7 @@ if (isset($_SESSION['user_id'])) {
         // NO HAY PACTOS DISPONIBLES
       </div>
     <?php else: ?>
-      <!-- Container de las cards -->
+      <!-- container cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         
         <?php foreach ($pacts as $pact): ?>
@@ -166,20 +191,18 @@ if (isset($_SESSION['user_id'])) {
           $categories = $pact->categories();
           $inCart = Cart::has($pact->id);
           
-          // Determinar imagen del pacto
-          // Las imágenes están en: /assets/img/pacts/DemonName/demonslug_numero_pactslug.png
-          // Ejemplo: /assets/img/pacts/Apex/apex_01_overclock_corona.png
+          
           $imagePath = '/assets/img/pacts/16861331.png'; // Fallback
           
           if ($pact->image_file_id) {
-              // Si tiene file_id, usar el sistema de archivos
+              // si tiene file_id, usar el sistema de archivos
               $imagePath = "/?file_id={$pact->image_file_id}";
           } elseif ($demon && $pact->slug) {
-              // Intentar construir ruta basada en patrón
+              // intentar construir ruta basada en patrón
               $demonFolder = ucfirst($demon->slug);
               $pactSlugClean = str_replace('-', '_', $pact->slug);
               
-              // Buscar archivo que coincida
+              // buscar archivo que coincida
               $globPath = BASE_PATH . "/public/assets/img/pacts/{$demonFolder}/*{$pactSlugClean}*.png";
               $files = glob($globPath);
               
@@ -196,7 +219,7 @@ if (isset($_SESSION['user_id'])) {
           <div class="expandable-card-container" data-searchable="<?= htmlspecialchars($searchable) ?>">
             <div class="expandable-card group" data-pact="pact-<?= $pact->id ?>">
               
-              <!-- Imagen principal -->
+              <!-- imagen principal -->
               <div class="card-image relative overflow-hidden rounded-xl border-2 border-amber-600/30 bg-black shadow-2xl shadow-amber-500/20">
 
 
@@ -207,7 +230,7 @@ if (isset($_SESSION['user_id'])) {
                   onerror="this.src='/assets/img/pacts/16861331.png'"
                 >
                 
-                <!-- Info discreta en la esquina -->
+                <!-- info discreta en la esquina -->
                 <div class="card-info">
                   <p class="text-amber-500 text-xs font-mono font-semibold"><?= htmlspecialchars($demonName) ?></p>
                   <p class="text-amber-300 text-sm font-mono font-bold"><?= htmlspecialchars($pact->name) ?></p>

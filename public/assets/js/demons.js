@@ -134,7 +134,7 @@ function initExpandableCards() {
       opacity: 0
     });
     
-    // Desactivar pointer events inicialmente
+    // Desactivar interacción del mouse inicialmente
     [panels.left, panels.right, panels.top, panels.bottom].forEach(panel => {
       if (panel) panel.style.pointerEvents = 'none';
     });
@@ -159,6 +159,7 @@ function initExpandableCards() {
       isMouseInside = true;
       
       // Efecto de escala en hover
+      // La imagen se escala automáticamente
       gsap.to(container, {
         scale: 1.05,
         duration: 0.3,

@@ -49,7 +49,7 @@ class Order
     }
 
     /**
-     * Obtener todas las órdenes (para admin)
+     * obtener todas las órdenes (para admin)
      */
     public static function all(): array
     {
@@ -64,7 +64,7 @@ class Order
     }
 
     /**
-     * Obtener órdenes de un usuario específico
+     * obtener órdenes de un usuario específico
      */
     public static function byUser(int $userId): array
     {
@@ -81,7 +81,7 @@ class Order
     }
 
     /**
-     * Contar órdenes de un usuario
+     * contar órdenes de un usuario
      */
     public static function countByUser(int $userId): int
     {
@@ -93,7 +93,7 @@ class Order
     }
 
     /**
-     * Encontrar orden por ID
+     * encontrar orden por ID
      */
     public static function find(int $id): ?self
     {
@@ -109,7 +109,7 @@ class Order
     }
 
     /**
-     * Obtener items de la orden
+     * obtener items de la orden
      */
     public function getItems(): array
     {
@@ -124,7 +124,7 @@ class Order
     }
 
     /**
-     * Cancelar orden
+     * cancelar orden
      */
     public function cancel(?string $reason = null): void
     {
@@ -137,7 +137,7 @@ class Order
     }
 
     /**
-     * Marcar como completada (admin otorga los pactos)
+     * marcar como completada (admin otorga los pactos)
      */
     public function fulfill(): void
     {
@@ -150,7 +150,7 @@ class Order
     }
 
     /**
-     * Obtener estadísticas de órdenes
+     * obtener estadísticas de órdenes
      */
     public static function getStats(): array
     {
@@ -164,7 +164,7 @@ class Order
             'total_revenue' => 0
         ];
         
-        // Contar por estado
+        // contar por estado
         $sql = "SELECT status, COUNT(*) as count, SUM(total_credits) as revenue
                 FROM orders
                 GROUP BY status";
@@ -183,7 +183,7 @@ class Order
     }
 
     /**
-     * Obtener IDs de pactos ya comprados por un usuario
+     * obtener IDs de pactos ya comprados por un usuario
      * @return int[]
      */
     public static function getPurchasedPactIds(int $userId): array
@@ -198,9 +198,9 @@ class Order
         $stmt->execute([$userId]);
         return array_column($stmt->fetchAll(PDO::FETCH_ASSOC), 'pact_id');
     }
-
+    
     /**
-     * Verificar si un usuario ya compró un pacto específico
+     * verificar si un usuario ya compró un pacto específico
      */
     public static function hasPurchased(int $userId, int $pactId): bool
     {

@@ -3,7 +3,7 @@ require_once BASE_PATH . '/classes/Toast.php';
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden py-20 px-4 font-mono">
-  <!-- Ambient background grid & glow -->
+  
   <div class="pointer-events-none fixed inset-0 opacity-5">
     <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
   </div>
@@ -12,29 +12,29 @@ require_once BASE_PATH . '/classes/Toast.php';
 
   <div class="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 relative z-10">
     
-    <!-- Título -->
+    <!-- titulo -->
     <div class="text-center mb-6 contact-title">
       <h1 class="text-6xl font-bold tracking-widest text-amber-500">
         CONTACTO
       </h1>
     </div>
 
-    <!-- Instrucciones -->
+    <!-- instrucciones -->
     <div class="text-center mb-12 contact-subtitle">
       <p class="text-amber-600/70 text-sm uppercase tracking-widest">
         // Envía tu mensaje al abismo digital
       </p>
     </div>
     
-    <!-- Grid: Formulario + Info -->
+    <!-- grid: formulario + info -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
       
-      <!-- FORMULARIO (2/3) -->
+      <!-- formulario (2/3) -->
       <div class="lg:col-span-2 contact-form">
         <div class="bg-black/70 border border-amber-600/30 rounded-xl p-8 backdrop-blur-sm">
           <form method="POST" action="/?sec=actions&action=send-contact" class="space-y-6">
             
-            <!-- Nombre -->
+            <!-- nombre -->
             <div class="form-field">
               <label for="name" class="block text-amber-500 text-xs mb-2 uppercase tracking-wider">
                 <i class="fa-solid fa-user mr-2"></i>Nombre Completo
@@ -50,7 +50,7 @@ require_once BASE_PATH . '/classes/Toast.php';
               >
             </div>
 
-            <!-- Email -->
+            <!-- email -->
             <div class="form-field">
               <label for="email" class="block text-amber-500 text-xs mb-2 uppercase tracking-wider">
                 <i class="fa-solid fa-envelope mr-2"></i>Email
@@ -66,7 +66,7 @@ require_once BASE_PATH . '/classes/Toast.php';
               >
             </div>
 
-            <!-- Asunto -->
+            <!-- asunto -->
             <div class="form-field">
               <label for="subject" class="block text-amber-500 text-xs mb-2 uppercase tracking-wider">
                 <i class="fa-solid fa-heading mr-2"></i>Asunto <span class="text-amber-600/50 text-[10px]">(opcional)</span>
@@ -81,7 +81,7 @@ require_once BASE_PATH . '/classes/Toast.php';
               >
             </div>
 
-            <!-- Mensaje -->
+            <!-- mensaje -->
             <div class="form-field">
               <label for="message" class="block text-amber-500 text-xs mb-2 uppercase tracking-wider">
                 <i class="fa-solid fa-message mr-2"></i>Mensaje
@@ -96,7 +96,7 @@ require_once BASE_PATH . '/classes/Toast.php';
               ></textarea>
             </div>
 
-            <!-- Botones -->
+            <!-- botones -->
             <div class="flex gap-4 form-buttons">
               <a href="/" class="flex-1 bg-black/60 hover:bg-black/80 border border-amber-600/40 text-amber-600 px-6 py-3 rounded text-center text-sm font-bold transition-all">
                 <i class="fa-solid fa-arrow-left mr-2"></i>VOLVER
@@ -111,11 +111,11 @@ require_once BASE_PATH . '/classes/Toast.php';
         </div>
       </div>
 
-      <!-- INFO LATERAL (1/3) -->
+      <!-- info lateral (1/3) -->
       <div class="contact-info">
         <div class="bg-black/70 border border-amber-600/30 rounded-xl p-6 backdrop-blur-sm space-y-6 h-full flex flex-col">
           
-          <!-- Info de contacto -->
+          <!-- info de contacto -->
           <div>
             <h3 class="text-amber-500 text-sm font-bold mb-4 uppercase tracking-wider border-b border-amber-600/30 pb-2">
               <i class="fa-solid fa-circle-info mr-2"></i>Información
@@ -136,7 +136,7 @@ require_once BASE_PATH . '/classes/Toast.php';
             </div>
           </div>
 
-          <!-- Métodos alternativos -->
+          <!-- métodos alternativos -->
           <div class="flex-grow">
             <h3 class="text-amber-500 text-sm font-bold mb-4 uppercase tracking-wider border-b border-amber-600/30 pb-2">
               <i class="fa-solid fa-link mr-2"></i>Otros Canales
@@ -166,7 +166,7 @@ require_once BASE_PATH . '/classes/Toast.php';
             </div>
           </div>
 
-          <!-- Horario de atención -->
+          <!-- horario de atención -->
           <div>
             <h3 class="text-amber-500 text-sm font-bold mb-4 uppercase tracking-wider border-b border-amber-600/30 pb-2">
               <i class="fa-solid fa-clock mr-2"></i>Horarios

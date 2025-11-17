@@ -4,7 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../classes/User.php';
 require_once __DIR__ . '/../classes/Toast.php';
 
-// Solo POST
+// solo por post
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /?sec=register');
     exit;
@@ -14,7 +14,7 @@ $email = trim($_POST['email'] ?? '');
 $password = trim($_POST['password'] ?? '');
 $displayName = trim($_POST['display_name'] ?? '');
 
-// Validaciones
+// validaciones
 if (empty($email) || empty($password) || empty($displayName)) {
     Toast::error('Todos los campos son obligatorios');
     header('Location: /?sec=register');
@@ -33,7 +33,7 @@ if (strlen($password) < 6) {
     exit;
 }
 
-// Verificar si el email ya existe
+// se verifica si el email ya existe
 if (User::findByEmail($email)) {
     Toast::error('Este email ya está registrado');
     header('Location: /?sec=register');
@@ -41,13 +41,13 @@ if (User::findByEmail($email)) {
 }
 
 try {
-    // Crear usuario
+    // se crea el usuario
     $userId = User::create($email, $password, $displayName);
     
-    // Actualizar último login inmediatamente después de crear la cuenta
+    // se actualiza el último login 
     User::updateLastLogin($userId);
     
-    // Auto-login
+    // auto login
     session_regenerate_id(true);
     $_SESSION['user_id'] = $userId;
     $_SESSION['user_email'] = $email;

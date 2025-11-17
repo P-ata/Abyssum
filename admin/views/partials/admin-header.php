@@ -8,7 +8,7 @@ $currentPage = $_GET['page'] ?? 'dashboard';
       
       <div class="grid grid-cols-3 h-16 items-center">
         
-        <!-- Left: Menu Button -->
+        <!-- izquierda menu button -->
         <div class="justify-self-start">
           <button id="adminMenuBtn"
                   class="inline-flex items-center justify-center p-2 rounded-md hover:bg-amber-500/10 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-white/90"
@@ -22,10 +22,10 @@ $currentPage = $_GET['page'] ?? 'dashboard';
           </button>
         </div>
 
-        <!-- Center: Logo/Brand con Badge Admin -->
+        <!-- para que respete el espacio -->
         <div></div>
 
-        <!-- Right: Site Link & Logout -->
+        <!-- derecha: link al sitio y logout -->
         <div class="justify-self-end flex items-center gap-3">
           <!-- Link al sitio público -->
           <a href="/" 
@@ -44,7 +44,7 @@ $currentPage = $_GET['page'] ?? 'dashboard';
     </div>
   </nav>
 
-  <!-- Decorative glowing border -->
+  <!-- borde decorativo brillante -->
   <div class="h-px bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-50"></div>
 
   <!-- Overlay -->
@@ -54,7 +54,7 @@ $currentPage = $_GET['page'] ?? 'dashboard';
   <aside id="adminMobileMenu"
          class="fixed top-4 bottom-4 left-4 w-[20rem] sm:w-[22rem] bg-black/95 backdrop-blur-md text-white -translate-x-[120%] transition-transform duration-300 ease-out z-50 border border-amber-500/40 rounded-xl flex flex-col shadow-2xl shadow-amber-500/30">
     
-    <!-- Header del menú -->
+    <!-- header del menú -->
     <div class="p-6 border-b border-amber-500/20">
       <div class="flex items-start justify-between gap-4">
         <div class="flex flex-col gap-2">
@@ -99,7 +99,7 @@ $currentPage = $_GET['page'] ?? 'dashboard';
             $active = $currentPage === $page;
         ?>
           <a href="/?sec=admin&page=<?= $page ?>"
-             class="group flex items-center gap-3 px-4 py-3 rounded-md transition relative <?= $active ? 'bg-amber-500/20 text-amber-500 border border-amber-500/40' : 'text-white/70 hover:bg-amber-500/10 hover:text-amber-500 border border-transparent hover:border-amber-500/20' ?>">
+             class="group flex items-center gap-3 px-4 py-3 rounded-md transition relative <?= $active ? 'bg-amber-500/20 text-amber-500 border border-amber-500/40' : 'text-white/70 hover:bg-amber-500/10 hover:text-amber-500 border-transparent hover:border-amber-500/20' ?>">
             <i class="fas <?= $data['icon'] ?> w-5 text-center <?= $active ? 'text-amber-500' : 'text-white/60 group-hover:text-amber-500' ?> transition-colors"></i>
             <span class="font-bold"><?= $data['label'] ?></span>
             <?php if ($active): ?>
@@ -114,7 +114,7 @@ $currentPage = $_GET['page'] ?? 'dashboard';
 
     </div>
 
-    <!-- Footer del menú pegado abajo -->
+    <!-- footer del menú pegado abajo -->
     <div class="mt-auto p-4 border-t border-amber-500/20">
       <div class="flex items-center justify-between text-[10px] text-amber-200/40 font-mono">
         <span>&copy; <?= date('Y'); ?> ABYSSUM</span>
@@ -125,7 +125,7 @@ $currentPage = $_GET['page'] ?? 'dashboard';
 </header>
 
 <script>
-// Admin Menu Toggle
+// admin menu toggle
 document.addEventListener('DOMContentLoaded', function() {
   const menuBtn = document.getElementById('adminMenuBtn');
   const menu = document.getElementById('adminMobileMenu');
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
   closeBtn.addEventListener('click', closeMenu);
   overlay.addEventListener('click', closeMenu);
 
-  // Cerrar con ESC
+  // cerrar con ESC
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && menu.classList.contains('translate-x-0')) {
       closeMenu();

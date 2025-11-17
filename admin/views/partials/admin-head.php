@@ -7,15 +7,15 @@
   <link rel="stylesheet" href="/assets/admin/css/tailwind.css?v=<?= time() ?>" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
-  <!-- Vite dev server para módulos ES (development) -->
+  <!-- vite dev server para modulos ES  -->
   <?php if (($_SERVER['SERVER_NAME'] ?? 'localhost') === 'localhost'): ?>
     <script type="module" src="http://localhost:5173/@vite/client"></script>
   <?php endif; ?>
   
-  <!-- GSAP for animations -->
+
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   
-  <!-- JS específico por vista admin (como módulos ES) -->
+  <!-- segun la vista va cargando los js -->
   <?php if (in_array($adminView ?? '', ['dashboard', 'pacts', 'demons', 'users', 'orders', 'contacts', 'health'])): ?>
     <script type="module" src="http://localhost:5173/public/assets/admin/js/dashboard.js"></script>
   <?php endif; ?>

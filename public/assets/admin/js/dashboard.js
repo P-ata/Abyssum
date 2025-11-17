@@ -1,11 +1,11 @@
 import { gsap } from 'gsap';
 
-// Optional JS enhancements for the dashboard
+// Mejoras JavaScript opcionales para el dashboard
 (() => {
 	const onReady = (fn) => (document.readyState !== 'loading') ? fn() : document.addEventListener('DOMContentLoaded', fn);
 
 	onReady(() => {
-		// Title animation with stagger
+		// Animar título con desfase
 		const title = document.getElementById('dashTitle');
 		if (title && title.children.length) {
 			gsap.from(title.children, {
@@ -19,7 +19,7 @@ import { gsap } from 'gsap';
 			gsap.from(title, { y: 20, opacity: 0, duration: 0.6, ease: 'power3.out' });
 		}
 
-		// Stats cards animation
+		// Animar tarjetas de estadísticas
 		const statCards = document.querySelectorAll('[data-stat]');
 		if (statCards.length) {
 			gsap.from(statCards, {
@@ -31,7 +31,7 @@ import { gsap } from 'gsap';
 				delay: 0.3
 			});
 
-			// Animate stat bars
+			// Animar barras de estadísticas
 			const statBars = document.querySelectorAll('[data-bar]');
 			gsap.from(statBars, {
 				scaleX: 0,
@@ -43,7 +43,7 @@ import { gsap } from 'gsap';
 			});
 		}
 
-		// Toolbar animation
+		// Animar barra de herramientas
 		const toolbar = document.getElementById('toolbar');
 		if (toolbar) {
 			gsap.from(toolbar, {
@@ -55,10 +55,9 @@ import { gsap } from 'gsap';
 			});
 		}
 
-		// Ensure all cards are visible (fallback) - Remove manual inline styles
-		// Don't set inline styles, let CSS handle it
+		// Las tarjetas se animan automáticamente
 		
-		// Animate pact cards entrance
+		// Animar entrada de tarjetas de pactos
 		const pactCards = document.querySelectorAll('#pactsGrid .pact-card');
 		if (pactCards.length > 0) {
 			gsap.from(pactCards, { 
@@ -69,14 +68,14 @@ import { gsap } from 'gsap';
 				ease: 'power3.out',
 				delay: 0.7,
 				clearProps: 'all',
-				onComplete: () => {
-					// Re-enable hover after animations complete
-					pactCards.forEach(card => card.classList.add('animation-complete'));
+			onComplete: () => {
+				// Reactivar efectos hover al completarse
+				pactCards.forEach(card => card.classList.add('animation-complete'));
 				}
 			});
 		}
 
-		// Animate demon cards entrance
+		// Animar entrada de tarjetas de demonios
 		const demonCards = document.querySelectorAll('.demon-card');
 		if (demonCards.length > 0) {
 			gsap.from(demonCards, { 
@@ -87,14 +86,14 @@ import { gsap } from 'gsap';
 				ease: 'power3.out',
 				delay: 0.7,
 				clearProps: 'all',
-				onComplete: () => {
-					// Re-enable hover after animations complete
-					demonCards.forEach(card => card.classList.add('animation-complete'));
+			onComplete: () => {
+				// Reactivar efectos hover al completarse
+				demonCards.forEach(card => card.classList.add('animation-complete'));
 				}
 			});
 		}
 
-		// Animate user table rows
+		// Animar filas de la tabla de usuarios
 		const userRows = document.querySelectorAll('.user-row');
 		if (userRows.length > 0) {
 			gsap.from(userRows, {
@@ -108,7 +107,7 @@ import { gsap } from 'gsap';
 			});
 		}
 
-		// Animate users table container
+		// Animar contenedor de tabla de usuarios
 		const usersTable = document.getElementById('usersTable');
 		if (usersTable) {
 			gsap.from(usersTable, {
@@ -120,7 +119,7 @@ import { gsap } from 'gsap';
 			});
 		}
 
-		// Animate order cards
+		// Animar tarjetas de órdenes
 		const orderCards = document.querySelectorAll('.order-card');
 		if (orderCards.length > 0) {
 			gsap.from(orderCards, {
@@ -134,7 +133,7 @@ import { gsap } from 'gsap';
 			});
 		}
 
-		// Animate contact cards
+		// Animar tarjetas de contactos
 		const contactCards = document.querySelectorAll('.contact-card');
 		if (contactCards.length > 0) {
 			gsap.from(contactCards, {
@@ -148,7 +147,7 @@ import { gsap } from 'gsap';
 			});
 		}
 
-		// Animate filter buttons
+		// Animar botones de filtro
 		const filterButtons = document.getElementById('filterButtons');
 		if (filterButtons && filterButtons.children.length) {
 			gsap.from(filterButtons.children, {
@@ -162,7 +161,7 @@ import { gsap } from 'gsap';
 			});
 		}
 
-		// Animate health cards
+		// Animar tarjetas de salud
 		const healthCards = document.querySelectorAll('.health-card');
 		if (healthCards.length > 0) {
 			gsap.from(healthCards, {
@@ -176,7 +175,7 @@ import { gsap } from 'gsap';
 			});
 		}
 
-		// Hover animations - Only apply to cards that finished animating
+		// Animaciones en hover - Solo para tarjetas que finalizaron
 		document.addEventListener('mouseenter', (e) => {
 			const card = e.target.closest('.pact-card, .demon-card');
 			if (card && card.classList.contains('animation-complete')) {
@@ -191,7 +190,7 @@ import { gsap } from 'gsap';
 			}
 		}, true);
 
-		// Clear button functionality
+		// Funcionalidad del botón limpiar
 		const clearBtn = document.getElementById('clearBtn');
 		if (clearBtn) {
 			clearBtn.addEventListener('click', () => {

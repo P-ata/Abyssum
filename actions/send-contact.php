@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../classes/Contact.php';
 require_once __DIR__ . '/../admin/classes/Toast.php';
 
+// solo por post
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /?sec=contact');
     exit;
@@ -14,7 +15,7 @@ $email = trim($_POST['email'] ?? '');
 $subject = trim($_POST['subject'] ?? '');
 $message = trim($_POST['message'] ?? '');
 
-// Validaciones
+// validaciones
 if (empty($name) || empty($email) || empty($message)) {
     Toast::error('Por favor completá todos los campos obligatorios');
     header('Location: /?sec=contact');
@@ -27,7 +28,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-// Obtener IP del usuario
+// se obtiene la IP del usuario
 $ipAddress = $_SERVER['REMOTE_ADDR'] ?? null;
 
 try {

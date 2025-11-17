@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-// ACCIÓN de logout (destruye sesión y redirige) — PRG pattern
+// Asegurarse de que la sesión esté activa
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-// Limpiar todas las variables de sesión
+// limpiar todas las variables de sesión
 $_SESSION = [];
 
-// Destruir la sesión
+// destruir la sesión
 session_destroy();
 
-// Destruir la cookie de sesión si existe
+// destruir la cookie de sesión si existe
 if (ini_get("session.use_cookies")) {
     $params = session_get_cookie_params();
     setcookie(
@@ -26,6 +26,6 @@ if (ini_get("session.use_cookies")) {
     );
 }
 
-// Redirect al login (PRG)
+// redirigir al login
 header('Location: /?sec=admin&page=login');
 exit;

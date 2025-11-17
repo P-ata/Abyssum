@@ -7,8 +7,8 @@ require_once __DIR__ . '/Pact.php';
 class Cart
 {
     /**
-     * Obtener items del carrito desde sesión
-     * @return array Array de pact_ids
+     * obtener items del carrito desde sesión
+     * @return array array de pact_ids
      */
     public static function getItems(): array
     {
@@ -19,8 +19,8 @@ class Cart
     }
 
     /**
-     * Agregar pacto al carrito (solo si no existe ya)
-     * Los pactos son únicos, no se pueden agregar duplicados
+     * agregar pacto al carrito (solo si no existe ya)
+     * los pactos son únicos, no se pueden agregar duplicados
      */
     public static function add(int $pactId): bool
     {
@@ -28,13 +28,13 @@ class Cart
             $_SESSION['cart'] = [];
         }
 
-        // Verificar que el pacto existe
+        // verificar que el pacto existe
         $pact = Pact::find($pactId);
         if (!$pact) {
             return false;
         }
 
-        // No agregar si ya está en el carrito (pactos únicos)
+        // no agregar si ya está en el carrito (pactos únicos)
         if (in_array($pactId, $_SESSION['cart'])) {
             return false;
         }
@@ -44,7 +44,7 @@ class Cart
     }
 
     /**
-     * Eliminar pacto del carrito
+     * eliminar pacto del carrito
      */
     public static function remove(int $pactId): void
     {
@@ -61,7 +61,7 @@ class Cart
     }
 
     /**
-     * Vaciar carrito completo
+     * vaciar carrito completo
      */
     public static function clear(): void
     {
@@ -69,7 +69,7 @@ class Cart
     }
 
     /**
-     * Obtener cantidad de items en carrito
+     * obtener cantidad de items en carrito
      */
     public static function count(): int
     {
@@ -77,7 +77,7 @@ class Cart
     }
 
     /**
-     * Obtener objetos Pact del carrito
+     * obtener objetos Pact del carrito
      * @return Pact[]
      */
     public static function getPacts(): array
@@ -99,7 +99,7 @@ class Cart
     }
 
     /**
-     * Calcular total en créditos
+     * calcular total en créditos
      */
     public static function getTotal(): int
     {
@@ -112,7 +112,7 @@ class Cart
     }
 
     /**
-     * Verificar si un pacto está en el carrito
+     * verificar si un pacto está en el carrito
      */
     public static function has(int $pactId): bool
     {
@@ -120,14 +120,14 @@ class Cart
     }
 
     /**
-     * Sincronizar carrito de sesión con base de datos
-     * Crea o actualiza el carrito "pending" del usuario
+     * sincronizar carrito de sesión con base de datos
+     * crea o actualiza el carrito "pending" del usuario
      */
     public static function syncToDatabase(int $userId): void
     {
         $items = self::getItems();
         
-        // Si el carrito está vacío, cancelar carrito pendiente si existe
+        // si el carrito está vacío, cancelar carrito pendiente si existe
         if (empty($items)) {
             self::cancelPendingCart($userId);
             return;
@@ -135,7 +135,7 @@ class Cart
 
         $pdo = DbConnection::get();
         
-        // Buscar carrito pendiente existente
+        // buscar carrito pendiente existente
         $stmt = $pdo->prepare('SELECT id FROM carts WHERE user_id = ? AND status = "pending" ORDER BY created_at DESC LIMIT 1');
         $stmt->execute([$userId]);
         $existingCart = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -144,23 +144,23 @@ class Cart
         $total = self::getTotal();
         
         if ($existingCart) {
-            // Actualizar carrito existente
+            // actualizar carrito existente
             $cartId = (int)$existingCart['id'];
             
             $stmt = $pdo->prepare('UPDATE carts SET total_credits = ?, updated_at = NOW() WHERE id = ?');
             $stmt->execute([$total, $cartId]);
             
-            // Eliminar items antiguos y agregar nuevos
+            // eliminar items antiguos y agregar nuevos
             $stmt = $pdo->prepare('DELETE FROM cart_items WHERE cart_id = ?');
             $stmt->execute([$cartId]);
         } else {
-            // Crear nuevo carrito
+            // crear nuevo carrito
             $stmt = $pdo->prepare('INSERT INTO carts (user_id, status, total_credits) VALUES (?, "pending", ?)');
             $stmt->execute([$userId, $total]);
             $cartId = (int)$pdo->lastInsertId();
         }
         
-        // Insertar items actuales
+        // insertar items actuales
         foreach ($pacts as $pact) {
             $price = $pact->price_credits;
             $stmt = $pdo->prepare('INSERT INTO cart_items (cart_id, pact_id, quantity, unit_price_credits, subtotal_credits) VALUES (?, ?, 1, ?, ?)');
@@ -169,7 +169,7 @@ class Cart
     }
 
     /**
-     * Cancelar carrito pendiente del usuario
+     * cancelar carrito pendiente del usuario
      */
     public static function cancelPendingCart(int $userId): void
     {
@@ -179,7 +179,7 @@ class Cart
     }
 
     /**
-     * Marcar carritos abandonados (más de X horas sin actualizar)
+     * marcar carritos abandonados (más de X horas sin actualizar)
      */
     public static function markAbandoned(int $hoursInactive = 24): int
     {
@@ -194,8 +194,8 @@ class Cart
     }
 
     /**
-     * Cargar carrito pendiente desde BD a sesión
-     * Útil al iniciar sesión para recuperar carrito
+     * cargar carrito pendiente desde BD a sesión
+     * útil al iniciar sesión para recuperar carrito
      */
     public static function loadFromDatabase(int $userId): bool
     {
@@ -210,12 +210,12 @@ class Cart
             return false;
         }
         
-        // Obtener items
+        // obtener items
         $stmt = $pdo->prepare('SELECT pact_id FROM cart_items WHERE cart_id = ?');
         $stmt->execute([(int)$cart['id']]);
         $items = array_column($stmt->fetchAll(PDO::FETCH_ASSOC), 'pact_id');
         
-        // Cargar en sesión
+        // cargar en sesión
         $_SESSION['cart'] = array_map('intval', $items);
         
         return true;

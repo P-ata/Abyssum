@@ -13,7 +13,7 @@ class User
     public array $roles = []; // ['admin', 'customer']
     
     /**
-     * Crear usuario desde fila de BD
+     * crear usuario desde fila de BD
      */
     public static function fromRow(array $row): self
     {
@@ -27,7 +27,7 @@ class User
     }
     
     /**
-     * Obtener todos los usuarios
+     * obtener todos los usuarios
      */
     public static function all(): array
     {
@@ -46,7 +46,7 @@ class User
     }
     
     /**
-     * Buscar usuario por ID
+     * buscar usuario por ID
      */
     public static function find(int $id): ?self
     {
@@ -63,7 +63,7 @@ class User
     }
     
     /**
-     * Buscar usuario por email
+     * buscar usuario por email
      */
     public static function findByEmail(string $email): ?self
     {
@@ -80,7 +80,7 @@ class User
     }
     
     /**
-     * Verificar password
+     * verificar password
      */
     public static function verifyPassword(string $email, string $password): ?self
     {
@@ -101,7 +101,7 @@ class User
     }
     
     /**
-     * Crear nuevo usuario
+     * crear nuevo usuario
      */
     public static function create(string $email, string $password, string $displayName): int
     {
@@ -118,14 +118,14 @@ class User
         
         $userId = (int)$pdo->lastInsertId();
         
-        // Asignar rol customer por defecto
+        // asignar rol customer por defecto
         self::assignRole($userId, 2); // 2 = customer
         
         return $userId;
     }
     
     /**
-     * Actualizar estado activo
+     * actualizar estado activo
      */
     public static function setActive(int $userId, bool $active): void
     {
@@ -135,12 +135,12 @@ class User
     }
     
     /**
-     * Actualizar último login
+     * actualizar último login
      */
     public static function updateLastLogin(int $userId): void
     {
         $pdo = DbConnection::get();
-        // Convertir hora actual de Argentina a UTC para almacenar
+        // convertir hora actual
         date_default_timezone_set('America/Argentina/Buenos_Aires');
         $now = date('Y-m-d H:i:s');
         $stmt = $pdo->prepare('UPDATE users SET last_login_at = ? WHERE id = ?');
@@ -148,7 +148,7 @@ class User
     }
     
     /**
-     * Obtener roles de un usuario
+     * obtener roles de un usuario
      */
     public static function getUserRoles(int $userId): array
     {
@@ -164,18 +164,18 @@ class User
     }
     
     /**
-     * Asignar rol a usuario
+     * asignar rol
      */
     public static function assignRole(int $userId, int $roleId): void
     {
         $pdo = DbConnection::get();
         
-        // Verificar si ya tiene el rol
+        // verificar si ya tiene el rol
         $check = $pdo->prepare('SELECT COUNT(*) FROM user_roles WHERE user_id = ? AND role_id = ?');
         $check->execute([$userId, $roleId]);
         
         if ($check->fetchColumn() > 0) {
-            return; // Ya tiene el rol
+            return; // ya tiene el rol
         }
         
         $stmt = $pdo->prepare('INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)');
@@ -183,7 +183,7 @@ class User
     }
     
     /**
-     * Quitar rol de usuario
+     * quitar rol
      */
     public static function removeRole(int $userId, int $roleId): void
     {
@@ -193,7 +193,7 @@ class User
     }
     
     /**
-     * Verificar si tiene un rol específico
+     * verificar si tiene un rol específico
      */
     public function hasRole(string $roleName): bool
     {
@@ -201,7 +201,7 @@ class User
     }
     
     /**
-     * Verificar si es admin
+     * verificar si es admin
      */
     public function isAdmin(): bool
     {

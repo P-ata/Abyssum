@@ -7,6 +7,7 @@ require_once __DIR__ . '/../classes/Toast.php';
 
 requireAdmin();
 
+// solo por post
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 	header('Location: /?sec=admin&page=users');
 	exit;
@@ -21,7 +22,7 @@ if ($userId === 0) {
 	exit;
 }
 
-// Si debe ser admin
+// admin es 1
 if ($isAdmin === 1) {
 	User::assignRole($userId, 1); // Asignar rol admin
 	Toast::success('Rol de administrador asignado correctamente');

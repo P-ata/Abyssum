@@ -4,11 +4,13 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../classes/Order.php';
 require_once __DIR__ . '/../classes/Toast.php';
 
+// solo por post
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /?sec=admin&page=orders');
     exit;
 }
 
+// obtener ID de orden
 $orderId = isset($_POST['order_id']) ? (int)$_POST['order_id'] : 0;
 
 if ($orderId <= 0) {
@@ -25,7 +27,7 @@ if (!$order) {
     exit;
 }
 
-// Solo se puede completar si está en estado 'paid'
+// solo se puede completar si está pagada
 if ($order->status !== 'paid') {
     Toast::error('Esta orden no puede ser completada');
     header('Location: /?sec=admin&page=orders');

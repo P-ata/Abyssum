@@ -11,21 +11,21 @@ class Demon
     public ?string $summary = null;
     public ?int $image_file_id = null;
     
-    // Demographics
+    // demografia
     public ?string $species = null;
     public ?string $gender = null;
     public ?string $age_real = null;
     
-    // Descriptions
+    // descripciones
     public ?string $lore = null;
     public ?string $abilities_summary = null;
     
-    // JSON arrays
+    // arreglos JSON
     public ?array $aliases = null;
     public ?array $personality = null;
     public ?array $weaknesses_limits = null;
     
-    // Stats
+    // estadisticas
     public ?int $stat_strength = null;
     public ?int $stat_dexterity = null;
     public ?int $stat_intelligence = null;
@@ -45,16 +45,16 @@ class Demon
         $d->summary = $row['summary'] ?? null;
         $d->image_file_id = isset($row['image_file_id']) ? (int)$row['image_file_id'] : null;
         
-        // Demographics
+        // demografia
         $d->species = $row['species'] ?? null;
         $d->gender = $row['gender'] ?? null;
         $d->age_real = $row['age_real'] ?? null;
         
-        // Descriptions
+        // descripciones
         $d->lore = $row['lore'] ?? null;
         $d->abilities_summary = $row['abilities_summary'] ?? null;
         
-        // JSON arrays - decode if string with proper Unicode handling
+        // arreglos JSON se decodifican si son strings
         $d->aliases = isset($row['aliases']) && is_string($row['aliases']) 
             ? json_decode($row['aliases'], true, 512, JSON_UNESCAPED_UNICODE) 
             : ($row['aliases'] ?? null);
@@ -65,7 +65,7 @@ class Demon
             ? json_decode($row['weaknesses_limits'], true, 512, JSON_UNESCAPED_UNICODE) 
             : ($row['weaknesses_limits'] ?? null);
         
-        // Stats
+        // estadisticas
         $d->stat_strength = isset($row['stat_strength']) ? (int)$row['stat_strength'] : null;
         $d->stat_dexterity = isset($row['stat_dexterity']) ? (int)$row['stat_dexterity'] : null;
         $d->stat_intelligence = isset($row['stat_intelligence']) ? (int)$row['stat_intelligence'] : null;
@@ -88,7 +88,7 @@ class Demon
     }
 
     /**
-     * Find a demon by ID or slug
+     * buscar demonio por ID o slug
      * @param int|string $idOrSlug
      * @return self|null
      */
@@ -113,7 +113,7 @@ class Demon
     }
 
     /**
-     * Find multiple demons by IDs
+     * buscar demonios por IDs
      * @param int[] $ids
      * @return Demon[]
      */
@@ -138,15 +138,15 @@ class Demon
     {
         $pdo = DbConnection::get();
         
-        // Build dynamic INSERT based on provided fields
-        $fields = ['slug', 'name']; // Required fields
+        // construir INSERT dinámico basado en los campos proporcionados
+        $fields = ['slug', 'name']; // campos requeridos
         $placeholders = [':slug', ':name'];
         $values = [
             ':slug' => $data['slug'],
             ':name' => $data['name'],
         ];
 
-        // Optional text fields
+        // campos de texto opcionales
         $optionalFields = [
             'species', 'gender', 'age_real', 'summary', 'lore', 
             'full_description', 'abilities_summary'
@@ -159,7 +159,7 @@ class Demon
             }
         }
 
-        // JSON fields
+        // arreglos JSON
         $jsonFields = ['aliases', 'personality', 'preferred_envs', 'appearance_tags', 'weaknesses_limits'];
         foreach ($jsonFields as $field) {
             if (isset($data[$field]) && !empty($data[$field])) {
@@ -169,7 +169,7 @@ class Demon
             }
         }
 
-        // Stats (tinyint)
+        // estadisticas (tinyint)
         $statFields = [
             'stat_strength', 'stat_dexterity', 'stat_intelligence',
             'stat_health', 'stat_reflexes', 'stat_stealth', 'stat_mobility'
@@ -182,7 +182,7 @@ class Demon
             }
         }
 
-        // Image file ID
+        // ID de archivo de imagen
         if (isset($data['image_file_id'])) {
             $fields[] = 'image_file_id';
             $placeholders[] = ':image_file_id';
@@ -206,11 +206,11 @@ class Demon
     {
         $pdo = DbConnection::get();
         
-        // Build dynamic UPDATE based on provided fields
+        // update dinamico
         $setClauses = [];
         $values = [':id' => $id];
 
-        // Required fields
+        // campos requeridos
         if (isset($data['slug'])) {
             $setClauses[] = 'slug = :slug';
             $values[':slug'] = $data['slug'];
@@ -220,7 +220,7 @@ class Demon
             $values[':name'] = $data['name'];
         }
 
-        // Optional text fields
+        // campos de texto opcionales
         $optionalFields = [
             'species', 'gender', 'age_real', 'summary', 'lore', 
             'full_description', 'abilities_summary', 'image'
@@ -232,7 +232,7 @@ class Demon
             }
         }
 
-        // JSON fields
+        // arreglos JSON
         $jsonFields = ['aliases', 'personality', 'preferred_envs', 'appearance_tags', 'weaknesses_limits'];
         foreach ($jsonFields as $field) {
             if (isset($data[$field])) {
@@ -241,7 +241,7 @@ class Demon
             }
         }
 
-        // Stats (tinyint)
+        // estadisticas (tinyint)
         $statFields = [
             'stat_strength', 'stat_dexterity', 'stat_intelligence',
             'stat_health', 'stat_reflexes', 'stat_stealth', 'stat_mobility'
@@ -253,7 +253,7 @@ class Demon
             }
         }
 
-        // Image file ID
+        // ID de archivo de imagen
         if (isset($data['image_file_id'])) {
             $setClauses[] = 'image_file_id = :image_file_id';
             $values[':image_file_id'] = (int)$data['image_file_id'];
@@ -274,13 +274,19 @@ class Demon
 
     public function delete(): void
     {
+        // eliminar imagen asociada si existe
+        if ($this->image_file_id !== null) {
+            require_once __DIR__ . '/../admin/classes/File.php';
+            File::deleteById($this->image_file_id);
+        }
+        
         $pdo = DbConnection::get();
         $stmt = $pdo->prepare('DELETE FROM demons WHERE id = ?');
         $stmt->execute([$this->id]);
     }
 
     /**
-     * Get all categories associated with this demon
+     * obtener todas las categorías asociadas a este demonio
      * @return Category[]
      */
     public function categories(): array

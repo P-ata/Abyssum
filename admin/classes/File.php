@@ -5,27 +5,99 @@ require_once __DIR__ . '/../../classes/DbConnection.php';
 
 class File
 {
+    private int $id;
+    private string $filename;
+    private string $mimeType;
+    private int $byteSize;
+    private string $checksum;
+    private ?string $createdAt;
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getFilename(): string
+    {
+        return $this->filename;
+    }
+
+    public function getMimeType(): string
+    {
+        return $this->mimeType;
+    }
+
+    public function getByteSize(): int
+    {
+        return $this->byteSize;
+    }
+
+    public function getChecksum(): string
+    {
+        return $this->checksum;
+    }
+
+    public function getCreatedAt(): ?string
+    {
+        return $this->createdAt;
+    }
+
+    public function getFullPath(): string
+    {
+        return __DIR__ . '/../../public/assets/img/' . $this->filename;
+    }
+
+    public function getUrl(): string
+    {
+        return '/assets/img/' . $this->filename;
+    }
+
     /**
-     * Upload a file to the uploads directory and store metadata in database
+     * buscar por id
+    */
+    public static function find(int $id): ?self
+    {
+        $pdo = DbConnection::get();
+        $stmt = $pdo->prepare('SELECT * FROM files WHERE id = :id');
+        $stmt->execute([':id' => $id]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$data) {
+            return null;
+        }
+
+        $file = new self();
+        $file->id = (int)$data['id'];
+        $file->filename = $data['filename'];
+        $file->mimeType = $data['mime_type'];
+        $file->byteSize = (int)$data['byte_size'];
+        $file->checksum = $data['checksum'];
+        $file->createdAt = $data['created_at'] ?? null;
+
+        return $file;
+    }
+
+    /**
+     * subir el archivo con su tipo
      */
     public static function upload(array $fileData, string $type = 'other'): int
     {
-        // Validate file type
+        // validar tipo de archivo
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mimeType = finfo_file($finfo, $fileData['tmp_name']);
         finfo_close($finfo);
 
         if (!in_array($mimeType, $allowedTypes, true)) {
-            throw new Exception("Invalid file type. Only JPG, PNG, GIF, and WebP are allowed");
+            throw new Exception("Tipo de archivo inválido. Solo se permiten JPG, PNG, GIF y WebP");
         }
 
-        // Validate file size (max 5MB)
+        // maximo 5MB
         if ($fileData['size'] > 5 * 1024 * 1024) {
-            throw new Exception("File size exceeds 5MB limit");
+            throw new Exception("El tamaño del archivo excede el límite de 5MB");
         }
 
-        // Check for duplicates by checksum
+        // verificar duplicados por checksum
         $fileContent = file_get_contents($fileData['tmp_name']);
         $checksum = hash('sha256', $fileContent);
         
@@ -35,15 +107,15 @@ class File
         $existing = $checkDuplicate->fetch(PDO::FETCH_ASSOC);
         
         if ($existing) {
-            throw new Exception('DUPLICATE_FILE:' . $existing['id']);
+            throw new Exception('ARCHIVO_DUPLICADO:' . $existing['id']);
         }
 
-        // Generate unique filename
+        // generar nombre de archivo único
         $originalName = explode(".", $fileData['name']);
         $extension = strtolower(end($originalName));
         $uniqueFilename = rand(10000000, 99999999) . ".$extension";
 
-        // Determine upload directory based on type
+        // determinar directorio de subida basado en el tipo de imagen
         $subFolder = ($type === 'demon') ? 'demons' : (($type === 'pact') ? 'pacts' : 'other');
         $uploadsDir = __DIR__ . "/../../public/assets/img/$subFolder";
         
@@ -51,15 +123,15 @@ class File
             mkdir($uploadsDir, 0755, true);
         }
         
-        // Move uploaded file
+        // mover archivo subido
         $filePath = $uploadsDir . '/' . $uniqueFilename;
         $fileUploaded = move_uploaded_file($fileData['tmp_name'], $filePath);
         
         if (!$fileUploaded) {
-            throw new Exception("Failed to upload file to server");
+            throw new Exception("Error al subir el archivo al servidor");
         }
-
-        // Save metadata to database
+        
+        // guardar metadata en la base de datos
         $stmt = $pdo->prepare(
             'INSERT INTO files (filename, mime_type, byte_size, checksum) 
              VALUES (:filename, :mime_type, :byte_size, :checksum)'
@@ -76,44 +148,68 @@ class File
     }
 
     /**
-     * Delete a file by ID (removes physical file and database record)
+     * borrar archivo (elimina el archivo físico y el registro de la base de datos)
      */
-    public static function delete(int $id): bool
+    public function delete(): bool
     {
         $pdo = DbConnection::get();
-        $stmt = $pdo->prepare('SELECT filename FROM files WHERE id = :id');
-        $stmt->execute([':id' => $id]);
-        $file = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // borrar archivo físico
+        $filePath = $this->getFullPath();
+        if (file_exists($filePath)) {
+            $fileDeleted = unlink($filePath);
+            if (!$fileDeleted) {
+                throw new Exception("Error al borrar el archivo físico");
+            }
+        }
+
+        // borrar de la base de datos
+        $stmt = $pdo->prepare('DELETE FROM files WHERE id = :id');
+        return $stmt->execute([':id' => $this->id]);
+    }
+
+    /**
+     * borrar archivo por ID (elimina el archivo físico y el registro de la base de datos)
+     */
+    public static function deleteById(int $id): bool
+    {
+        $file = self::find($id);
         
         if (!$file) {
             return false;
         }
 
-        // Delete physical file
-        $filePath = __DIR__ . '/../../public/assets/img/' . $file['filename'];
-        if (file_exists($filePath)) {
-            $fileDeleted = unlink($filePath);
-            if (!$fileDeleted) {
-                throw new Exception("Failed to delete physical file");
-            }
-        }
-
-        // Delete from database
-        $stmt = $pdo->prepare('DELETE FROM files WHERE id = :id');
-        return $stmt->execute([':id' => $id]);
+        return $file->delete();
     }
 
 
 
     /**
-     * Serve file content directly (for image display)
+     * servir el contenido del archivo directamente (para mostrar imágenes)
      */
-    public static function serve(int $id): void
+    public function serve(): void
     {
-        $pdo = DbConnection::get();
-        $stmt = $pdo->prepare('SELECT filename, mime_type FROM files WHERE id = :id');
-        $stmt->execute([':id' => $id]);
-        $file = $stmt->fetch(PDO::FETCH_ASSOC);
+        $filePath = $this->getFullPath();
+
+        if (!file_exists($filePath)) {
+            http_response_code(404);
+            echo "Archivo físico no encontrado";
+            exit;
+        }
+
+        header('Content-Type: ' . $this->mimeType);
+        header('Content-Disposition: inline; filename="' . basename($this->filename) . '"');
+        
+        readfile($filePath);
+        exit;
+    }
+
+    /**
+     * servir el contenido del archivo directamente por ID (para mostrar imágenes)
+     */
+    public static function serveById(int $id): void
+    {
+        $file = self::find($id);
         
         if (!$file) {
             http_response_code(404);
@@ -121,18 +217,6 @@ class File
             exit;
         }
 
-        $filePath = __DIR__ . '/../../public/assets/img/' . $file['filename'];
-
-        if (!file_exists($filePath)) {
-            http_response_code(404);
-            echo "Physical file not found";
-            exit;
-        }
-
-        header('Content-Type: ' . $file['mime_type']);
-        header('Content-Disposition: inline; filename="' . $file['filename'] . '"');
-        
-        readfile($filePath);
-        exit;
+        $file->serve();
     }
 }

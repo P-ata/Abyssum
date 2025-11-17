@@ -4,9 +4,9 @@ require_once BASE_PATH . '/classes/Demon.php';
 require_once BASE_PATH . '/classes/Order.php';
 ?>
 
-<!-- Hero Section - Full Width -->
+<!-- main section -->
 <div class="relative overflow-hidden bg-black py-20 lg:py-32 font-mono">
-  <!-- Ambient background grid & glow -->
+  
   <div class="pointer-events-none fixed inset-0 opacity-5">
     <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
   </div>
@@ -15,7 +15,7 @@ require_once BASE_PATH . '/classes/Order.php';
   
   <div class="relative z-10 mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">
     <div class="text-center">
-      <!-- Main Title -->
+      
       <h1 class="hero-title text-6xl lg:text-8xl font-bold tracking-widest text-amber-500 mb-4">
         <span class="block">ABYSSUM</span>
       </h1>
@@ -25,12 +25,12 @@ require_once BASE_PATH . '/classes/Order.php';
         <span class="inline-block">SISTEMA DE PACTOS</span>
       </div>
       
-      <!-- Subtitle/Description -->
+      
       <p class="hero-description max-w-3xl mx-auto lg:px-17 text-sm lg:text-base text-gray-400 leading-relaxed mb-12">
         Los demonios de Abyssum son leyendas, entidades con reglas claras y poderes medibles. Un pacto abre acceso a sus dones y habilidades.
       </p>
       
-      <!-- Feature Pills -->
+      
       <div class="flex flex-wrap justify-center gap-4 mb-12">
         <div class="feature-pill group bg-black/70 border border-amber-600/30 rounded-xl px-6 py-3 backdrop-filter hover:bg-amber-600/10 transition-all">
           <div class="flex items-center gap-3">
@@ -63,7 +63,6 @@ require_once BASE_PATH . '/classes/Order.php';
         </div>
       </div>
       
-      <!-- CTA Buttons -->
       <div class="flex flex-wrap justify-center gap-4">
         <a href="/?sec=pacts" class="cta-button group relative inline-flex items-center gap-2 px-8 py-3 rounded border border-amber-600/40 bg-amber-600/20 hover:bg-amber-600/30 transition overflow-hidden">
           <span class="text-amber-500 text-sm tracking-wide font-semibold">EXPLORAR PACTOS</span>
@@ -124,6 +123,6 @@ require_once BASE_PATH . '/classes/Order.php';
     </div>
   </div>
   
-  <!-- Decorative bottom fade -->
+  <!-- fade -->
   <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent pointer-events-none"></div>
 </div>

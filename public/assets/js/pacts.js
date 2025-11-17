@@ -219,8 +219,6 @@ function initExpandableCards() {
           ease: 'power3.out',
           delay: 0.15
         });
-
-        // REMOVIDO: Efecto de escala en la imagen
       }, 51);
     });
 
@@ -286,7 +284,7 @@ function initExpandableCards() {
         ease: 'power2.in'
       });
 
-      // REMOVIDO: Efecto de escala en la imagen
+      
     });
   });
 }

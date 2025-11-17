@@ -13,64 +13,69 @@ class PactFilter
     }
 
     /**
-     * Parsea los filtros desde $_GET
+     * parsea los filtros desde $_GET
      */
     private function parseFilters(): void
     {
-        // Alinear filtros con demons: solo categoría y orden
+        // alinear filtros con demons: categoría, orden y demonio
         $sort = $_GET['sort'] ?? 'newest';
         $category = $_GET['category'] ?? null;
+        $demon = isset($_GET['demon']) ? (int)$_GET['demon'] : null;
 
         $this->filters = [
             'category' => $category,
             'sort' => $sort,
+            'demon_id' => $demon,
         ];
 
-        // Filtrar valores null
+        // filtrar valores null
         $this->filters = array_filter($this->filters, fn($v) => $v !== null);
 
-        // Filtros activos: categoría presente o sort distinto de 'newest'
-        $this->hasActiveFilters = ($category !== null && $category !== '') || ($sort !== 'newest');
+        // filtros activos: categoría presente, demonio presente o sort distinto de 'newest'
+        $this->hasActiveFilters = ($category !== null && $category !== '') 
+                                || ($demon !== null) 
+                                || ($sort !== 'newest');
     }
 
     /**
-     * Obtiene los pactos aplicando los filtros
+     * obtiene los pactos aplicando los filtros
      * 
-     * @return array Array de objetos Pact
+     * @return array array de objetos Pact
      */
     public function getPacts(): array
     {
-        // Si no hay filtros o solo hay sort por defecto, traer todos
+        // si no hay filtros o solo hay sort por defecto, traer todos
         if (empty($this->filters) || (count($this->filters) === 1 && isset($this->filters['sort']) && $this->filters['sort'] === 'newest')) {
             return Pact::all();
         }
 
-        // Aplicar filtros
+        // aplicar filtros
         return Pact::filter($this->filters);
     }
 
     /**
-     * Muestra toast de filtros aplicados si corresponde
+     * muestra toast de filtros aplicados si corresponde
      */
     public function showToastIfNeeded(): void
     {
-        // Determinar si el referer es de la misma sección
+        // determinar si el referer es de la misma sección
         $isSameSection = isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'sec=pacts') !== false;
 
         if (!$isSameSection) {
-            // Limpiar flags si cambio de sección
+            // limpiar flags si cambio de sección
             unset($_SESSION['filter_toast_pacts_applied'], $_SESSION['filter_toast_pacts_cleared']);
             return;
         }
 
-        // Extraer parámetros del referer para detectar "limpieza" de filtros
+        // extraer parámetros del referer para detectar "limpieza" de filtros
         $refQuery = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY) ?? '';
         parse_str($refQuery, $refParams);
 
         $refHadFilters = (isset($refParams['category']) && $refParams['category'] !== '')
+                      || (isset($refParams['demon']) && $refParams['demon'] !== '')
                       || (isset($refParams['sort']) && $refParams['sort'] !== 'newest');
 
-        // Caso 1: Filtros aplicados
+        // caso 1: filtros aplicados
         if ($this->hasActiveFilters && !isset($_SESSION['filter_toast_pacts_applied'])) {
             $_SESSION['filter_toast_pacts_applied'] = true;
             unset($_SESSION['filter_toast_pacts_cleared']);
@@ -78,7 +83,7 @@ class PactFilter
             return;
         }
 
-        // Caso 2: Filtros limpiados (antes había, ahora no)
+        // caso 2: filtros limpiados (antes había, ahora no)
         if (!$this->hasActiveFilters && $refHadFilters && !isset($_SESSION['filter_toast_pacts_cleared'])) {
             $_SESSION['filter_toast_pacts_cleared'] = true;
             unset($_SESSION['filter_toast_pacts_applied']);
@@ -86,14 +91,14 @@ class PactFilter
             return;
         }
 
-        // Si no hay filtros, limpiar flag de "applied" para futuros clics
+        // si no hay filtros, limpiar flag de "applied"
         if (!$this->hasActiveFilters) {
             unset($_SESSION['filter_toast_pacts_applied']);
         }
     }
 
     /**
-     * Verifica si hay filtros activos
+     * verifica si hay filtros activos
      * 
      * @return bool
      */
@@ -103,7 +108,7 @@ class PactFilter
     }
 
     /**
-     * Obtiene los filtros actuales
+     * obtiene los filtros actuales
      * 
      * @return array
      */
@@ -113,7 +118,7 @@ class PactFilter
     }
 
     /**
-     * Obtiene el valor de un filtro específico
+     * obtiene el valor de un filtro específico
      * 
      * @param string $key Nombre del filtro
      * @return mixed|null

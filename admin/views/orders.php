@@ -6,14 +6,14 @@ require_once BASE_PATH . '/classes/Pact.php';
 $orders = Order::all();
 $stats = Order::getStats();
 
-// Cargar items de cada orden
+// cargar items de cada orden
 foreach ($orders as $order) {
     $order->items = $order->getItems();
 }
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden px-6 py-12 font-mono">
-	<!-- Ambient background grid & glow -->
+	
 	<div class="pointer-events-none fixed inset-0 opacity-5">
 		<div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
 	</div>
@@ -21,7 +21,7 @@ foreach ($orders as $order) {
 	<div class="pointer-events-none fixed bottom-0 right-0 w-[28rem] h-[28rem] rounded-full blur-3xl opacity-10" style="background: radial-gradient(circle at center, rgba(251,191,36,0.35), transparent 70%);"></div>
 
 	<div class="max-w-7xl mx-auto relative z-10">
-		<!-- Header -->
+		<!-- header -->
 		<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-12">
 			<div>
 				<h1 id="dashTitle" class="text-6xl font-bold tracking-widest text-amber-500">
@@ -34,7 +34,7 @@ foreach ($orders as $order) {
 			</div>
 		</div>
 
-		<!-- Estadísticas -->
+		<!-- estadísticas -->
 		<div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
 			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-4 backdrop-filter" data-stat>
 				<div class="text-xs uppercase tracking-widest text-amber-600/70 mb-1">TOTAL ÓRDENES</div>
@@ -58,7 +58,7 @@ foreach ($orders as $order) {
 			</div>
 		</div>
 
-		<!-- Tabla de órdenes -->
+		<!-- tabla de órdenes -->
 		<?php if (empty($orders)): ?>
 			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-6 text-amber-400 text-center">
 				No hay órdenes registradas.
@@ -87,7 +87,7 @@ foreach ($orders as $order) {
 					?>
 					
 					<div class="order-card bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden hover:shadow-[0_0_25px_-4px_rgba(251,191,36,0.35)] transition-all">
-						<!-- Header -->
+						<!-- header -->
 						<div class="bg-amber-900/10 border-b border-amber-600/30 p-4">
 							<div class="flex justify-between items-start">
 								<div>
@@ -114,7 +114,7 @@ foreach ($orders as $order) {
 							</div>
 						</div>
 
-				<!-- Items -->
+				<!-- items -->
 				<div class="p-4">
 					<h4 class="text-amber-600/70 text-xs uppercase tracking-widest mb-3"><i class="fas fa-file-contract mr-2"></i>Pactos Adquiridos</h4>
 					<div class="space-y-3 mb-4">
@@ -127,11 +127,11 @@ foreach ($orders as $order) {
 							$duration = $snapshot['duration'] ?? null;
 							$cooldown = $snapshot['cooldown'] ?? null;
 							
-							// Obtener imagen del snapshot o del pacto actual
+							// obtener imagen del snapshot o del pacto actual
 							$pactImage = null;
 							$imageFileId = $snapshot['image_file_id'] ?? null;
 							
-							// Si no hay en snapshot, intentar obtener del pacto actual
+							// si no hay en snapshot, intentar obtener del pacto actual
 							if (!$imageFileId && isset($item['pact_id'])) {
 								$pact = Pact::find((int)$item['pact_id']);
 								if ($pact) {
@@ -139,7 +139,7 @@ foreach ($orders as $order) {
 								}
 							}
 							
-							// Obtener la ruta de la imagen
+							// obtener la ruta de la imagen
 							if ($imageFileId) {
 								$pdo = DbConnection::get();
 								$stmt = $pdo->prepare('SELECT filename FROM files WHERE id = ?');
@@ -151,7 +151,7 @@ foreach ($orders as $order) {
 							}
 							?>
 							<div class="bg-black/50 border border-amber-600/20 rounded-lg overflow-hidden hover:border-amber-600/40 transition-all flex flex-col sm:flex-row">
-								<!-- Imagen del pacto -->
+								<!-- imagen del pacto -->
 								<?php if ($pactImage): ?>
 									<div class="w-full sm:w-32 h-32 flex-shrink-0">
 										<img 
@@ -167,9 +167,9 @@ foreach ($orders as $order) {
 									</div>
 								<?php endif; ?>
 								
-								<!-- Contenido del item -->
+								<!-- contenido del item -->
 								<div class="flex-1 p-3 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-									<!-- Info del pacto -->
+									<!-- info del pacto -->
 									<div class="flex-1 min-w-0">
 										<h5 class="text-amber-300 font-bold text-sm mb-1"><?= htmlspecialchars($pactName) ?></h5>
 										<p class="text-amber-500/70 text-xs uppercase tracking-wider mb-2">
@@ -189,7 +189,7 @@ foreach ($orders as $order) {
 											</div>
 										<?php endif; ?>
 									</div>
-									<!-- Precio -->
+									<!-- precio -->
 									<div class="flex items-center w-full md:w-auto justify-end">
 										<span class="text-2xl font-bold text-amber-500 whitespace-nowrap">
 											<?= number_format($item['unit_price_credits']) ?> <i class="fas fa-coins text-xl"></i>
@@ -206,7 +206,7 @@ foreach ($orders as $order) {
 								</div>
 							<?php endif; ?>
 
-							<!-- Acciones -->
+							<!-- acciones -->
 							<div class="flex gap-3 pt-3 border-t border-amber-600/20">
 								<?php if ($order->status === 'paid'): ?>
 									<form method="POST" action="/?sec=admin&action=fulfill-order" class="flex-1">
@@ -246,7 +246,7 @@ foreach ($orders as $order) {
 </div>
 
 <!-- Modal de Cancelación -->
-<div id="cancelModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+<div id="cancelModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/80 backdrop-blur-sm">
 	<div class="bg-black border-2 border-red-500/50 rounded-xl max-w-md w-full mx-4 p-6 shadow-[0_0_50px_rgba(239,68,68,0.3)]">
 									<h3 class="text-2xl font-bold text-red-500 mb-4 tracking-wide flex items-center gap-2"><i class="fas fa-exclamation-triangle"></i> CANCELAR ORDEN</h3>
 		<p class="text-amber-200/80 mb-6 text-sm">
@@ -281,14 +281,14 @@ function closeCancelModal() {
 	document.getElementById('cancelModal').classList.add('hidden');
 }
 
-// Cerrar modal con ESC
+// cerrar modal con ESC
 document.addEventListener('keydown', (e) => {
 	if (e.key === 'Escape') {
 		closeCancelModal();
 	}
 });
 
-// Cerrar modal al hacer click fuera
+// cerrar modal al hacer click fuera
 document.getElementById('cancelModal')?.addEventListener('click', (e) => {
 	if (e.target.id === 'cancelModal') {
 		closeCancelModal();

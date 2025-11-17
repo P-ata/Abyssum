@@ -12,7 +12,7 @@
   <!-- Tailwind CSS (público) -->
   <link rel="stylesheet" href="/assets/css/tailwind.css?v=<?= time() ?>" />
   
-  <!-- Vite dev server para módulos ES (development) -->
+  <!-- Vite dev server para módulos ES -->
   <?php if (($_SERVER['SERVER_NAME'] ?? 'localhost') === 'localhost'): ?>
     <script type="module" src="http://localhost:5173/@vite/client"></script>
   <?php endif; ?>

@@ -18,7 +18,7 @@ class Contact
     public string $created_at;
     public string $updated_at;
     
-    // Datos relacionados
+    // datos relacionados
     public ?string $handler_name = null;
 
     public static function fromRow(array $row): self
@@ -43,14 +43,18 @@ class Contact
     }
 
     /**
-     * Crear nuevo contacto
+     * crear nuevo contacto
      */
     public static function create(array $data): int
     {
         $pdo = DbConnection::get();
         
-        $sql = 'INSERT INTO contacts (name, email, subject, message, ip_address) 
-                VALUES (?, ?, ?, ?, ?)';
+        // obtener fecha/hora actual en zona horaria de Argentina
+        date_default_timezone_set('America/Argentina/Buenos_Aires');
+        $sent_at = date('Y-m-d H:i:s');
+        
+        $sql = 'INSERT INTO contacts (name, email, subject, message, ip_address, sent_at) 
+                VALUES (?, ?, ?, ?, ?, ?)';
         
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
@@ -58,14 +62,15 @@ class Contact
             $data['email'],
             $data['subject'] ?? null,
             $data['message'],
-            $data['ip_address'] ?? null
+            $data['ip_address'] ?? null,
+            $sent_at
         ]);
         
         return (int)$pdo->lastInsertId();
     }
 
     /**
-     * Obtener todos los contactos (para admin)
+     * obtener todos los contactos (para admin)
      */
     public static function all(): array
     {
@@ -80,7 +85,7 @@ class Contact
     }
 
     /**
-     * Obtener contactos por estado
+     * obtener contactos por estado
      */
     public static function byStatus(string $status): array
     {
@@ -97,7 +102,7 @@ class Contact
     }
 
     /**
-     * Encontrar contacto por ID
+     * encontrar contacto por ID
      */
     public static function find(int $id): ?self
     {
@@ -113,7 +118,7 @@ class Contact
     }
 
     /**
-     * Actualizar estado del contacto
+     * actualizar estado del contacto
      */
     public function updateStatus(string $status, ?int $handlerId = null): void
     {
@@ -133,7 +138,7 @@ class Contact
     }
 
     /**
-     * Marcar como spam
+     * marcar como spam
      */
     public function markAsSpam(): void
     {
@@ -141,7 +146,7 @@ class Contact
     }
 
     /**
-     * Obtener estadísticas
+     * obtener estadísticas
      */
     public static function getStats(): array
     {

@@ -13,15 +13,16 @@ require_once __DIR__ . '/../classes/File.php';
 require_once __DIR__ . '/../classes/Toast.php';
 require_once __DIR__ . '/../includes/functions.php';
 
-// Get return_to parameter
+// return a la pagina de donde vino
 $returnTo = isset($_GET['return_to']) ? htmlspecialchars($_GET['return_to']) : 'dashboard';
 
+// solo por post
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /?sec=admin&page=' . $returnTo);
     exit;
 }
 
-// Get demon slug
+// Obtener el slug del demonio a editar
 $slug = isset($_POST['id']) ? trim($_POST['id']) : '';
 
 if ($slug === '') {
@@ -30,7 +31,7 @@ if ($slug === '') {
     exit;
 }
 
-// Load existing demon
+// Cargar demonio existente
 $demon = Demon::find($slug);
 if (!$demon) {
     Toast::error('Demonio no encontrado');
@@ -38,7 +39,7 @@ if (!$demon) {
     exit;
 }
 
-// Required fields
+// Campos requeridos
 $name = trim($_POST['name'] ?? '');
 $newSlug = trim($_POST['slug'] ?? '');
 
@@ -48,32 +49,39 @@ if ($name === '') {
     exit;
 }
 
-// Auto-generate slug if empty
+// se genera slug si no se escribió
 if ($newSlug === '') {
     $newSlug = generateSlug($name);
 }
 
-// Handle image upload
+// manejar subida de imagen
 $currentImageFileId = !empty($_POST['current_image_file_id']) ? (int)$_POST['current_image_file_id'] : null;
+$deleteCurrentImage = !empty($_POST['delete_current_image']) && $_POST['delete_current_image'] === '1';
 $imageFileId = $currentImageFileId;
+
+// si se marcó para eliminar la imagen actual
+if ($deleteCurrentImage && $currentImageFileId) {
+    File::deleteById($currentImageFileId);
+    $imageFileId = null;
+}
 
 if (!empty($_FILES['image']['tmp_name'])) {
     try {
         $imageFileId = File::upload($_FILES['image'], 'demon');
         
-        // Delete old image from DB if exists and it's different
+        // borrar imagen vieja de la BD si existe y es diferente
         if ($currentImageFileId && $currentImageFileId !== $imageFileId) {
-            File::delete($currentImageFileId);
+            File::deleteById($currentImageFileId);
         }
     } catch (Exception $e) {
-        // Check if it's a duplicate file
-        if (str_starts_with($e->getMessage(), 'DUPLICATE_FILE:')) {
-            $imageFileId = (int)substr($e->getMessage(), strlen('DUPLICATE_FILE:'));
+        // Verificar si es un archivo duplicado
+        if (str_starts_with($e->getMessage(), 'ARCHIVO_DUPLICADO:')) {
+            $imageFileId = (int)substr($e->getMessage(), strlen('ARCHIVO_DUPLICADO:'));
             Toast::info('Imagen ya existente en la base de datos, reutilizando archivo');
             
-            // Delete old image if it's different
+            // Borrar imagen vieja si es diferente
             if ($currentImageFileId && $currentImageFileId !== $imageFileId) {
-                File::delete($currentImageFileId);
+                File::deleteById($currentImageFileId);
             }
         } else {
             Toast::error('Error al subir imagen: ' . $e->getMessage());
@@ -83,7 +91,7 @@ if (!empty($_FILES['image']['tmp_name'])) {
     }
 }
 
-// Optional fields
+// campos opcionales
 $species = trim($_POST['species'] ?? '');
 $gender = trim($_POST['gender'] ?? '');
 $age_real = trim($_POST['age_real'] ?? '');
@@ -91,7 +99,7 @@ $summary = trim($_POST['summary'] ?? '');
 $lore = trim($_POST['lore'] ?? '');
 $abilities_summary = trim($_POST['abilities_summary'] ?? '');
 
-// JSON fields - Aliases
+// campos JSON - alias
 $aliases = [];
 for ($i = 1; $i <= 3; $i++) {
     $alias = trim($_POST["alias_$i"] ?? '');
@@ -100,7 +108,7 @@ for ($i = 1; $i <= 3; $i++) {
     }
 }
 
-// JSON fields - Personality
+// campos JSON - personalidad
 $personality = [];
 for ($i = 1; $i <= 3; $i++) {
     $trait = trim($_POST["personality_$i"] ?? '');
@@ -109,7 +117,7 @@ for ($i = 1; $i <= 3; $i++) {
     }
 }
 
-// JSON fields - Weaknesses
+// campos JSON - debilidades
 $weaknesses = [];
 for ($i = 1; $i <= 3; $i++) {
     $weakness = trim($_POST["weakness_$i"] ?? '');
@@ -134,7 +142,7 @@ try {
         'name' => $name,
     ];
 
-    // Add optional fields only if not empty
+    // agregar campos opcionales si no están vacíos
     if ($species !== '') $data['species'] = $species;
     if ($gender !== '') $data['gender'] = $gender;
     if ($age_real !== '') $data['age_real'] = $age_real;
@@ -143,15 +151,15 @@ try {
     if ($abilities_summary !== '') $data['abilities_summary'] = $abilities_summary;
     if ($imageFileId !== null) $data['image_file_id'] = $imageFileId;
     
-    // Add JSON fields if not empty
+    // campos JSON si no están vacíos
     if (!empty($aliases)) $data['aliases'] = $aliases;
     if (!empty($personality)) $data['personality'] = $personality;
     if (!empty($weaknesses)) $data['weaknesses_limits'] = $weaknesses;
 
-    // Add stats
+    // agregar stats
     foreach ($stats as $key => $value) {
         if ($value !== null) {
-            $data[$key] = max(0, min(100, $value)); // Clamp to 0-100
+            $data[$key] = max(0, min(10, $value)); // clamp de 0-10
         }
     }
 
@@ -161,5 +169,12 @@ try {
     Toast::error('Error al actualizar el demonio: ' . $e->getMessage());
 }
 
-header('Location: /?sec=admin&page=' . $returnTo);
+// construir URL de retorno (usar el nuevo slug si se cambió, sino el original)
+$finalSlug = isset($data['slug']) ? $data['slug'] : $demon->slug;
+
+if ($returnTo === 'demon-detail') {
+    header('Location: /?sec=admin&page=demon-detail&id=' . urlencode($finalSlug));
+} else {
+    header('Location: /?sec=admin&page=' . $returnTo);
+}
 exit;

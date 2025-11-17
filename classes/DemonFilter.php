@@ -8,7 +8,7 @@ require_once __DIR__ . '/Toast.php';
 class DemonFilter
 {
     /**
-     * Filtra y ordena los demonios según los parámetros GET
+     * filtra y ordena los demonios según los parámetros GET
      * 
      * @return array{demons: Demon[], hasActiveFilters: bool}
      */
@@ -17,14 +17,14 @@ class DemonFilter
         $demons = Demon::all();
         $hasActiveFilters = false;
         
-        // Aplicar filtro por categoría
+        // aplicar filtro por categoría
         if (isset($_GET['category']) && !empty($_GET['category'])) {
             $categorySlug = $_GET['category'];
             $demons = self::filterByCategory($demons, $categorySlug);
             $hasActiveFilters = true;
         }
         
-        // Aplicar ordenamiento
+        // aplicar ordenamiento
         $sort = $_GET['sort'] ?? 'newest';
         $demons = self::sortDemons($demons, $sort);
         if ($sort !== 'newest') {
@@ -38,7 +38,7 @@ class DemonFilter
     }
     
     /**
-     * Filtra demonios por categoría
+     * filtra demonios por categoría
      * 
      * @param Demon[] $demons
      * @param string $categorySlug
@@ -58,7 +58,7 @@ class DemonFilter
     }
     
     /**
-     * Ordena los demonios según el criterio especificado
+     * ordena los demonios según el criterio especificado
      * 
      * @param Demon[] $demons
      * @param string $sort
@@ -80,33 +80,33 @@ class DemonFilter
                 
             case 'newest':
             default:
-                // Ya viene ordenado por defecto
+                // ya viene ordenado por defecto
                 return $demons;
         }
     }
 
     /**
-     * Muestra toast de filtros aplicados o limpiados si corresponde
+     * muestra toast de filtros aplicados o limpiados si corresponde
      */
     public static function showToastIfNeeded(): void
     {
         $sort = $_GET['sort'] ?? 'newest';
         $hasActiveFilters = (isset($_GET['category']) && $_GET['category'] !== '') || ($sort !== 'newest');
 
-        // Verificar que el referer pertenezca a la misma sección
+        // verificar que el referer pertenezca a la misma sección
         $isSameSection = isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'sec=demons') !== false;
         if (!$isSameSection) {
             unset($_SESSION['filter_toast_demons_applied'], $_SESSION['filter_toast_demons_cleared']);
             return;
         }
 
-        // Analizar el referrer para detectar limpieza
+        // analizar el referrer para detectar limpieza
         $refQuery = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY) ?? '';
         parse_str($refQuery, $refParams);
         $refHadFilters = (isset($refParams['category']) && $refParams['category'] !== '')
                       || (isset($refParams['sort']) && $refParams['sort'] !== 'newest');
 
-        // Caso: aplicados
+        // caso: aplicados
         if ($hasActiveFilters && !isset($_SESSION['filter_toast_demons_applied'])) {
             $_SESSION['filter_toast_demons_applied'] = true;
             unset($_SESSION['filter_toast_demons_cleared']);
@@ -114,7 +114,7 @@ class DemonFilter
             return;
         }
 
-        // Caso: limpiados
+        // caso: limpiados
         if (!$hasActiveFilters && $refHadFilters && !isset($_SESSION['filter_toast_demons_cleared'])) {
             $_SESSION['filter_toast_demons_cleared'] = true;
             unset($_SESSION['filter_toast_demons_applied']);

@@ -7,6 +7,7 @@ require_once __DIR__ . '/../classes/Toast.php';
 
 requireAdmin();
 
+// solo por post
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 	header('Location: /?sec=admin&page=users');
 	exit;
@@ -21,6 +22,7 @@ if ($userId === 0) {
 	exit;
 }
 
+// no desactivarnos a nosotros mismos
 if ($userId === $_SESSION['admin_id']) {
 	Toast::error('No puedes desactivar tu propia cuenta');
 	header('Location: /?sec=admin&page=users');

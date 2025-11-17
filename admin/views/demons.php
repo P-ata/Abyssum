@@ -8,14 +8,13 @@ $totalDemons = count($demons);
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden px-6 py-12 font-mono">
-	<!-- Ambient background grid & glow -->
+
 	<div class="pointer-events-none fixed inset-0 opacity-5">
 		<div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
 	</div>
 	<div class="pointer-events-none fixed top-0 left-0 w-96 h-96 rounded-full blur-3xl opacity-20" style="background: radial-gradient(circle at center, rgba(251,191,36,0.45), transparent 70%);"></div>
 	<div class="pointer-events-none fixed bottom-0 right-0 w-[28rem] h-[28rem] rounded-full blur-3xl opacity-10" style="background: radial-gradient(circle at center, rgba(251,191,36,0.35), transparent 70%);"></div>
 
-	<!-- Header / Title Row -->
 	<div class="max-w-7xl mx-auto relative z-10">
 		<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-12">
 			<div>
@@ -48,8 +47,7 @@ $totalDemons = count($demons);
 			</div>
 		</div>
 
-		<!-- Toolbar Row -->
-				<!-- Toolbar con buscador y botón crear -->
+		<!-- herramientas -->
 		<div id="toolbar" class="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between mb-10">
 			<div class="flex items-center gap-3 w-full md:w-auto">
 				<div class="relative flex-1 md:flex-none md:w-72">
@@ -67,34 +65,30 @@ $totalDemons = count($demons);
 			</div>
 		</div>
 
-		<!-- Demons Section -->
+			<!-- sección de demonios -->
 		<?php if (!empty($demons)): ?>
 			<div>
 				<div class="grid gap-6 md:grid-cols-3 lg:grid-cols-4" id="demonsList">
 					<?php foreach ($demons as $d): ?>
 					<div class="demon-card bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden hover:border-amber-500/50 transition group"
 						 data-searchable="<?= htmlspecialchars(strtolower($d->name . ' ' . $d->slug)) ?>">
-						<!-- Image -->
+						<!-- imagen -->
 						<?php if (!empty($d->image_file_id)): ?>
 							<div class="w-full overflow-hidden bg-black/50 border-b border-amber-600/20">
 								<img src="/?file_id=<?= $d->image_file_id ?>" alt="<?= htmlspecialchars($d->name) ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
 							</div>
-						<?php else: ?>
-							<div class="w-full h-32 flex items-center justify-center bg-gradient-to-br from-black/80 to-amber-950/20 border-b border-amber-600/20">
-								<svg class="w-12 h-12 text-amber-600/30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-								</svg>
-							</div>
-						<?php endif; ?>
-						
-						<div class="p-5">
+					<?php else: ?>
+						<div class="w-full h-32 flex items-center justify-center bg-gradient-to-br from-black/80 to-amber-950/20 border-b border-amber-600/20">
+							<i class="fas fa-skull text-5xl text-amber-600/30"></i>
+						</div>
+					<?php endif; ?>						<div class="p-5">
 							<div class="text-sm text-amber-500 font-semibold mb-1"><?= htmlspecialchars($d->name) ?></div>
 							<div class="text-xs text-amber-600/70 mb-2">ID: <?= htmlspecialchars($d->slug) ?></div>
 						<div class="text-xs text-gray-400 mb-3 line-clamp-2"><?= htmlspecialchars(substr($d->summary ?? '', 0, 80)) ?><?= strlen($d->summary ?? '') > 80 ? '...' : '' ?></div>
 						<div class="flex gap-2">
 							<a href="/?sec=admin&page=demon-detail&id=<?= urlencode($d->slug) ?>&return_to=demons" class="flex-1 text-xs px-3 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">VER</a>
 							<a href="/?sec=admin&page=edit-demon&id=<?= urlencode($d->slug) ?>&return_to=demons" class="flex-1 text-xs px-3 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">EDITAR</a>
-								<a href="/?sec=admin&action=delete-demon&id=<?= urlencode($d->slug) ?>&return_to=demons" onclick="return confirm('¿Eliminar este demonio?')" class="flex-1 text-xs px-3 py-1.5 rounded border border-red-600/40 text-red-500 bg-black/50 hover:bg-red-600/20 transition text-center">ELIMINAR</a>
+								<a href="#" onclick="showDeleteModal('/?sec=admin&action=delete-demon&id=<?= urlencode($d->slug) ?>&return_to=demons', '¿Eliminar el demonio <?= htmlspecialchars($d->name) ?>?'); return false;" class="flex-1 text-xs px-3 py-1.5 rounded border border-red-600/40 text-red-500 bg-black/50 hover:bg-red-600/20 transition text-center">ELIMINAR</a>
 							</div>
 						</div>
 					</div>
@@ -107,15 +101,12 @@ $totalDemons = count($demons);
 			</div>
 		<?php endif; ?>
 
-		<!-- Footer info strip -->
-		<div class="mt-14 text-center text-xs tracking-widest text-amber-600/50">
-			// DATABASE_DRIVEN :: ABYSSUM_ADMIN :: v1.0
-		</div>
 	</div>
 </div>
 
 <script>
-// Fallback: ensure demon cards stay visible
+
+// aseguramos de que las cards esten visibles
 document.querySelectorAll('.demon-card').forEach(el => {
 	el.style.opacity = '1';
 	el.style.transform = 'translateY(0)';

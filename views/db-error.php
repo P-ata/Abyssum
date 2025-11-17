@@ -9,7 +9,7 @@
 </head>
 <body class="bg-black text-amber-500 font-mono">
     <div class="min-h-screen flex items-center justify-center relative overflow-hidden px-4">
-        <!-- Ambient background grid & glow -->
+        
         <div class="pointer-events-none fixed inset-0 opacity-5">
             <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
         </div>
@@ -18,7 +18,7 @@
 
         <div class="relative z-10 max-w-2xl w-full">
             <div class="bg-black/80 border border-red-600/40 rounded-xl p-8 md:p-12 backdrop-blur-sm">
-                <!-- Icono de error -->
+                <!-- icono de error -->
                 <div class="text-center mb-6">
                     <i class="fas fa-exclamation-triangle text-6xl text-red-500 mb-4 animate-pulse"></i>
                     <h1 class="text-4xl md:text-5xl font-bold tracking-widest text-red-500 mb-2">
@@ -29,7 +29,7 @@
                     </div>
                 </div>
 
-                <!-- Mensaje -->
+                <!-- mensaje -->
                 <div class="bg-red-900/20 border border-red-600/30 rounded-lg p-6 mb-6">
                     <p class="text-amber-400/80 text-center mb-4">
                         No se puede establecer conexión con la base de datos.
@@ -39,7 +39,7 @@
                     </p>
                 </div>
 
-                <!-- Acciones -->
+                <!-- acciones -->
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="/" class="inline-block bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 px-8 py-3 rounded text-sm font-bold transition-all text-center uppercase tracking-wider">
                         <i class="fa-solid fa-home mr-2"></i>Volver al Inicio

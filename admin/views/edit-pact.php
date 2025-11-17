@@ -1,6 +1,7 @@
 <?php
 require_once BASE_PATH . '/classes/Pact.php';
 require_once BASE_PATH . '/classes/Demon.php';
+require_once BASE_PATH . '/classes/Category.php';
 
 $pactId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $pact = $pactId > 0 ? Pact::find($pactId) : null;
@@ -12,6 +13,9 @@ if (!$pact) {
 
 $demons = Demon::all();
 $limitations = $pact->limitations ?? [];
+$allCategories = Category::allExcludingDemons();
+$pactCategories = $pact->categories();
+$pactCategorySlugs = array_map(fn($cat) => $cat->slug, $pactCategories);
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden px-6 py-14 xl:py-16 font-mono">
@@ -48,7 +52,7 @@ $limitations = $pact->limitations ?? [];
     <?php endif; ?>
 
     <div class="grid gap-10 xl:gap-16 md:grid-cols-2 items-start">
-      <!-- Left: Media uploader -->
+      <!-- izquierda drag and drop -->
       <section class="md:col-span-1 space-y-8">
         <div class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden" id="mediaCard">
           <div class="p-6 xl:p-7 border-b border-amber-600/20">
@@ -69,7 +73,7 @@ $limitations = $pact->limitations ?? [];
                 <p class="text-xs text-amber-600/70 mb-3">IMAGEN ACTUAL:</p>
                 <div class="relative group border border-amber-600/30 rounded-lg overflow-hidden">
                   <img src="/?file_id=<?= $pact->image_file_id ?>" alt="Current" class="h-auto max-h-screen" />
-                  <button type="button" onclick="document.getElementById('currentImagePreview').style.display='none';" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" title="Eliminar imagen">
+                  <button type="button" onclick="document.getElementById('currentImagePreview').style.display='none'; document.getElementById('deleteCurrentImage').value='1';" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" title="Eliminar imagen">
                     <svg class="w-7 h-7 text-amber-500 drop-shadow-lg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
@@ -83,11 +87,12 @@ $limitations = $pact->limitations ?? [];
         </div>
       </section>
 
-      <!-- Right: Form fields -->
+      <!-- a la derecha los forms -->
       <section class="md:col-span-1">
         <form action="/?sec=admin&action=edit-pact<?= isset($_GET['return_to']) ? '&return_to=' . htmlspecialchars($_GET['return_to']) : '' ?>" method="post" enctype="multipart/form-data" class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden" id="editPactForm">
           <input type="hidden" name="id" value="<?= $pact->id ?>" />
           <input type="hidden" name="current_image_file_id" value="<?= $pact->image_file_id ?? '' ?>" />
+          <input type="hidden" name="delete_current_image" id="deleteCurrentImage" value="0" />
           
           <!-- Hidden file input -->
           <input id="fileInput" name="image" type="file" accept="image/*" class="hidden" aria-label="Seleccionar imagen" />
@@ -137,6 +142,27 @@ $limitations = $pact->limitations ?? [];
             <div class="md:col-span-2 form-section">
               <label class="block text-xs text-amber-600/70 tracking-widest mb-2">PRECIO (créditos)</label>
               <input name="price_credits" type="number" min="0" value="<?= $pact->price_credits ?>" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" />
+            </div>
+            
+            <!-- categorías -->
+            <div class="md:col-span-2 form-section">
+              <label class="block text-xs text-amber-600/70 tracking-widest mb-3">
+                <i class="fa-solid fa-tags mr-2"></i>CATEGORÍAS
+              </label>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <?php foreach ($allCategories as $cat): ?>
+                  <label class="flex items-center gap-2 px-4 py-2.5 rounded border border-amber-600/30 bg-black/40 hover:bg-amber-600/10 transition cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      name="categories[]" 
+                      value="<?= htmlspecialchars($cat->slug) ?>"
+                      <?= in_array($cat->slug, $pactCategorySlugs) ? 'checked' : '' ?>
+                      class="w-4 h-4 rounded border-amber-600/40 bg-black/60 text-amber-500 focus:ring-amber-500 focus:ring-offset-0"
+                    />
+                    <span class="text-sm text-amber-300"><?= htmlspecialchars($cat->display_name) ?></span>
+                  </label>
+                <?php endforeach; ?>
+              </div>
             </div>
           </div>
           <div class="px-6 xl:px-8 py-5 border-t border-amber-600/20 flex flex-wrap items-center justify-end gap-4">

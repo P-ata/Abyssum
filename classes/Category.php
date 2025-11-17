@@ -30,7 +30,7 @@ class Category
     }
 
     /**
-     * Get all categories excluding demon names (for filters)
+     * todas las categorias menos los nombres de demonios
      * @return Category[]
      */
     public static function allExcludingDemons(): array
@@ -46,7 +46,7 @@ class Category
     }
 
     /**
-     * Get all categories for demons (categories that are demon names)
+     * todas las categorias para demonios (categorias que son nombres de demonios)
      * @return Category[]
      */
     public static function allForDemons(): array

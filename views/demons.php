@@ -8,10 +8,10 @@ $demons = [];
 $hasActiveFilters = false;
 
 try {
-    // Mostrar toast si hay filtros aplicados
+    // mostrar toast si hay filtros aplicados
     DemonFilter::showToastIfNeeded();
     
-    // Aplicar filtros y ordenamiento
+    // aplicar filtros y ordenamiento
     $result = DemonFilter::applyFilters();
     $demons = $result['demons'];
     $hasActiveFilters = $result['hasActiveFilters'];
@@ -20,7 +20,7 @@ try {
     $demons = [];
 }
 
-// Obtener todas las categorías para los filtros (solo las de demonios)
+// obtener todas las categorías para los filtros (solo las de demonios)
 $allCategories = [];
 try {
     $allCategories = Category::allForDemons();
@@ -30,7 +30,7 @@ try {
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden py-20 px-4 font-mono">
-  <!-- Ambient background grid & glow -->
+  
   <div class="pointer-events-none fixed inset-0 opacity-5">
     <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
   </div>
@@ -39,21 +39,21 @@ try {
   
   <div class="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 relative z-10">
     
-    <!-- Título -->
+    <!-- título -->
     <div class="text-center mb-6 demons-title">
       <h1 class="text-6xl font-bold tracking-widest text-amber-500 font-mono">
         DEMONIOS
       </h1>
     </div>
 
-    <!-- Instrucciones arriba -->
+    <!-- instrucciones arriba -->
     <div class="text-center mb-8 demons-instructions">
       <p class="text-amber-600/70 text-sm font-mono uppercase tracking-widest">
         // Pasa el cursor sobre un demonio para revelar detalles
       </p>
     </div>
 
-    <!-- Buscador sutil -->
+    <!-- buscador sutil -->
     <div class="mb-6 search-container">
       <div class="max-w-lg mx-auto flex items-center gap-3">
         <div class="relative flex-1">
@@ -64,12 +64,12 @@ try {
       </div>
     </div>
 
-    <!-- Filtros -->
+    <!-- filtros -->
     <div class="mb-8 bg-black/70 border border-amber-600/30 rounded-xl p-6 filters-container">
       <form method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <input type="hidden" name="sec" value="demons">
 
-        <!-- Filtro por Categoría -->
+        <!-- filtro por categoría -->
         <div class="filter-item group">
           <label class="block text-amber-500 text-xs font-mono mb-2 uppercase tracking-wider">
             <i class="fa-solid fa-tag mr-2"></i>Categoría
@@ -87,7 +87,7 @@ try {
           </div>
         </div>
 
-        <!-- Ordenar por -->
+        <!-- ordenar por -->
         <div class="filter-item group">
           <label class="block text-amber-500 text-xs font-mono mb-2 uppercase tracking-wider">
             <i class="fa-solid fa-arrow-down-short-wide mr-2"></i>Ordenar
@@ -103,7 +103,7 @@ try {
           </div>
         </div>
 
-        <!-- Botones -->
+        <!-- botones -->
         <div class="flex items-end gap-2 filter-buttons">
           <button type="submit" class="flex-1 bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 text-xs font-bold py-2 px-4 rounded font-mono transition-all">
             <i class="fa-solid fa-filter mr-2"></i>FILTRAR
@@ -135,14 +135,14 @@ try {
         // NO HAY DEMONIOS DISPONIBLES
       </div>
     <?php else: ?>
-      <!-- Container de las cards -->
+      <!-- container de las cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         
         <?php foreach ($demons as $demon): ?>
           <?php 
           $categories = $demon->categories();
           
-          // Obtener imagen del demonio
+          // obtener imagen del demonio
           $imagePath = '/assets/img/demons/default.png'; // Fallback
           
           if ($demon->image_file_id) {
@@ -160,7 +160,7 @@ try {
           <div class="expandable-card-container" data-searchable="<?= htmlspecialchars($searchable) ?>">
             <div class="expandable-card group" data-demon="demon-<?= $demon->id ?>">
               
-              <!-- Imagen principal -->
+              <!-- imagen principal -->
               <div class="card-image relative overflow-hidden rounded-xl border-2 border-amber-600/30 bg-black shadow-2xl shadow-amber-500/20">
                 <img 
                   src="<?= htmlspecialchars($imagePath) ?>" 
@@ -169,15 +169,15 @@ try {
                   onerror="this.src='/assets/img/demons/default.png'"
                 >
                 
-                <!-- Info discreta en la esquina -->
+                <!-- info discreta en la esquina -->
                 <div class="card-info">
                   <p class="text-amber-300 text-lg font-mono font-bold"><?= htmlspecialchars($demon->name) ?></p>
                 </div>
               </div>
 
-              <!-- Menú expandible -->
+              <!-- menú expandible -->
               <div class="card-menu">
-                <!-- Panel izquierdo - Alias -->
+                <!-- panel izquierdo - alias -->
                 <div class="menu-panel menu-left bg-black/95 border-2 border-amber-600/40 backdrop-blur-sm h-38">
                   <div class="p-4 h-full flex flex-col">
                     <h4 class="text-amber-500 font-mono text-sm mb-3 border-b border-amber-600/30 pb-2 uppercase tracking-wider text-center">
@@ -195,19 +195,19 @@ try {
                   </div>
                 </div>
 
-                <!-- Panel derecho - Acciones -->
+                <!-- panel derecho - acciones -->
                 <div class="menu-panel menu-right bg-black/95 border-2 border-amber-600/40 backdrop-blur-sm h-38">
                   <div class="p-4">
                     <h4 class="text-amber-500 font-mono text-sm mb-3 border-b border-amber-600/30 pb-2 uppercase tracking-wider text-center">
                       <i class="fa-solid fa-info-circle mr-2"></i>Info
                     </h4>
                     <div class="space-y-2">
-                      <!-- Botón ver detalles -->
+                      <!-- botón ver detalles -->
                       <a href="/?sec=demon-detail&demon_id=<?= $demon->id ?>" class="block w-full bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 text-xs font-bold py-2 px-3 rounded font-mono transition-all hover:shadow-lg hover:shadow-amber-500/30 text-center">
                         VER DETALLES
                       </a>
                       
-                      <!-- Botón ver pactos -->
+                      <!-- botón ver pactos -->
                       <a href="/?sec=pacts&demon=<?= $demon->id ?>" class="block w-full bg-black/60 hover:bg-black/80 border border-amber-600/40 text-amber-600 hover:text-amber-500 text-xs font-bold py-2 px-3 rounded font-mono transition-all text-center">
                         VER PACTOS
                       </a>
@@ -215,7 +215,7 @@ try {
                   </div>
                 </div>
 
-                <!-- Panel superior - Nombre -->
+                <!-- panel superior - nombre -->
                 <div class="menu-panel menu-top bg-black/95 border-2 border-amber-600/40 backdrop-blur-sm">
                   <div class="p-3 text-center">
                     <p class="text-amber-500 font-bold text-sm font-mono uppercase tracking-wider">
@@ -224,7 +224,7 @@ try {
                   </div>
                 </div>
 
-                <!-- Panel inferior - Descripción -->
+                <!-- panel inferior - descripción -->
                 <div class="menu-panel menu-bottom bg-black/95 border-2 border-amber-600/40 backdrop-blur-sm">
                   <div class="p-3">
                     <p class="text-amber-400 text-xs font-mono text-center line-clamp-2">

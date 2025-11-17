@@ -7,6 +7,7 @@ require_once __DIR__ . '/../../includes/auth.php';
 
 requireAdmin();
 
+// solo por post
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /?sec=admin&page=contacts');
     exit;

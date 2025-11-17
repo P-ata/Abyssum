@@ -15,7 +15,7 @@ try {
     $total = Cart::getTotal();
     $count = Cart::count();
 
-    // Pre-load all demons at once to avoid N+1 queries
+    // Pre-load todos los demonios
     $demonIds = array_unique(array_column($pacts, 'demon_id'));
     if (!empty($demonIds)) {
         $demons = Demon::findMultiple($demonIds);
@@ -30,7 +30,7 @@ try {
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden py-20 px-4 font-mono">
-  <!-- Ambient background grid & glow -->
+  
   <div class="pointer-events-none fixed inset-0 opacity-5">
     <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
   </div>
@@ -92,7 +92,7 @@ try {
               $demon = $demonsMap[$pact->demon_id] ?? null;
               $demonName = $demon ? $demon->name : 'Desconocido';
               
-              // Obtener la imagen del pacto desde la base de datos
+              // obtener la imagen del pacto desde la base de datos
               $pactImage = null;
               if ($pact->image_file_id) {
                   $pdo = DbConnection::get();
@@ -105,7 +105,7 @@ try {
               }
               ?>
               <div class="cart-item bg-black/50 border border-amber-600/20 rounded-lg overflow-hidden hover:border-amber-600/40 transition-all flex flex-col sm:flex-row">
-                <!-- Imagen del pacto -->
+                <!-- imagen del pacto -->
                 <?php if ($pactImage): ?>
                   <div class="w-full sm:w-32 h-32 flex-shrink-0">
                     <img 
@@ -121,9 +121,9 @@ try {
                   </div>
                 <?php endif; ?>
                 
-                <!-- Contenido del item -->
+                <!-- contenido del item -->
                 <div class="flex-1 p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                  <!-- Info del pacto -->
+                  <!-- info del pacto -->
                   <div class="flex-1 min-w-0">
                     <h3 class="text-amber-300 font-bold text-lg mb-1"><?= htmlspecialchars($pact->name) ?></h3>
                     <p class="text-amber-500/70 text-xs uppercase tracking-wider mb-2">
@@ -143,7 +143,7 @@ try {
                       </div>
                     <?php endif; ?>
                   </div>
-                  <!-- Precio y botón -->
+                  <!-- precio y botón -->
                   <div class="flex flex-row md:flex-col items-center md:items-end gap-3 md:gap-2 w-full md:w-auto justify-between md:justify-start">
                     <span class="text-3xl font-bold text-amber-500 whitespace-nowrap">
                       <?= $pact->price_credits ?> <i class="fa-solid fa-coins text-2xl"></i>

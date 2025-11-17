@@ -6,7 +6,7 @@
       <!-- Grid principal -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
         
-        <!-- Columna 1: Branding -->
+        <!-- Columna 1 -->
         <div class="space-y-4">
           <h3 class="text-2xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">
             ABYSSUM
@@ -28,7 +28,7 @@
           </div>
         </div>
         
-        <!-- Columna 2: Links rápidos -->
+        <!-- Columna 2 -->
         <div class="space-y-4">
           <h4 class="text-sm font-bold font-mono text-amber-500 uppercase tracking-widest flex items-center gap-2">
             <i class="fas fa-terminal text-xs"></i>
@@ -50,7 +50,7 @@
           </nav>
         </div>
         
-        <!-- Columna 3: Info de contacto -->
+        <!-- Columna 3 -->
         <div class="space-y-4">
           <h4 class="text-sm font-bold font-mono text-amber-500 uppercase tracking-widest flex items-center gap-2">
             <i class="fas fa-broadcast-tower text-xs"></i>
@@ -117,14 +117,14 @@
   <!-- Cart Animations -->
   <script src="/assets/js/cart-animations.js"></script>
   
-  <!-- Toast System -->
+  <!-- toast System -->
   <?php
   require_once BASE_PATH . '/classes/Toast.php';
   $hasToasts = Toast::hasToasts();
   $toastData = $hasToasts ? Toast::getAll() : [];
   ?>
   
-  <?php if ($hasToasts || true): // Siempre incluir para toast de limpieza ?>
+  <?php if ($hasToasts || true): // siempre incluir para toast de limpieza ?>
     <script src="/assets/admin/js/toast.js"></script>
     <script src="/assets/admin/js/search.js"></script>
     <?php if (!empty($toastData)): ?>

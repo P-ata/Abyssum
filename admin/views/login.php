@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+// iniciar sesion si no esta activa
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
@@ -12,9 +13,9 @@ if (isAdmin()) {
     exit;
 }
 
-// Esta es la VISTA del login (solo GET)
+
 $error = $_SESSION['login_error'] ?? '';
-unset($_SESSION['login_error']); // Clear flash message
+unset($_SESSION['login_error']); 
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,7 +27,7 @@ unset($_SESSION['login_error']); // Clear flash message
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>     
 <body class="min-h-screen bg-black relative overflow-hidden flex items-center justify-center font-mono">
-  <!-- Ambient background grid & glow -->
+  
   <div class="pointer-events-none fixed inset-0 opacity-5">
     <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
   </div>
@@ -35,7 +36,7 @@ unset($_SESSION['login_error']); // Clear flash message
 
   <div class="relative z-10 w-full max-w-md px-4">
     
-    <!-- Título con badge ADMIN -->
+    <!-- titulo con badge ADMIN -->
     <div class="text-center mb-6">
       <div class="flex justify-center mb-4">
         <div class="px-3 py-1 bg-red-600/20 border border-red-600/40 rounded-full">
@@ -46,14 +47,14 @@ unset($_SESSION['login_error']); // Clear flash message
       </div>
     </div>
 
-    <!-- Instrucciones -->
+    
     <div class="text-center mb-8">
       <p class="text-amber-600/70 text-sm uppercase tracking-widest">
         // Acceso restringido - Solo administradores
       </p>
     </div>
     
-    <!-- Formulario -->
+    <!-- formulario -->
     <div class="bg-black/70 border-2 border-amber-600/40 backdrop-blur-sm rounded-xl p-8 shadow-2xl shadow-amber-500/20">
       
       <?php if ($error): ?>

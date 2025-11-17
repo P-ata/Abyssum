@@ -8,7 +8,7 @@ require_once BASE_PATH . '/classes/Category.php';
 $pacts = Pact::all();
 $totalPacts = count($pacts);
 
-// Build a map of demon_id => Demon for quick access
+// Cargar demonios relacionados
 /** @var array<int, Demon|null> $demons */
 $demons = [];
 foreach ($pacts as $p) {
@@ -20,7 +20,7 @@ foreach ($pacts as $p) {
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden px-6 py-12 font-mono">
-	<!-- Ambient background grid & glow -->
+	
 	<div class="pointer-events-none fixed inset-0 opacity-5">
 		<div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
 	</div>
@@ -28,7 +28,7 @@ foreach ($pacts as $p) {
 	<div class="pointer-events-none fixed bottom-0 right-0 w-[28rem] h-[28rem] rounded-full blur-3xl opacity-10" style="background: radial-gradient(circle at center, rgba(251,191,36,0.35), transparent 70%);"></div>
 
 	<div class="max-w-7xl mx-auto relative z-10">
-		<!-- Header con stats -->
+		
 		<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-12">
 			<div>
 				<h1 id="dashTitle" class="text-6xl font-bold tracking-widest text-amber-500">
@@ -37,7 +37,7 @@ foreach ($pacts as $p) {
 				</h1>
 			</div>
 			<div class="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-				<!-- Stat cards -->
+				
 				<div class="group bg-black/70 border border-amber-600/30 rounded-xl p-4 flex-1 min-w-[180px] backdrop-filter" data-stat>
 					<div class="text-xs uppercase tracking-widest text-amber-600/70 mb-1">TOTAL PACTOS</div>
 					<div class="flex items-end justify-between">
@@ -61,7 +61,7 @@ foreach ($pacts as $p) {
 			</div>
 		</div>
 
-		<!-- Toolbar con buscador y botón crear -->
+		<!-- herramientas -->
 		<div id="toolbar" class="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between mb-10">
 			<div class="flex items-center gap-3 w-full md:w-auto">
 				<div class="relative flex-1 md:flex-none md:w-72">
@@ -79,7 +79,7 @@ foreach ($pacts as $p) {
 			</div>
 		</div>
 
-		<!-- Pactos Grid -->
+		<!-- pactos -->
 		<?php if (empty($pacts)): ?>
 			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-6 text-amber-400 text-center">
 				No hay pactos cargados. <a href="/?sec=admin&page=new-pact" class="underline">Creá uno nuevo</a>.
@@ -114,9 +114,9 @@ foreach ($pacts as $p) {
 							</div>
 							<p class="text-xs leading-relaxed text-gray-400 mb-4"><?= htmlspecialchars(substr($p->summary ?? '', 0, 120)) ?><?= strlen($p->summary ?? '') > 120 ? '...' : '' ?></p>
 						<div class="flex gap-2">
-							<a href="/?sec=admin&page=pact-detail&id=<?= urlencode((string)$p->id) ?>&return_to=pacts" class="flex-1 text-xs px-2 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">VER</a>
-							<a href="/?sec=admin&page=edit-pact&id=<?= urlencode((string)$p->id) ?>&return_to=pacts" class="flex-1 text-xs px-2 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">EDITAR</a>
-							<a href="/?sec=admin&action=delete-pact&id=<?= urlencode((string)$p->id) ?>&return_to=pacts" onclick="return confirm('¿Eliminar este pacto?')" class="flex-1 text-xs px-2 py-1.5 rounded border border-red-600/40 text-red-500 bg-black/50 hover:bg-red-600/20 transition text-center">ELIMINAR</a>
+						<a href="/?sec=admin&page=pact-detail&id=<?= urlencode((string)$p->id) ?>&return_to=pacts" class="flex-1 text-xs px-2 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">VER</a>
+						<a href="/?sec=admin&page=edit-pact&id=<?= urlencode((string)$p->id) ?>&return_to=pacts" class="flex-1 text-xs px-2 py-1.5 rounded border border-amber-600/40 text-amber-500 bg-black/50 hover:bg-amber-600/20 transition text-center">EDITAR</a>
+						<a href="#" onclick="showDeleteModal('/?sec=admin&action=delete-pact&id=<?= urlencode((string)$p->id) ?>&return_to=pacts', '¿Eliminar el pacto <?= htmlspecialchars($p->name) ?>?'); return false;" class="flex-1 text-xs px-2 py-1.5 rounded border border-red-600/40 text-red-500 bg-black/50 hover:bg-red-600/20 transition text-center">ELIMINAR</a>
 						</div>
 						</div>
 						<div class="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 group-hover:w-full transition-all"></div>
@@ -125,6 +125,6 @@ foreach ($pacts as $p) {
 			</div>
 		<?php endif; ?>
 
-		<div class="mt-10 text-center text-xs tracking-widest text-amber-600/50">// LISTADO GENERADO DESDE DB :: pacts</div>
+		<div class="mt-10 text-center text-xs tracking-widest text-amber-600/50">// LISTADO :: pacts</div>
 	</div>
 </div>

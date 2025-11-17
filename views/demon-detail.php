@@ -3,7 +3,7 @@ require_once BASE_PATH . '/classes/Demon.php';
 require_once BASE_PATH . '/classes/Category.php';
 require_once BASE_PATH . '/classes/DbConnection.php';
 
-// Obtener ID del demonio
+// obtener ID del demonio
 $demonId = isset($_GET['demon_id']) ? (int)$_GET['demon_id'] : null;
 
 if (!$demonId) {
@@ -16,7 +16,7 @@ $demon = null;
 $demonImage = null;
 
 try {
-    // Obtener el demonio
+    // obtener el demonio
     $demon = Demon::find($demonId);
 
     if (!$demon) {
@@ -24,7 +24,7 @@ try {
         exit;
     }
 
-    // Obtener imagen
+    // obtener imagen
     if ($demon->image_file_id) {
         $demonImage = "/?file_id={$demon->image_file_id}";
     }
@@ -35,7 +35,7 @@ try {
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden py-8 px-4 font-mono">
-  <!-- Ambient background grid & glow -->
+  
   <div class="pointer-events-none fixed inset-0 opacity-5">
     <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
   </div>
@@ -57,10 +57,10 @@ try {
         </a>
       </div>
     <?php else: ?>
-    <!-- Contenedor principal centrado -->
+    <!-- contenedor principal centrado -->
     <div class="mx-auto max-w-7xl overflow-visible">
       
-      <!-- Botón volver -->
+      <!-- botón volver -->
       <div class="mb-6 mt-2 demon-back">
         <a href="/?sec=demons" class="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-amber-600/40 bg-amber-600/10 hover:bg-amber-600/20 hover:border-amber-600/60 transition-all text-amber-500 hover:text-amber-400 shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20">
           <i class="fa-solid fa-arrow-left text-base"></i>
@@ -70,7 +70,7 @@ try {
 
       <div class="flex flex-col lg:flex-row gap-8 lg:items-start">
         
-        <!-- Columna izquierda: Imagen -->
+        <!-- columna izquierda: imagen -->
         <div class="demon-image lg:w-2/5 flex-shrink-0">
           <div class="bg-black/70 border-2 border-amber-600/40 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl shadow-amber-500/20 h-full">
             <?php if ($demonImage): ?>
@@ -88,11 +88,11 @@ try {
           </div>
         </div>
 
-        <!-- Columna derecha: Información -->
+        <!-- columna derecha: información -->
         <div class="demon-info space-y-6 lg:w-3/5 flex-shrink-0 lg:overflow-y-auto lg:h-[766px] lg:pr-4"
              style="scrollbar-width: thin; scrollbar-color: rgba(251, 191, 36, 0.3) transparent;">
         
-        <!-- Título y especie -->
+        <!-- título y especie -->
         <div class="demon-header">
           <h1 class="text-5xl font-bold text-amber-500 mb-3 tracking-wider"><?= htmlspecialchars($demon->name) ?></h1>
           <?php if ($demon->species): ?>
@@ -103,7 +103,7 @@ try {
           <?php endif; ?>
         </div>
 
-        <!-- Aliases -->
+        <!-- alias -->
         <?php if (!empty($demon->aliases) && is_array($demon->aliases)): ?>
           <div class="demon-aliases">
             <h3 class="text-amber-500 text-sm font-bold uppercase tracking-wider mb-2">
@@ -119,7 +119,7 @@ try {
           </div>
         <?php endif; ?>
 
-        <!-- Resumen -->
+        <!-- resumen -->
         <?php if ($demon->summary): ?>
           <div class="demon-summary bg-black/70 border border-amber-600/30 rounded-xl p-6">
             <h3 class="text-amber-500 text-sm font-bold uppercase tracking-wider mb-3">
@@ -131,10 +131,10 @@ try {
           </div>
         <?php endif; ?>
 
-        <!-- Información demográfica -->
+        <!-- información demográfica -->
         <div class="demon-demographics grid grid-cols-1 md:grid-cols-2 gap-4">
           
-          <!-- Género -->
+          <!-- género -->
           <?php if ($demon->gender): ?>
             <div class="bg-black/70 border border-amber-600/30 rounded-xl p-4">
               <h4 class="text-amber-500 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
@@ -144,7 +144,7 @@ try {
             </div>
           <?php endif; ?>
 
-          <!-- Edad -->
+          <!-- edad -->
           <?php if ($demon->age_real): ?>
             <div class="bg-black/70 border border-amber-600/30 rounded-xl p-4">
               <h4 class="text-amber-500 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
@@ -156,7 +156,7 @@ try {
 
         </div>
 
-        <!-- Lore -->
+        <!-- lore -->
         <?php if ($demon->lore): ?>
           <div class="demon-lore bg-black/70 border border-amber-600/30 rounded-xl p-6">
             <h3 class="text-amber-500 text-sm font-bold uppercase tracking-wider mb-3">
@@ -168,7 +168,7 @@ try {
           </div>
         <?php endif; ?>
 
-        <!-- Habilidades -->
+        <!-- habilidades -->
         <?php if ($demon->abilities_summary): ?>
           <div class="demon-abilities bg-black/70 border border-amber-600/30 rounded-xl p-6">
             <h3 class="text-amber-500 text-sm font-bold uppercase tracking-wider mb-3">
@@ -180,7 +180,7 @@ try {
           </div>
         <?php endif; ?>
 
-        <!-- Estadísticas -->
+        <!-- estadísticas -->
         <?php 
         $hasStats = $demon->stat_strength || $demon->stat_dexterity || $demon->stat_intelligence || 
                     $demon->stat_health || $demon->stat_reflexes || $demon->stat_stealth;
@@ -266,7 +266,7 @@ try {
           </div>
         <?php endif; ?>
 
-        <!-- Personalidad -->
+        <!-- personalidad -->
         <?php if (!empty($demon->personality)): ?>
           <div class="demon-personality bg-black/70 border border-amber-600/30 rounded-xl p-6">
             <h3 class="text-amber-500 text-sm font-bold uppercase tracking-wider mb-3">
@@ -274,7 +274,7 @@ try {
             </h3>
             
             <?php if (is_array($demon->personality)): ?>
-              <!-- Si es array simple (legado) -->
+              <!-- si es array simple -->
               <ul class="space-y-2">
                 <?php foreach ($demon->personality as $trait): ?>
                   <li class="text-amber-300/90 text-sm flex items-start gap-2">
@@ -284,7 +284,7 @@ try {
                 <?php endforeach; ?>
               </ul>
             <?php else: ?>
-              <!-- Si es objeto con estructura compleja -->
+              <!-- si es objeto con estructura compleja -->
               <div class="space-y-3">
                 <?php if (isset($demon->personality['core'])): ?>
                   <div>
@@ -325,7 +325,7 @@ try {
           </div>
         <?php endif; ?>
 
-        <!-- Debilidades -->
+        <!-- debilidades -->
         <?php if (!empty($demon->weaknesses_limits) && is_array($demon->weaknesses_limits)): ?>
           <div class="demon-weaknesses bg-black/70 border border-amber-600/30 rounded-xl p-6">
             <h3 class="text-amber-500 text-sm font-bold uppercase tracking-wider mb-3">
@@ -342,7 +342,7 @@ try {
           </div>
         <?php endif; ?>
 
-        <!-- Botones de acción -->
+        <!-- botones de acción -->
         <div class="demon-actions flex flex-col sm:flex-row gap-3">
           <a href="/?sec=pacts&demon=<?= $demon->id ?>" class="flex-1 bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 text-sm font-bold py-3 px-6 rounded-lg transition-all text-center flex items-center justify-center gap-2">
             <i class="fa-solid fa-scroll"></i>
@@ -355,12 +355,12 @@ try {
         </div>
 
       </div>
-      <!-- Fin columna derecha demon-info -->
+      
 
       </div>
-      <!-- Fin contenedor flex -->
+      
     </div>
-    <!-- Fin contenedor centrado -->
+    
     <?php endif; ?>
 
   </div>

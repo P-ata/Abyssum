@@ -10,7 +10,7 @@ $current = $_GET['sec'] ?? 'abyssum';
       
       <div class="grid grid-cols-3 h-16 items-center">
         
-        <!-- Left: Menu Button -->
+        <!-- izquierda menu -->
         <div class="justify-self-start">
           <button id="menuBtn"
                   class="inline-flex items-center justify-center p-2 rounded-md hover:bg-amber-500/10 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-white/90"
@@ -27,7 +27,7 @@ $current = $_GET['sec'] ?? 'abyssum';
         <!-- pelado como una papa -->
         <div></div>
 
-        <!-- Right: Cart & Profile -->
+        <!-- derecha: carrito y perfil -->
         <div class="justify-self-end flex items-center gap-3">
           <?php if (isLoggedIn()): ?>
             <!-- CARRITO -->
@@ -91,7 +91,7 @@ $current = $_GET['sec'] ?? 'abyssum';
     </div>
   </nav>
 
-  <!-- Decorative glowing border -->
+  
   <div class="h-px bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-50"></div>
 
   <!-- Overlay -->

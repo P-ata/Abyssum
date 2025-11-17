@@ -7,17 +7,17 @@ class DbConnection
 
     public static function isConnected(): bool
     {
-        // Si ya falló, retornar false
+        // si ya falló, retornar false
         if (self::$connectionFailed) {
             return false;
         }
         
-        // Si ya hay una conexión, retornar true
+        // si ya hay una conexión, retornar true
         if (self::$pdo instanceof PDO) {
             return true;
         }
         
-        // Si no se ha intentado conectar, intentar ahora
+        // si no se ha intentado conectar, intentar ahora
         try {
             self::get();
             return true;
@@ -33,12 +33,12 @@ class DbConnection
 
     public static function get(): PDO
     {   
-        // Si ya existe, reusar
+        // si ya existe, reusar
         if (self::$pdo instanceof PDO) {
             return self::$pdo;
         }
 
-        // Si ya falló antes, no reintentar
+        // si ya falló antes, no reintentar
         if (self::$connectionFailed) {
             throw new Exception('Conexión a base de datos no disponible');
         }
@@ -70,7 +70,7 @@ class DbConnection
             self::$connectionFailed = true;
             self::$lastError = $e->getMessage();
             
-            // Si es admin (cualquier página admin excepto health), redirigir a health
+            // si es admin (cualquier página admin excepto health), redirigir a health
             if (isset($_GET['sec']) && $_GET['sec'] === 'admin') {
                 $page = $_GET['page'] ?? null;
                 if ($page !== 'health') {
@@ -78,7 +78,7 @@ class DbConnection
                     exit;
                 }
             } elseif (!isset($_GET['sec']) || $_GET['sec'] !== 'db-error') {
-                // Si es público y no es la página de error, redirigir a página de error
+                // si es público y no es la página de error, redirigir a página de error
                 header('Location: /?sec=db-error');
                 exit;
             }

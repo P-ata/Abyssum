@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const midBar = menuBtn.querySelector('.bar-mid');
   const botBar = menuBtn.querySelector('.bar-bot');
   
-  // Set initial state for menu
+  // Establecer estado inicial del menú
   gsap.set(mobileMenu, { x: '-120%' });
   gsap.set(overlay, { opacity: 0, pointerEvents: 'none' });
   

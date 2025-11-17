@@ -1,23 +1,23 @@
 import { gsap } from 'gsap';
 
-// Abyssum page animations
+// Animaciones de la página Abyssum
 (() => {
 	const onReady = (fn) => (document.readyState !== 'loading') ? fn() : document.addEventListener('DOMContentLoaded', fn);
 
 		onReady(() => {
-		// Calculate dynamic bar widths
+		// Calcular ancho dinámico de barras
 		const statCards = document.querySelectorAll('[data-stat]');
 		if (statCards.length) {
-			// Get all values
+			// Obtener todos los valores
 			const values = Array.from(statCards).map(card => {
 				const value = parseInt(card.querySelector('[data-value]')?.getAttribute('data-value') || '0');
 				return value;
 			});
 			
-			// Find max value for percentage calculation
-			const maxValue = Math.max(...values, 1); // Avoid division by zero
+			// Encontrar valor máximo para cálculo de porcentaje
+			const maxValue = Math.max(...values, 1); // Evitar división por cero
 			
-			// Set bar widths based on percentage
+			// Establecer ancho de barras según porcentaje
 			statCards.forEach((card, index) => {
 				const bar = card.querySelector('[data-bar]');
 				if (bar && values[index] !== undefined) {
@@ -28,7 +28,7 @@ import { gsap } from 'gsap';
 				}
 			});
 		
-			// Stats cards animation
+			// Animar tarjetas de estadísticas
 			gsap.from(statCards, {
 				scale: 0.85,
 				opacity: 0,
@@ -38,7 +38,7 @@ import { gsap } from 'gsap';
 				delay: 0.3
 			});
 
-			// Animate stat bars
+			// Animar barras de estadísticas
 			const statBars = document.querySelectorAll('[data-bar]');
 			gsap.from(statBars, {
 				scaleX: 0,
@@ -50,7 +50,7 @@ import { gsap } from 'gsap';
 			});
 		}
 
-		// Animate pact cards
+		// Animar tarjetas de pactos
 		const pactCards = document.querySelectorAll('[data-pact-card]');
 		if (pactCards.length > 0) {
 			gsap.from(pactCards, { 

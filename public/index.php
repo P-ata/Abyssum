@@ -3,44 +3,35 @@ declare(strict_types=1);
 
 session_start();
 
-// Base del proyecto (un nivel arriba de /public)
+// base del proyecto (un nivel arriba de /public)
 define('BASE_PATH', dirname(__DIR__));
 
-// Includes con ruta absoluta
+// includes con ruta absoluta
 require_once BASE_PATH . '/classes/Sections.php';
 require_once BASE_PATH . '/admin/classes/AdminSections.php';
 require_once BASE_PATH . '/includes/auth.php';
 
 // =======================
-// RUTA ESPECIAL: SERVIR ARCHIVOS DESDE BD
+// ruta especial para archivos
 // =======================
 if (isset($_GET['file_id'])) {
     require_once BASE_PATH . '/admin/classes/File.php';
     $fileId = (int)$_GET['file_id'];
-    File::serve($fileId);
+    File::serveById($fileId);
     exit;
 }
-
-// =======================
-// RESOLVER RUTA CON PARÁMETROS GET EXPLÍCITOS
-// =======================
-
-// Sistema de routing con parámetros visibles:
-// Público: ?sec=pacts
-// Admin: ?sec=admin&page=dashboard
-// Acciones: ?sec=actions&action=login o ?sec=admin&action=create-pact
 
 $section = $_GET['sec'] ?? null;
 
 // =======================
-// RUTAS ADMIN
+// rutas para el admin
 // =======================
 if ($section === 'admin') {
 
     $adminPage = $_GET['page'] ?? null;
     $adminAction = $_GET['action'] ?? null;
 
-    // Admin actions (no requieren auth para login/logout)
+    // acciones admin (no requieren auth para login/logout)
     if ($adminAction === 'login') {
         require BASE_PATH . '/admin/actions/login.php';
         exit;
@@ -51,7 +42,7 @@ if ($section === 'admin') {
         exit;
     }
 
-    // Resto de acciones admin requieren autenticación
+    // resto de acciones admin requieren autenticación
     if ($adminAction) {
         requireAdmin();
         
@@ -68,15 +59,15 @@ if ($section === 'admin') {
         }
     }
 
-    // /admin/login (GET form view - NO requiere auth)
+    // /admin/login (GET - no requiere auth)
     if ($adminPage === 'login') {
-        // Verificar si la DB está disponible antes de mostrar login
+        // verificar si la DB está disponible antes de mostrar login
         require_once BASE_PATH . '/classes/DbConnection.php';
         try {
             DbConnection::get(); // Intentar conectar
         } catch (Exception $e) {
-            // Si falla, ya debería haber redirigido desde DbConnection::get()
-            // Pero por si acaso, redirigir manualmente
+            // si falla, ya debería haber redirigido desde DbConnection::get()
+            // pero por las redirigir manual
             header('Location: /?sec=admin&page=health&error=db');
             exit;
         }
@@ -84,7 +75,7 @@ if ($section === 'admin') {
         exit;
     }
 
-    // Permitir health sin auth SOLO si viene con parámetro error (desde redirect automático)
+    // permitir health sin auth SOLO si viene con parámetro error 
     if ($adminPage === 'health' && isset($_GET['error'])) {
         require BASE_PATH . '/admin/views/partials/admin-head.php';
         echo '<main class="flex-grow">';
@@ -103,7 +94,7 @@ if ($section === 'admin') {
         exit;
     }
 
-    // Cargar vista admin
+    // cargar vista admin
     $validAdmin = AdminSections::validSections();
     $adminView  = in_array($adminPage, $validAdmin, true) ? $adminPage : '404';
 
@@ -127,7 +118,7 @@ if ($section === 'admin') {
 }
 
 // =======================
-// ACCIONES PÚBLICAS
+// acciones publicas
 // =======================
 if ($section === 'actions') {
     $action = $_GET['action'] ?? null;
@@ -144,16 +135,16 @@ if ($section === 'actions') {
         exit;
     }
     
-    // Acción no válida
+    // acción no válida
     header('Location: /?sec=404');
     exit;
 }
 
 // =======================
-// RUTAS PÚBLICAS
+// rutas publicas
 // =======================
 
-// Permitir página de error de DB sin validación
+// permitir página de error de DB sin validación
 if ($section === 'db-error') {
     require BASE_PATH . '/views/db-error.php';
     exit;
@@ -163,12 +154,12 @@ try {
     $validSections = Sections::validSections();
     $menuSections  = Sections::menuSections();
 } catch (Exception $e) {
-    // Si falla la carga de secciones (DB error), redirigir a página de error
+    // si falla la carga de secciones (DB error) redirigir a página de error
     header('Location: /?sec=db-error');
     exit;
 }
 
-// si no vino nada → redirect a abyssum con parámetro visible
+// si no vino nada  redirect a abyssum con parámetro visible
 if (!$section) {
     header('Location: /?sec=abyssum');
     exit;

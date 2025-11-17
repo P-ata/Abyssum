@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-// Destruir sesión
+// destruir la sesión
 session_destroy();
 
-// Redirigir a home
+// redirigir a home
 header('Location: /?sec=abyssum');
 exit;

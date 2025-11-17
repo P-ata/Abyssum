@@ -11,7 +11,7 @@ requireAdmin();
 require_once __DIR__ . '/../../classes/Demon.php';
 require_once __DIR__ . '/../classes/Toast.php';
 
-// Get return_to parameter
+// return a la pagina de donde vino
 $returnTo = isset($_GET['return_to']) ? htmlspecialchars($_GET['return_to']) : 'dashboard';
 
 $id = $_GET['id'] ?? null;

@@ -6,7 +6,7 @@ $filter = $_GET['status'] ?? 'all';
 
 $contacts = $filter === 'all' ? Contact::all() : Contact::byStatus($filter);
 
-// Mapeo de estados a colores
+// mapeo de estados a colores
 $statusColors = [
     'new' => 'yellow',
     'in_progress' => 'blue',
@@ -23,7 +23,6 @@ $statusLabels = [
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden px-6 py-12 font-mono">
-	<!-- Ambient background grid & glow -->
 	<div class="pointer-events-none fixed inset-0 opacity-5">
 		<div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
 	</div>
@@ -44,7 +43,7 @@ $statusLabels = [
 			</div>
 		</div>
 
-		<!-- Estadísticas -->
+		<!-- estadísticas -->
 		<div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
 			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-4 backdrop-filter" data-stat>
 				<div class="text-xs uppercase tracking-widest text-amber-600/70 mb-1">TOTAL</div>
@@ -68,24 +67,26 @@ $statusLabels = [
 			</div>
 		</div>
 
-		<!-- Filtros -->
+		<!-- filtros -->
 		<div id="filterButtons" class="flex gap-3 mb-8">
-			<a href="/?sec=admin&page=contacts&status=all" class="px-5 py-2.5 rounded border text-sm tracking-wide transition font-bold <?= $filter === 'all' ? 'border-amber-600/40 bg-amber-600/20 text-amber-500' : 'border-amber-600/30 bg-black/60 text-amber-600 hover:bg-amber-600/10' ?>">
+			<a href="/?sec=admin&page=contacts&status=all" class="px-5 py-2.5 rounded border text-sm tracking-wide transition font-bold <?= $filter === 'all' ? 'border-amber-600/40 bg-amber-600/20 text-amber-500' : 'border-amber-600/30 text-amber-600 hover:bg-amber-600/10' ?>">
 				TODOS
 			</a>
-			<a href="/?sec=admin&page=contacts&status=new" class="px-5 py-2.5 rounded border text-sm tracking-wide transition font-bold <?= $filter === 'new' ? 'border-yellow-600/40 bg-yellow-600/20 text-yellow-500' : 'border-yellow-600/30 bg-black/60 text-yellow-600 hover:bg-yellow-600/10' ?>">
+			<a href="/?sec=admin&page=contacts&status=new" class="px-5 py-2.5 rounded border text-sm tracking-wide transition font-bold <?= $filter === 'new' ? 'border-yellow-600/40 bg-yellow-600/20 text-yellow-500' : 'border-yellow-600/30 text-yellow-600 hover:bg-yellow-600/10' ?>">
 				NUEVOS
 			</a>
-			<a href="/?sec=admin&page=contacts&status=in_progress" class="px-5 py-2.5 rounded border text-sm tracking-wide transition font-bold <?= $filter === 'in_progress' ? 'border-blue-600/40 bg-blue-600/20 text-blue-500' : 'border-blue-600/30 bg-black/60 text-blue-600 hover:bg-blue-600/10' ?>">
+			<a href="/?sec=admin&page=contacts&status=in_progress" class="px-5 py-2.5 rounded border text-sm tracking-wide transition font-bold <?= $filter === 'in_progress' ? 'border-blue-600/40 bg-blue-600/20 text-blue-500' : 'border-blue-600/30 text-blue-600 hover:bg-blue-600/10' ?>">
 				EN PROCESO
 			</a>
-			<a href="/?sec=admin&page=contacts&status=resolved" class="px-5 py-2.5 rounded border text-sm tracking-wide transition font-bold <?= $filter === 'resolved' ? 'border-green-600/40 bg-green-600/20 text-green-500' : 'border-green-600/30 bg-black/60 text-green-600 hover:bg-green-600/10' ?>">
+			<a href="/?sec=admin&page=contacts&status=resolved" class="px-5 py-2.5 rounded border text-sm tracking-wide transition font-bold <?= $filter === 'resolved' ? 'border-green-600/40 bg-green-600/20 text-green-500' : 'border-green-600/30 text-green-600 hover:bg-green-600/10' ?>">
 				RESUELTOS
 			</a>
-			<a href="/?sec=admin&page=contacts&status=spam" class="px-5 py-2.5 rounded border text-sm tracking-wide transition font-bold <?= $filter === 'spam' ? 'border-red-600/40 bg-red-600/20 text-red-500' : 'border-red-600/30 bg-black/60 text-red-600 hover:bg-red-600/10' ?>">
+			<a href="/?sec=admin&page=contacts&status=spam" class="px-5 py-2.5 rounded border text-sm tracking-wide transition font-bold <?= $filter === 'spam' ? 'border-red-600/40 bg-red-600/20 text-red-500' : 'border-red-600/30 text-red-600 hover:bg-red-600/10' ?>">
 				SPAM
 			</a>
-		</div>		<!-- Lista de contactos -->
+		</div>
+
+		<!-- lista de contactos -->
 		<?php if (empty($contacts)): ?>
 			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-6 text-amber-400 text-center">
 				No hay mensajes <?= $filter !== 'all' ? 'con este estado' : '' ?>
@@ -98,7 +99,7 @@ $statusLabels = [
 					$statusLabel = $statusLabels[$contact->status];
 					?>
 					<div class="contact-card bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden hover:shadow-[0_0_25px_-4px_rgba(251,191,36,0.35)] transition-all">
-						<!-- Header del contacto -->
+						<!-- header del contacto -->
 						<div class="bg-amber-900/10 border-b border-amber-600/30 p-4">
 							<div class="flex justify-between items-start">
 								<div class="flex-1">
@@ -128,12 +129,12 @@ $statusLabels = [
 							</div>
 						</div>
 
-						<!-- Mensaje -->
+						<!-- mensaje -->
 						<div class="p-4 bg-black/50">
 							<p class="text-amber-200/80 whitespace-pre-wrap text-sm"><?= htmlspecialchars($contact->message) ?></p>
 						</div>
 
-						<!-- Acciones -->
+						<!-- acciones -->
 						<div class="p-4 flex gap-3 border-t border-amber-600/20">
 							<?php if ($contact->status !== 'in_progress'): ?>
 								<form method="POST" action="/?sec=admin&action=update-contact-status" class="inline">

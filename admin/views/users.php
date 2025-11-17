@@ -6,7 +6,7 @@ $users = User::all();
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden px-6 py-12 font-mono">
-	<!-- Ambient background grid & glow -->
+	
 	<div class="pointer-events-none fixed inset-0 opacity-5">
 		<div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
 	</div>
@@ -14,7 +14,7 @@ $users = User::all();
 	<div class="pointer-events-none fixed bottom-0 right-0 w-[28rem] h-[28rem] rounded-full blur-3xl opacity-10" style="background: radial-gradient(circle at center, rgba(251,191,36,0.35), transparent 70%);"></div>
 
 	<div class="max-w-7xl mx-auto relative z-10">
-		<!-- Header -->
+		
 		<div class="mb-12">
 			<h1 id="dashTitle" class="text-6xl font-bold tracking-widest text-amber-500">
 				<span class="block">ABYSSUM</span>
@@ -22,7 +22,7 @@ $users = User::all();
 			</h1>
 		</div>
 
-		<!-- Stats Cards -->
+		<!-- estadisticas -->
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-6 backdrop-blur-sm" data-stat>
 				<div class="text-xs uppercase tracking-widest text-amber-600/70 mb-1">TOTAL USUARIOS</div>
@@ -38,7 +38,7 @@ $users = User::all();
 			</div>
 		</div>
 
-		<!-- Users Table -->
+		<!-- users table -->
 		<div id="usersTable" class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden backdrop-blur-sm">
 			<table class="w-full">
 				<thead class="bg-black/50 border-b border-amber-600/30">
@@ -98,7 +98,7 @@ $users = User::all();
 										</button>
 									</form>
 								
-								<!-- Role Selector -->
+								<!-- seleccionar roles -->
 								<form action="/?sec=admin&action=update-roles" method="POST" class="inline">
 									<input type="hidden" name="user_id" value="<?= $user->id ?>">
 									<select name="is_admin" onchange="this.form.submit()" class="px-3 py-1 text-xs rounded border border-amber-600/40 bg-black/60 text-amber-300 hover:bg-amber-600/10 transition cursor-pointer focus:border-amber-500 focus:outline-none">

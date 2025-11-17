@@ -4,7 +4,7 @@ require_once BASE_PATH . '/classes/Toast.php';
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden py-20 px-4 font-mono">
-  <!-- Ambient background grid & glow -->
+  
   <div class="pointer-events-none fixed inset-0 opacity-5">
     <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
   </div>
@@ -13,7 +13,7 @@ require_once BASE_PATH . '/classes/Toast.php';
 
   <div class="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8 relative z-10">
 
-    <!-- Title -->
+    <!-- title -->
     <div class="text-center mb-10">
       <h1 class="text-5xl sm:text-6xl font-bold tracking-widest text-amber-500">
         EL SELLADOR
@@ -22,7 +22,7 @@ require_once BASE_PATH . '/classes/Toast.php';
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
-      <!-- Photo / avatar -->
+      <!-- photo / avatar -->
       <div class="lg:col-span-2">
         <div class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden shadow-2xl shadow-amber-500/20">
           <div class="aspect-[4/5] flex items-center justify-center bg-gradient-to-br from-black/80 to-amber-950/10">
@@ -38,7 +38,7 @@ require_once BASE_PATH . '/classes/Toast.php';
     
       </div>
 
-      <!-- Bio / content -->
+      <!-- bio -->
       <div class="lg:col-span-3 space-y-6">
         <section class="bg-black/70 border border-amber-600/30 rounded-xl p-6">
           <h2 class="text-amber-500 text-xl font-bold mb-3 tracking-widest">MANIFIESTO</h2>

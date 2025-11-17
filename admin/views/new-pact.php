@@ -1,16 +1,18 @@
 <?php
 require_once BASE_PATH . '/classes/Demon.php';
+require_once BASE_PATH . '/classes/Category.php';
 $demons = Demon::all();
+$allCategories = Category::allExcludingDemons();
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden px-6 py-14 xl:py-16 font-mono">
-  <!-- Ambient background grid & glow -->
+  
   <div class="pointer-events-none fixed inset-0 opacity-5">
     <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.10) 1px, transparent 1px); background-size: 60px 60px;"></div>
   </div>
   
   <div class="max-w-7xl mx-auto relative z-10">
-    <!-- Title -->
+    <!-- titulo -->
     <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-10 mb-14">
       <h1 id="npTitle" class="text-5xl md:text-6xl font-bold tracking-widest leading-tight text-amber-500">
         <span class="block">ABYSSUM</span>
@@ -28,9 +30,9 @@ $demons = Demon::all();
       </div>
     <?php endif; ?>
 
-    <!-- Form layout wider spacing on desktop -->
+    <!-- espaciador -->
     <div class="grid gap-10 xl:gap-16 md:grid-cols-2 items-start">
-      <!-- Left: Media uploader -->
+      <!-- izquierda -->
       <section class="md:col-span-1 space-y-8">
         <div class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden" id="mediaCard">
           <div class="p-6 xl:p-7 border-b border-amber-600/20">
@@ -50,10 +52,10 @@ $demons = Demon::all();
         </div>
       </section>
 
-      <!-- Right: Form fields -->
+      <!-- derecha formulario -->
       <section class="md:col-span-1">
         <form action="/?sec=admin&action=create-pact<?= isset($_GET['return_to']) ? '&return_to=' . htmlspecialchars($_GET['return_to']) : '' ?>" method="post" enctype="multipart/form-data" class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden" id="newPactForm">
-          <!-- Hidden file input -->
+          <!-- input escondido -->
           <input id="fileInput" name="image" type="file" accept="image/*" class="hidden" aria-label="Seleccionar imagen" />
           
           <div class="p-6 xl:p-7 border-b border-amber-600/20 flex items-center justify-between">
@@ -100,9 +102,28 @@ $demons = Demon::all();
               <label class="block text-xs text-amber-600/70 tracking-widest mb-2">PRECIO (créditos)</label>
               <input name="price_credits" type="number" min="0" value="0" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" />
             </div>
+
+            <div class="md:col-span-2 form-section">
+              <label class="block text-xs text-amber-600/70 tracking-widest mb-3">
+                <i class="fa-solid fa-tags mr-2"></i>CATEGORÍAS
+              </label>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <?php foreach ($allCategories as $cat): ?>
+                  <label class="flex items-center gap-2 px-4 py-2.5 rounded border border-amber-600/30 bg-black/40 hover:bg-amber-600/10 transition cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      name="categories[]" 
+                      value="<?= htmlspecialchars($cat->slug) ?>"
+                      class="w-4 h-4 rounded border-amber-600/40 bg-black/60 text-amber-500 focus:ring-amber-500 focus:ring-offset-0"
+                    />
+                    <span class="text-sm text-amber-300"><?= htmlspecialchars($cat->display_name) ?></span>
+                  </label>
+                <?php endforeach; ?>
+              </div>
+            </div>
           </div>
           <div class="px-6 xl:px-8 py-5 border-t border-amber-600/20 flex flex-wrap items-center justify-end gap-4">
-            <button type="reset" class="px-5 py-2 rounded border border-amber-600/30 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">LIMPIAR</button>
+            <button type="reset" id="resetBtn" class="px-5 py-2 rounded border border-amber-600/30 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">LIMPIAR</button>
             <button type="submit" class="px-5 py-2 rounded border border-amber-600/40 bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 text-sm tracking-wide transition">GUARDAR</button>
           </div>
         </form>
@@ -112,3 +133,16 @@ $demons = Demon::all();
     <div class="mt-16 text-center text-xs tracking-widest text-amber-600/50">// ADMIN :: NEW-PACT</div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function() {
+      setTimeout(() => {
+        showToast('success', 'Formulario limpiado correctamente');
+      }, 100);
+    });
+  }
+});
+</script>

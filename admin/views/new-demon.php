@@ -1,11 +1,11 @@
 <div class="min-h-screen bg-black relative overflow-hidden px-6 py-14 xl:py-16 font-mono">
-  <!-- Ambient background grid & glow -->
+  
   <div class="pointer-events-none fixed inset-0 opacity-5">
     <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.10) 1px, transparent 1px); background-size: 60px 60px;"></div>
   </div>
 
   <div class="max-w-7xl mx-auto relative z-10">
-    <!-- Title -->
+      
     <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-10 mb-14">
       <h1 id="ndTitle" class="text-5xl md:text-6xl font-bold tracking-widest leading-tight text-amber-500">
         <span class="block">ABYSSUM</span>
@@ -23,9 +23,9 @@
       </div>
     <?php endif; ?>
 
-    <!-- Form layout wider spacing on desktop -->
+    <!-- espaciador -->
     <div class="grid gap-10 xl:gap-16 md:grid-cols-2 items-start">
-      <!-- Left: Media uploader -->
+      <!-- izquierda drag and drop -->
       <section class="md:col-span-1 space-y-8">
         <div class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden" id="mediaCard">
           <div class="p-6 xl:p-7 border-b border-amber-600/20">
@@ -45,17 +45,17 @@
         </div>
       </section>
 
-      <!-- Right: Form fields -->
+      <!-- derecha formulario -->
       <section class="md:col-span-1">
         <form action="/?sec=admin&action=create-demon<?= isset($_GET['return_to']) ? '&return_to=' . htmlspecialchars($_GET['return_to']) : '' ?>" method="post" enctype="multipart/form-data" class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden" id="newDemonForm">
-          <!-- Hidden file input -->
+          <!-- input escondido -->
           <input id="fileInput" name="image" type="file" accept="image/*" class="hidden" aria-label="Seleccionar imagen" />
           
           <div class="p-6 xl:p-7 border-b border-amber-600/20 flex items-center justify-between">
             <h2 class="text-amber-500 tracking-widest text-sm">// DATOS DEL DEMONIO</h2>
           </div>
           <div class="p-6 xl:p-8 grid gap-8 md:grid-cols-2">
-            <!-- Basic Info -->
+            <!-- información básica -->
             <div class="md:col-span-2 form-section">
               <label class="block text-xs text-amber-600/70 tracking-widest mb-2">NOMBRE *</label>
               <input required name="name" type="text" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 placeholder:text-amber-600/40 focus:outline-none focus:border-amber-500 transition" placeholder="Aurelia" />
@@ -66,7 +66,7 @@
               <p class="text-xs text-amber-600/50 mt-1">Se genera automáticamente del nombre si se deja vacío</p>
             </div>
             
-            <!-- Species & Gender -->
+            <!-- especies y generos -->
             <div class="md:col-span-1 form-section">
               <label class="block text-xs text-amber-600/70 tracking-widest mb-2">ESPECIE</label>
               <input name="species" type="text" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 placeholder:text-amber-600/40 focus:outline-none focus:border-amber-500 transition" placeholder="e.g. Súcubo, Íncubo" />
@@ -76,13 +76,13 @@
               <input name="gender" type="text" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 placeholder:text-amber-600/40 focus:outline-none focus:border-amber-500 transition" placeholder="e.g. Femenino, Masculino" />
             </div>
 
-            <!-- Age -->
+            <!-- edad -->
             <div class="md:col-span-2 form-section">
               <label class="block text-xs text-amber-600/70 tracking-widest mb-2">EDAD REAL</label>
               <input name="age_real" type="text" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 placeholder:text-amber-600/40 focus:outline-none focus:border-amber-500 transition" placeholder="e.g. 347 años, Milenario" />
             </div>
 
-            <!-- Aliases (JSON array - 3 inputs) -->
+            <!-- alias -->
             <div class="md:col-span-2 form-section">
               <label class="block text-xs text-amber-600/70 tracking-widest mb-2">ALIAS</label>
               <input name="alias_1" type="text" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 placeholder:text-amber-600/40 focus:outline-none focus:border-amber-500 transition mb-2" placeholder="Alias 1" />
@@ -90,19 +90,19 @@
               <input name="alias_3" type="text" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 placeholder:text-amber-600/40 focus:outline-none focus:border-amber-500 transition" placeholder="Alias 3" />
             </div>
 
-            <!-- Summary -->
+            <!-- resumen -->
             <div class="md:col-span-2 form-section">
               <label class="block text-xs text-amber-600/70 tracking-widest mb-2">RESUMEN</label>
               <textarea name="summary" rows="4" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 placeholder:text-amber-600/40 focus:outline-none focus:border-amber-500 transition" placeholder="// descripción breve del demonio, características principales"></textarea>
             </div>
 
-            <!-- Lore -->
+            <!-- lore -->
             <div class="md:col-span-2 form-section">
               <label class="block text-xs text-amber-600/70 tracking-widest mb-2">LORE</label>
               <textarea name="lore" rows="6" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 placeholder:text-amber-600/40 focus:outline-none focus:border-amber-500 transition" placeholder="// historia completa, origen, eventos relevantes del demonio"></textarea>
             </div>
 
-            <!-- Personality (JSON array - 3 traits) -->
+            <!-- personalidad -->
             <div class="md:col-span-2 form-section">
               <label class="block text-xs text-amber-600/70 tracking-widest mb-2">PERSONALIDAD</label>
               <input name="personality_1" type="text" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 placeholder:text-amber-600/40 focus:outline-none focus:border-amber-500 transition mb-2" placeholder="Rasgo 1" />
@@ -110,44 +110,44 @@
               <input name="personality_3" type="text" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 placeholder:text-amber-600/40 focus:outline-none focus:border-amber-500 transition" placeholder="Rasgo 3" />
             </div>
 
-            <!-- Abilities Summary -->
+            <!-- resumen de habilidades -->
             <div class="md:col-span-2 form-section">
               <label class="block text-xs text-amber-600/70 tracking-widest mb-2">HABILIDADES</label>
               <textarea name="abilities_summary" rows="4" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 placeholder:text-amber-600/40 focus:outline-none focus:border-amber-500 transition" placeholder="// resumen de habilidades y poderes especiales"></textarea>
             </div>
 
-            <!-- Stats -->
+            <!-- estadísticas -->
             <div class="md:col-span-2 form-section">
-              <label class="block text-xs text-amber-600/70 tracking-widest mb-3">ESTADÍSTICAS (0-100)</label>
+              <label class="block text-xs text-amber-600/70 tracking-widest mb-3">ESTADÍSTICAS (0-10)</label>
               <div class="grid grid-cols-2 gap-4">
                 <div>
                   <label class="block text-xs text-amber-600/50 mb-1">Fuerza</label>
-                  <input name="stat_strength" type="number" min="0" max="100" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0" />
+                  <input name="stat_strength" type="number" min="0" max="10" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0" />
                 </div>
                 <div>
                   <label class="block text-xs text-amber-600/50 mb-1">Destreza</label>
-                  <input name="stat_dexterity" type="number" min="0" max="100" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0" />
+                  <input name="stat_dexterity" type="number" min="0" max="10" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0" />
                 </div>
                 <div>
                   <label class="block text-xs text-amber-600/50 mb-1">Inteligencia</label>
-                  <input name="stat_intelligence" type="number" min="0" max="100" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0" />
+                  <input name="stat_intelligence" type="number" min="0" max="10" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0" />
                 </div>
                 <div>
                   <label class="block text-xs text-amber-600/50 mb-1">Salud</label>
-                  <input name="stat_health" type="number" min="0" max="100" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0" />
+                  <input name="stat_health" type="number" min="0" max="10" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0" />
                 </div>
                 <div>
                   <label class="block text-xs text-amber-600/50 mb-1">Reflejos</label>
-                  <input name="stat_reflexes" type="number" min="0" max="100" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0" />
+                  <input name="stat_reflexes" type="number" min="0" max="10" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0" />
                 </div>
                 <div>
                   <label class="block text-xs text-amber-600/50 mb-1">Sigilo</label>
-                  <input name="stat_stealth" type="number" min="0" max="100" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0" />
+                  <input name="stat_stealth" type="number" min="0" max="10" class="w-full bg-black/60 border border-amber-600/30 rounded px-4 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-500 transition" placeholder="0" />
                 </div>
               </div>
             </div>
 
-            <!-- Weaknesses (JSON array - 3 inputs) -->
+            <!-- debilidades -->
             <div class="md:col-span-2 form-section">
               <label class="block text-xs text-amber-600/70 tracking-widest mb-2">DEBILIDADES / LÍMITES</label>
               <input name="weakness_1" type="text" class="w-full bg-black/60 border border-amber-600/30 rounded px-5 py-3 text-sm text-amber-100 placeholder:text-amber-600/40 focus:outline-none focus:border-amber-500 transition mb-2" placeholder="Debilidad 1" />
@@ -156,7 +156,7 @@
             </div>
           </div>
           <div class="px-6 xl:px-8 py-5 border-t border-amber-600/20 flex flex-wrap items-center justify-end gap-4">
-            <button type="reset" class="px-5 py-2 rounded border border-amber-600/30 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">LIMPIAR</button>
+            <button type="reset" id="resetBtn" class="px-5 py-2 rounded border border-amber-600/30 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">LIMPIAR</button>
             <button type="submit" class="px-5 py-2 rounded border border-amber-600/40 bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 text-sm tracking-wide transition">GUARDAR</button>
           </div>
         </form>
@@ -166,3 +166,16 @@
     <div class="mt-16 text-center text-xs tracking-widest text-amber-600/50">// ADMIN :: NEW-DEMON</div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function() {
+      setTimeout(() => {
+        showToast('success', 'Formulario limpiado correctamente');
+      }, 100);
+    });
+  }
+});
+</script>

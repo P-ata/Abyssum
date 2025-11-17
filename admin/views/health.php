@@ -1,19 +1,19 @@
 <?php
 require_once BASE_PATH . '/classes/DbConnection.php';
 
-// Obtener información del sistema
+// obtener información del sistema
 try {
     $pdo = DbConnection::get();
     
-    // Base de datos actual
+    // base de datos actual
     $stmt = $pdo->query("SELECT DATABASE() as db_name");
     $currentDb = $stmt->fetch(PDO::FETCH_ASSOC)['db_name'];
     
-    // Listar tablas
+    // listar tablas
     $stmt = $pdo->query("SHOW TABLES");
     $tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
     
-    // Contar registros
+    // contar registros
     $tableCounts = [];
     $tablesToCheck = ['demons', 'pacts', 'users', 'orders', 'contacts', 'roles', 'admin_sections', 'public_sections'];
     foreach ($tablesToCheck as $table) {
@@ -23,7 +23,7 @@ try {
         }
     }
     
-    // Variables del servidor
+    // variables del servidor
     $stmt = $pdo->query("SHOW VARIABLES LIKE 'version'");
     $mysqlVersion = $stmt->fetch(PDO::FETCH_ASSOC)['Value'];
     
@@ -35,7 +35,7 @@ try {
 ?>
 
 <div class="min-h-screen bg-black relative overflow-hidden px-6 py-12 font-mono">
-	<!-- Ambient background grid & glow -->
+	
 	<div class="pointer-events-none fixed inset-0 opacity-5">
 		<div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
 	</div>
@@ -57,7 +57,7 @@ try {
 		</div>
 
 		<?php if (!$connectionOk): ?>
-			<!-- Error de conexión -->
+			<!-- error de conexión -->
 			<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
 				<div class="bg-black/70 border border-red-600/30 rounded-xl p-4 backdrop-filter" data-stat>
 					<div class="text-xs uppercase tracking-widest text-red-600/70 mb-1">ESTADO DB</div>
@@ -85,7 +85,7 @@ try {
 				<p class="text-red-400"><?= htmlspecialchars($errorMsg) ?></p>
 			</div>
 		<?php else: ?>
-			<!-- Estado del sistema -->
+			<!-- estado del sistema -->
 			<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
 				<div class="bg-black/70 border border-green-600/30 rounded-xl p-4 backdrop-filter" data-stat>
 					<div class="text-xs uppercase tracking-widest text-green-600/70 mb-1">ESTADO DB</div>
@@ -108,7 +108,7 @@ try {
 				</div>
 			</div>
 
-			<!-- Información de la base de datos -->
+			<!-- información de la base de datos -->
 			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-6 mb-8 health-card">
 				<h2 class="text-amber-500 text-2xl font-bold mb-4 tracking-wide"><i class="fas fa-database mr-2"></i>BASE DE DATOS</h2>
 				<div class="space-y-3">
@@ -119,7 +119,7 @@ try {
 				</div>
 			</div>
 
-			<!-- Tablas y registros -->
+			<!-- tablas y registros -->
 			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-6 mb-8 health-card">
 				<h2 class="text-amber-500 text-2xl font-bold mb-6 tracking-wide"><i class="fas fa-table mr-2"></i>REGISTROS POR TABLA</h2>
 				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -132,7 +132,7 @@ try {
 				</div>
 			</div>
 
-			<!-- Todas las tablas -->
+			<!-- todas las tablas -->
 			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-6 health-card">
 				<h2 class="text-amber-500 text-2xl font-bold mb-6 tracking-wide"><i class="fas fa-list mr-2"></i>TODAS LAS TABLAS (<?= count($tables) ?>)</h2>
 				<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
