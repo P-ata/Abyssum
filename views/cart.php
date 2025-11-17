@@ -2,19 +2,30 @@
 require_once BASE_PATH . '/classes/Cart.php';
 require_once BASE_PATH . '/classes/Pact.php';
 require_once BASE_PATH . '/classes/Demon.php';
+require_once BASE_PATH . '/classes/DbConnection.php';
 
-$pacts = Cart::getPacts();
-$total = Cart::getTotal();
-$count = Cart::count();
-
-// Pre-load all demons at once to avoid N+1 queries
-$demonIds = array_unique(array_column($pacts, 'demon_id'));
+$dbError = false;
+$pacts = [];
+$total = 0;
+$count = 0;
 $demonsMap = [];
-if (!empty($demonIds)) {
-    $demons = Demon::findMultiple($demonIds);
-    foreach ($demons as $demon) {
-        $demonsMap[$demon->id] = $demon;
+
+try {
+    $pacts = Cart::getPacts();
+    $total = Cart::getTotal();
+    $count = Cart::count();
+
+    // Pre-load all demons at once to avoid N+1 queries
+    $demonIds = array_unique(array_column($pacts, 'demon_id'));
+    if (!empty($demonIds)) {
+        $demons = Demon::findMultiple($demonIds);
+        foreach ($demons as $demon) {
+            $demonsMap[$demon->id] = $demon;
+        }
     }
+} catch (Exception $e) {
+    $dbError = true;
+    error_log('Error loading cart: ' . $e->getMessage());
 }
 ?>
 
@@ -43,7 +54,19 @@ if (!empty($demonIds)) {
     <div class="max-w-6xl mx-auto">
       
       <!-- CONTENEDOR DE ITEMS -->
-      <?php if (empty($pacts)): ?>
+      <?php if ($dbError): ?>
+        <div class="text-center py-12">
+          <div class="text-red-400 font-mono text-xl mb-2">
+            // ERROR DE CONEXIÓN
+          </div>
+          <div class="text-amber-400/60 font-mono mb-6">
+            No se pudo cargar el carrito. Por favor, intenta más tarde.
+          </div>
+          <a href="/?sec=pacts" class="inline-block bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 px-6 py-3 rounded text-sm font-bold transition-all uppercase tracking-wider">
+            <i class="fa-solid fa-arrow-left mr-2"></i>Volver a Pactos
+          </a>
+        </div>
+      <?php elseif (empty($pacts)): ?>
         <div class="empty-state bg-black/70 border border-amber-600/30 rounded-xl p-12 text-center backdrop-blur-sm mb-6">
           <div class="text-6xl mb-4 text-amber-500/50">
             <i class="fa-solid fa-cart-shopping"></i>

@@ -23,58 +23,92 @@ unset($_SESSION['login_error']); // Clear flash message
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Admin | ABYSSUM</title>
     <link href="/assets/admin/css/tailwind.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>     
-<body class="min-h-screen flex items-center justify-center bg-black text-white overflow-hidden">
-    <div class="cyber-grid absolute inset-0 opacity-10"></div>
-    <div class="scanlines absolute inset-0 pointer-events-none opacity-30"></div>
+<body class="min-h-screen bg-black relative overflow-hidden flex items-center justify-center font-mono">
+  <!-- Ambient background grid & glow -->
+  <div class="pointer-events-none fixed inset-0 opacity-5">
+    <div class="absolute inset-0" style="background-image: linear-gradient(rgba(251,191,36,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.12) 1px, transparent 1px); background-size: 55px 55px;"></div>
+  </div>
+  <div class="pointer-events-none fixed top-0 left-0 w-96 h-96 rounded-full blur-3xl opacity-20" style="background: radial-gradient(circle at center, rgba(251,191,36,0.45), transparent 70%);"></div>
+  <div class="pointer-events-none fixed bottom-0 right-0 w-[28rem] h-[28rem] rounded-full blur-3xl opacity-10" style="background: radial-gradient(circle at center, rgba(251,191,36,0.35), transparent 70%);"></div>
+
+  <div class="relative z-10 w-full max-w-md px-4">
     
-    <form method="post" action="/?sec=admin&action=login" class="relative z-10 p-8 border-2 border-cyan-500/30 rounded-xl bg-black/80 backdrop-blur-sm space-y-6 w-full max-w-md">
-        <header class="text-center mb-6">
-            <h1 class="text-3xl font-bold glitch-text text-cyan-400 mb-2" data-text="ADMIN ACCESS">ADMIN ACCESS</h1>
-            <p class="text-sm text-gray-500 font-mono">&gt; Panel de control ABYSSUM_</p>
-        </header>
-
-        <?php if ($error): ?>
-            <div class="p-4 bg-red-500/10 border border-red-500/50 rounded text-red-400 text-sm">
-                <?= htmlspecialchars($error) ?>
-            </div>
-        <?php endif; ?>
-
-        <div>
-            <label class="block text-sm text-cyan-400 mb-2 font-mono">&gt; EMAIL</label>
-            <input
-                type="email"
-                name="email"
-                placeholder="admin@demons.test"
-                class="w-full px-4 py-3 bg-black border-2 border-gray-700 rounded focus:border-cyan-500 focus:outline-none transition-all text-cyan-300 font-mono"
-                required
-                autofocus
-            >
+    <!-- Título con badge ADMIN -->
+    <div class="text-center mb-6">
+      <div class="flex justify-center mb-4">
+        <div class="px-3 py-1 bg-red-600/20 border border-red-600/40 rounded-full">
+          <span class="text-red-500 text-xs font-bold tracking-widest flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved"></i>ADMIN ACCESS
+          </span>
         </div>
+      </div>
+    </div>
 
-        <div>
-            <label class="block text-sm text-cyan-400 mb-2 font-mono">&gt; PASSWORD</label>
-            <input
-                type="password"
-                name="password"
-                placeholder="••••••••••"
-                class="w-full px-4 py-3 bg-black border-2 border-gray-700 rounded focus:border-cyan-500 focus:outline-none transition-all text-cyan-300 font-mono"
-                required
-            >
+    <!-- Instrucciones -->
+    <div class="text-center mb-8">
+      <p class="text-amber-600/70 text-sm uppercase tracking-widest">
+        // Acceso restringido - Solo administradores
+      </p>
+    </div>
+    
+    <!-- Formulario -->
+    <div class="bg-black/70 border-2 border-amber-600/40 backdrop-blur-sm rounded-xl p-8 shadow-2xl shadow-amber-500/20">
+      
+      <?php if ($error): ?>
+        <div class="mb-6 p-4 bg-red-600/10 border border-red-600/40 rounded-lg text-red-400 text-sm">
+          <i class="fa-solid fa-exclamation-triangle mr-2"></i><?= htmlspecialchars($error) ?>
         </div>
-
-        <button
-            type="submit"
-            class="w-full py-3 rounded bg-gradient-to-r from-cyan-500 to-pink-500 text-black font-bold uppercase tracking-wider hover:shadow-lg hover:shadow-cyan-500/50 transition-all"
+      <?php endif; ?>
+      
+      <form method="post" action="/?sec=admin&action=login" class="space-y-6">
+        <!-- EMAIL -->
+        <div>
+          <label class="block text-amber-500 mb-2 font-bold text-xs uppercase tracking-wider">
+            <i class="fa-solid fa-envelope mr-2"></i>Email de administrador
+          </label>
+          <input 
+            type="email" 
+            name="email" 
+            required 
+            autofocus
+            class="w-full bg-black/60 border border-amber-600/40 rounded-lg px-4 py-3 text-amber-300 font-mono focus:border-amber-500 focus:outline-none transition-colors placeholder:text-amber-300/30"
+            placeholder="admin@abyssum.local"
+          >
+        </div>
+        
+        <!-- PASSWORD -->
+        <div>
+          <label class="block text-amber-500 mb-2 font-bold text-xs uppercase tracking-wider">
+            <i class="fa-solid fa-lock mr-2"></i>Contraseña
+          </label>
+          <input 
+            type="password" 
+            name="password" 
+            required 
+            class="w-full bg-black/60 border border-amber-600/40 rounded-lg px-4 py-3 text-amber-300 font-mono focus:border-amber-500 focus:outline-none transition-colors placeholder:text-amber-300/30"
+            placeholder="••••••••"
+          >
+        </div>
+        
+        <!-- SUBMIT -->
+        <button 
+          type="submit" 
+          class="w-full bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 font-bold py-3 rounded-lg transition-all font-mono text-sm tracking-widest mt-8"
         >
-            Iniciar sesión
+          <i class="fa-solid fa-right-to-bracket mr-2"></i>ACCEDER AL PANEL
         </button>
-
-        <footer class="text-center pt-4 border-t border-gray-800">
-            <a href="/" class="text-sm text-gray-500 hover:text-cyan-400 transition-colors">
-                ← Volver al sitio
-            </a>
-        </footer>
-    </form>
+      </form>
+      
+      <!-- LINKS -->
+      <div class="mt-8 text-center">
+        <a href="/" class="text-amber-600/70 hover:text-amber-500 text-sm transition-colors inline-flex items-center gap-2">
+          <i class="fa-solid fa-arrow-left"></i>Volver al sitio
+        </a>
+      </div>
+      
+    </div>
+  </div>
 </body>
 </html>

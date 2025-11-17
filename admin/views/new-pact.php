@@ -17,7 +17,7 @@ $demons = Demon::all();
         <span class="block text-xl md:text-2xl mt-3 tracking-wide text-amber-600/80">// PACTOS :: NUEVO</span>
       </h1>
       <div class="flex flex-wrap gap-3">
-        <a href="/?sec=admin&page=dashboard" class="px-5 py-2.5 rounded border border-amber-600/30 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">VOLVER</a>
+        <a href="<?= isset($_GET['return_to']) ? '/?sec=admin&page=' . htmlspecialchars($_GET['return_to']) : '/?sec=admin&page=dashboard' ?>" class="px-5 py-2.5 rounded border border-amber-600/30 bg-black/60 hover:bg-amber-600/20 text-amber-500 text-sm tracking-wide transition">VOLVER</a>
       </div>
     </div>
 
@@ -52,7 +52,7 @@ $demons = Demon::all();
 
       <!-- Right: Form fields -->
       <section class="md:col-span-1">
-        <form action="/?sec=admin&action=create-pact" method="post" enctype="multipart/form-data" class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden" id="newPactForm">
+        <form action="/?sec=admin&action=create-pact<?= isset($_GET['return_to']) ? '&return_to=' . htmlspecialchars($_GET['return_to']) : '' ?>" method="post" enctype="multipart/form-data" class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden" id="newPactForm">
           <!-- Hidden file input -->
           <input id="fileInput" name="image" type="file" accept="image/*" class="hidden" aria-label="Seleccionar imagen" />
           

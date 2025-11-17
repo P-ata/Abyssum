@@ -11,11 +11,14 @@ requireAdmin();
 require_once __DIR__ . '/../../classes/Pact.php';
 require_once __DIR__ . '/../classes/Toast.php';
 
+// Get return_to parameter
+$returnTo = isset($_GET['return_to']) ? htmlspecialchars($_GET['return_to']) : 'dashboard';
+
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-if ($id === 0) {
-    Toast::error('ID de pacto requerido');
-    header('Location: /?sec=admin&page=dashboard');
+if ($id <= 0) {
+    Toast::error('ID de pacto inválido');
+    header('Location: /?sec=admin&page=' . $returnTo);
     exit;
 }
 
@@ -31,5 +34,5 @@ try {
     Toast::error('Error al eliminar el pacto: ' . $e->getMessage());
 }
 
-header('Location: /?sec=admin&page=dashboard');
+header('Location: /?sec=admin&page=' . $returnTo);
 exit;

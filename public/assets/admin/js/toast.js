@@ -179,8 +179,10 @@
   }
 
   window.showToast = showToast;
+  console.log('[Toast] window.showToast registered');
 
   function loadGSAPAndInit() {
+    console.log('[Toast] loadGSAPAndInit called, gsap available:', typeof gsap !== 'undefined');
     if (typeof gsap !== 'undefined') {
       initToasts();
       return;
@@ -194,8 +196,10 @@
   }
 
   if (document.readyState === 'loading') {
+    console.log('[Toast] Document still loading, waiting for DOMContentLoaded');
     document.addEventListener('DOMContentLoaded', loadGSAPAndInit);
   } else {
+    console.log('[Toast] Document already loaded, initializing immediately');
     loadGSAPAndInit();
   }
 

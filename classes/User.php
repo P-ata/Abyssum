@@ -140,8 +140,11 @@ class User
     public static function updateLastLogin(int $userId): void
     {
         $pdo = DbConnection::get();
-        $stmt = $pdo->prepare('UPDATE users SET last_login_at = NOW() WHERE id = ?');
-        $stmt->execute([$userId]);
+        // Convertir hora actual de Argentina a UTC para almacenar
+        date_default_timezone_set('America/Argentina/Buenos_Aires');
+        $now = date('Y-m-d H:i:s');
+        $stmt = $pdo->prepare('UPDATE users SET last_login_at = ? WHERE id = ?');
+        $stmt->execute([$now, $userId]);
     }
     
     /**

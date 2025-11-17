@@ -13,8 +13,11 @@ require_once __DIR__ . '/../classes/File.php';
 require_once __DIR__ . '/../classes/Toast.php';
 require_once __DIR__ . '/../includes/functions.php';
 
+// Get return_to parameter
+$returnTo = isset($_GET['return_to']) ? htmlspecialchars($_GET['return_to']) : 'dashboard';
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /?sec=admin&page=dashboard');
+    header('Location: /?sec=admin&page=' . $returnTo);
     exit;
 }
 
@@ -23,7 +26,7 @@ $slug = isset($_POST['id']) ? trim($_POST['id']) : '';
 
 if ($slug === '') {
     Toast::error('ID de demonio inválido');
-    header('Location: /?sec=admin&page=dashboard');
+    header('Location: /?sec=admin&page=' . $returnTo);
     exit;
 }
 
@@ -31,7 +34,7 @@ if ($slug === '') {
 $demon = Demon::find($slug);
 if (!$demon) {
     Toast::error('Demonio no encontrado');
-    header('Location: /?sec=admin&page=dashboard');
+    header('Location: /?sec=admin&page=' . $returnTo);
     exit;
 }
 
@@ -158,5 +161,5 @@ try {
     Toast::error('Error al actualizar el demonio: ' . $e->getMessage());
 }
 
-header('Location: /?sec=admin&page=dashboard');
+header('Location: /?sec=admin&page=' . $returnTo);
 exit;

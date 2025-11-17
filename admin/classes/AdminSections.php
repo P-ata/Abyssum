@@ -34,7 +34,7 @@ class AdminSections
         $sections = [];
         $db = DbConnection::get();
 
-        $query = "SELECT slug, title, icon, sort_order 
+        $query = "SELECT slug, title, sort_order 
                   FROM admin_sections 
                   ORDER BY sort_order ASC";
         

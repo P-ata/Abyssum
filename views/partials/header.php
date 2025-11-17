@@ -129,6 +129,8 @@ $current = $_GET['sec'] ?? 'abyssum';
           $links = [
             'abyssum' => ['label' => 'INICIO', 'icon' => 'fa-home'],
             'pacts' => ['label' => 'PACTOS', 'icon' => 'fa-file-contract'],
+            'demons' => ['label' => 'DEMONIOS', 'icon' => 'fa-skull'],
+            'sellador' => ['label' => 'SELLADOR', 'icon' => 'fa-user-secret'],
             'contact' => ['label' => 'CONTACTO', 'icon' => 'fa-envelope']
           ];
           foreach ($links as $slug => $data):
@@ -186,41 +188,6 @@ $current = $_GET['sec'] ?? 'abyssum';
             </div>
             <div class="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
           </a>
-        </div>
-      </div>
-
-      <!-- Demonios destacados -->
-      <div class="space-y-3">
-        <h3 class="text-xs tracking-widest font-mono text-amber-500 uppercase font-bold flex items-center gap-2">
-          <i class="fas fa-fire"></i>
-          DEMONIOS
-        </h3>
-        <div id="demonsContainer" class="relative h-40 bg-black/40 rounded-lg border border-amber-500/30 overflow-hidden">
-          <?php
-            require_once BASE_PATH . '/classes/Demon.php';
-            $demons = array_slice(Demon::all(), 0, 5);
-            $totalDemons = count($demons);
-            foreach ($demons as $index => $demon):
-              $imageUrl = $demon->image_file_id ? "/?file_id={$demon->image_file_id}" : '/public/assets/img/default-demon.jpg';
-              $initialWidth = 100 / $totalDemons;
-              $initialLeft = $index * $initialWidth;
-          ?>
-            <a href="/?sec=abyssum#demon-<?= $demon->slug ?>" 
-               class="demon-item absolute top-0 h-full overflow-hidden transition-all duration-300 <?= $index < $totalDemons - 1 ? 'border-r border-amber-500/30' : '' ?>"
-               data-index="<?= $index ?>"
-               style="left: <?= $initialLeft ?>%; width: <?= $initialWidth ?>%;">
-              <img src="<?= htmlspecialchars($imageUrl) ?>" 
-                   alt="<?= htmlspecialchars($demon->name) ?>"
-                   class="absolute top-0 left-0 w-full h-full object-cover"
-                   style="object-position: center top;">
-              <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-              <div class="absolute bottom-0 left-0 right-0 p-3">
-                <p class="demon-name text-xs font-mono font-bold text-white text-center leading-tight tracking-wide">
-                  <?= htmlspecialchars($demon->name) ?>
-                </p>
-              </div>
-            </a>
-          <?php endforeach; ?>
         </div>
       </div>
     </div>

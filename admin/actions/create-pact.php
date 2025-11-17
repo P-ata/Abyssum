@@ -13,6 +13,9 @@ require_once __DIR__ . '/../classes/File.php';
 require_once __DIR__ . '/../classes/Toast.php';
 require_once __DIR__ . '/../includes/functions.php';
 
+// Get return_to parameter
+$returnTo = isset($_GET['return_to']) ? htmlspecialchars($_GET['return_to']) : 'dashboard';
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /?sec=admin');
     exit;
@@ -84,5 +87,5 @@ try {
     Toast::error('Error al crear el pacto: ' . $e->getMessage());
 }
 
-header('Location: /?sec=admin&page=dashboard');
+header('Location: /?sec=admin&page=' . $returnTo);
 exit;

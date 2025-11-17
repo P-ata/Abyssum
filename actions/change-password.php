@@ -8,6 +8,7 @@ require_once __DIR__ . '/../classes/Toast.php';
 
 requireLogin();
 
+//solo por post
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /?sec=profile');
     exit;
@@ -18,7 +19,7 @@ $currentPassword = trim($_POST['current_password'] ?? '');
 $newPassword = trim($_POST['new_password'] ?? '');
 $confirmPassword = trim($_POST['confirm_password'] ?? '');
 
-// Validaciones
+// validaciones
 if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
     Toast::error('Todos los campos son obligatorios');
     header('Location: /?sec=profile');
@@ -38,7 +39,7 @@ if ($newPassword !== $confirmPassword) {
 }
 
 try {
-    // Verificar contraseña actual
+    // verificar contraseña actual
     $pdo = DbConnection::get();
     $stmt = $pdo->prepare('SELECT password_hash FROM users WHERE id = ?');
     $stmt->execute([$userId]);
@@ -50,7 +51,7 @@ try {
         exit;
     }
     
-    // Actualizar contraseña
+    // actualizar contraseña
     $newHash = password_hash($newPassword, PASSWORD_DEFAULT);
     $stmt = $pdo->prepare('UPDATE users SET password_hash = ? WHERE id = ?');
     $stmt->execute([$newHash, $userId]);

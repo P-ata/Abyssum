@@ -55,12 +55,9 @@ import { gsap } from 'gsap';
 			});
 		}
 
-		// Ensure all cards are visible (fallback)
-		document.querySelectorAll('.pact-card').forEach(el => {
-			el.style.opacity = '1';
-			el.style.transform = 'translateY(0)';
-		});
-
+		// Ensure all cards are visible (fallback) - Remove manual inline styles
+		// Don't set inline styles, let CSS handle it
+		
 		// Animate pact cards entrance
 		const pactCards = document.querySelectorAll('#pactsGrid .pact-card');
 		if (pactCards.length > 0) {
@@ -71,15 +68,128 @@ import { gsap } from 'gsap';
 				duration: 0.9,
 				ease: 'power3.out',
 				delay: 0.7,
-				clearProps: 'all' // Clear inline styles after animation
+				clearProps: 'all',
+				onComplete: () => {
+					// Re-enable hover after animations complete
+					pactCards.forEach(card => card.classList.add('animation-complete'));
+				}
 			});
 		}
 
-		// Hover animations (idempotent)
-		document.querySelectorAll('.pact-card').forEach(card => {
-			card.addEventListener('mouseenter', () => gsap.to(card, { scale: 1.02, duration: 0.25, ease: 'power2.out' }));
-			card.addEventListener('mouseleave', () => gsap.to(card, { scale: 1, duration: 0.3, ease: 'power2.out' }));
-		});
+		// Animate demon cards entrance
+		const demonCards = document.querySelectorAll('.demon-card');
+		if (demonCards.length > 0) {
+			gsap.from(demonCards, { 
+				y: 50, 
+				opacity: 0, 
+				stagger: 0.08, 
+				duration: 0.9,
+				ease: 'power3.out',
+				delay: 0.7,
+				clearProps: 'all',
+				onComplete: () => {
+					// Re-enable hover after animations complete
+					demonCards.forEach(card => card.classList.add('animation-complete'));
+				}
+			});
+		}
+
+		// Animate user table rows
+		const userRows = document.querySelectorAll('.user-row');
+		if (userRows.length > 0) {
+			gsap.from(userRows, {
+				x: -30,
+				opacity: 0,
+				stagger: 0.05,
+				duration: 0.7,
+				ease: 'power3.out',
+				delay: 0.7,
+				clearProps: 'all'
+			});
+		}
+
+		// Animate users table container
+		const usersTable = document.getElementById('usersTable');
+		if (usersTable) {
+			gsap.from(usersTable, {
+				y: 30,
+				opacity: 0,
+				duration: 0.8,
+				ease: 'power3.out',
+				delay: 0.5
+			});
+		}
+
+		// Animate order cards
+		const orderCards = document.querySelectorAll('.order-card');
+		if (orderCards.length > 0) {
+			gsap.from(orderCards, {
+				y: 50,
+				opacity: 0,
+				stagger: 0.1,
+				duration: 0.8,
+				ease: 'power3.out',
+				delay: 0.7,
+				clearProps: 'all'
+			});
+		}
+
+		// Animate contact cards
+		const contactCards = document.querySelectorAll('.contact-card');
+		if (contactCards.length > 0) {
+			gsap.from(contactCards, {
+				y: 50,
+				opacity: 0,
+				stagger: 0.1,
+				duration: 0.8,
+				ease: 'power3.out',
+				delay: 0.7,
+				clearProps: 'all'
+			});
+		}
+
+		// Animate filter buttons
+		const filterButtons = document.getElementById('filterButtons');
+		if (filterButtons && filterButtons.children.length) {
+			gsap.from(filterButtons.children, {
+				scale: 0.8,
+				opacity: 0,
+				stagger: 0.08,
+				duration: 0.6,
+				ease: 'back.out(1.5)',
+				delay: 0.5,
+				clearProps: 'all'
+			});
+		}
+
+		// Animate health cards
+		const healthCards = document.querySelectorAll('.health-card');
+		if (healthCards.length > 0) {
+			gsap.from(healthCards, {
+				y: 40,
+				opacity: 0,
+				stagger: 0.15,
+				duration: 0.8,
+				ease: 'power3.out',
+				delay: 0.6,
+				clearProps: 'all'
+			});
+		}
+
+		// Hover animations - Only apply to cards that finished animating
+		document.addEventListener('mouseenter', (e) => {
+			const card = e.target.closest('.pact-card, .demon-card');
+			if (card && card.classList.contains('animation-complete')) {
+				gsap.to(card, { scale: 1.02, duration: 0.25, ease: 'power2.out', overwrite: true });
+			}
+		}, true);
+		
+		document.addEventListener('mouseleave', (e) => {
+			const card = e.target.closest('.pact-card, .demon-card');
+			if (card && card.classList.contains('animation-complete')) {
+				gsap.to(card, { scale: 1, duration: 0.3, ease: 'power2.out', overwrite: true });
+			}
+		}, true);
 
 		// Clear button functionality
 		const clearBtn = document.getElementById('clearBtn');

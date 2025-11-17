@@ -16,30 +16,30 @@ $users = User::all();
 	<div class="max-w-7xl mx-auto relative z-10">
 		<!-- Header -->
 		<div class="mb-12">
-			<h1 class="text-6xl font-bold tracking-widest text-amber-500 mb-2">
-				// USUARIOS
+			<h1 id="dashTitle" class="text-6xl font-bold tracking-widest text-amber-500">
+				<span class="block">ABYSSUM</span>
+				<span class="block text-2xl mt-2 tracking-wide text-amber-600/80">// USUARIOS</span>
 			</h1>
-			<p class="text-amber-600/70 text-sm">&gt; Gestión_de_cuentas.sys</p>
 		</div>
 
 		<!-- Stats Cards -->
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-6 backdrop-blur-sm">
+			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-6 backdrop-blur-sm" data-stat>
 				<div class="text-xs uppercase tracking-widest text-amber-600/70 mb-1">TOTAL USUARIOS</div>
 				<div class="text-amber-500 text-3xl font-bold"><?= count($users) ?></div>
 			</div>
-			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-6 backdrop-blur-sm">
+			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-6 backdrop-blur-sm" data-stat>
 				<div class="text-xs uppercase tracking-widest text-amber-600/70 mb-1">ACTIVOS</div>
 				<div class="text-green-500 text-3xl font-bold"><?= count(array_filter($users, fn($u) => $u->is_active)) ?></div>
 			</div>
-			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-6 backdrop-blur-sm">
+			<div class="bg-black/70 border border-amber-600/30 rounded-xl p-6 backdrop-blur-sm" data-stat>
 				<div class="text-xs uppercase tracking-widest text-amber-600/70 mb-1">ADMINS</div>
 				<div class="text-blue-500 text-3xl font-bold"><?= count(array_filter($users, fn($u) => $u->isAdmin())) ?></div>
 			</div>
 		</div>
 
 		<!-- Users Table -->
-		<div class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden backdrop-blur-sm">
+		<div id="usersTable" class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden backdrop-blur-sm">
 			<table class="w-full">
 				<thead class="bg-black/50 border-b border-amber-600/30">
 					<tr>
@@ -54,7 +54,7 @@ $users = User::all();
 				</thead>
 				<tbody class="divide-y divide-amber-600/20">
 					<?php foreach ($users as $user): ?>
-						<tr class="hover:bg-amber-600/5 transition">
+						<tr class="user-row hover:bg-amber-600/5 transition">
 							<td class="px-6 py-4 text-gray-300">#<?= $user->id ?></td>
 							<td class="px-6 py-4">
 								<div class="font-semibold text-amber-400"><?= htmlspecialchars($user->display_name) ?></div>
@@ -76,9 +76,17 @@ $users = User::all();
 									<span class="px-3 py-1 text-xs rounded bg-red-600/20 text-red-400 border border-red-600/40">INACTIVO</span>
 								<?php endif; ?>
 							</td>
-							<td class="px-6 py-4 text-gray-400 text-sm">
-								<?= $user->last_login_at ? date('d/m/Y H:i', strtotime($user->last_login_at)) : 'Nunca' ?>
-							</td>
+						<td class="px-6 py-4 text-gray-400 text-sm">
+							<?php
+							if ($user->last_login_at) {
+								date_default_timezone_set('America/Argentina/Buenos_Aires');
+								$datetime = new DateTime($user->last_login_at);
+								echo $datetime->format('d/m/Y H:i');
+							} else {
+								echo 'Nunca';
+							}
+							?>
+						</td>
 							<td class="px-6 py-4">
 								<div class="flex gap-2 justify-center">
 									<!-- Toggle Active -->
@@ -93,9 +101,9 @@ $users = User::all();
 								<!-- Role Selector -->
 								<form action="/?sec=admin&action=update-roles" method="POST" class="inline">
 									<input type="hidden" name="user_id" value="<?= $user->id ?>">
-									<select name="is_admin" onchange="this.form.submit()" class="px-3 py-1 text-xs rounded border border-amber-600/40 bg-black text-amber-500 hover:bg-amber-600/10 transition cursor-pointer">
-										<option value="0" <?= !$user->isAdmin() ? 'selected' : '' ?>>CUSTOMER</option>
-										<option value="1" <?= $user->isAdmin() ? 'selected' : '' ?>>ADMIN</option>
+									<select name="is_admin" onchange="this.form.submit()" class="px-3 py-1 text-xs rounded border border-amber-600/40 bg-black/60 text-amber-300 hover:bg-amber-600/10 transition cursor-pointer focus:border-amber-500 focus:outline-none">
+										<option value="0" class="bg-black text-amber-300" <?= !$user->isAdmin() ? 'selected' : '' ?>>CUSTOMER</option>
+										<option value="1" class="bg-black text-amber-300" <?= $user->isAdmin() ? 'selected' : '' ?>>ADMIN</option>
 									</select>
 								</form>
 								</div>

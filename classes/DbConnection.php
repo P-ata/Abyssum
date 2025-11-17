@@ -2,12 +2,45 @@
 class DbConnection
 {
     private static ?PDO $pdo = null;
+    private static bool $connectionFailed = false;
+    private static ?string $lastError = null;
+
+    public static function isConnected(): bool
+    {
+        // Si ya falló, retornar false
+        if (self::$connectionFailed) {
+            return false;
+        }
+        
+        // Si ya hay una conexión, retornar true
+        if (self::$pdo instanceof PDO) {
+            return true;
+        }
+        
+        // Si no se ha intentado conectar, intentar ahora
+        try {
+            self::get();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLastError(): ?string
+    {
+        return self::$lastError;
+    }
 
     public static function get(): PDO
     {   
         // Si ya existe, reusar
         if (self::$pdo instanceof PDO) {
             return self::$pdo;
+        }
+
+        // Si ya falló antes, no reintentar
+        if (self::$connectionFailed) {
+            throw new Exception('Conexión a base de datos no disponible');
         }
 
         // si no es docker es default
@@ -34,16 +67,23 @@ class DbConnection
                 PDO::ATTR_EMULATE_PREPARES => false,
             ]);
         } catch (PDOException $e) {
-            /* die('Error al conectar con la base de datos.'); */
+            self::$connectionFailed = true;
+            self::$lastError = $e->getMessage();
             
-            // --- DEBUG (usar sólo en desarrollo) ---
-            echo "<h3>Error de conexión a MySQL</h3>";
-            echo "<p><strong>Mensaje:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
-            echo "<p><strong>Código:</strong> " . $e->getCode() . "</p>";
-            echo "<p><strong>Archivo:</strong> " . $e->getFile() . "</p>";
-            echo "<p><strong>Línea:</strong> " . $e->getLine() . "</p>";
-            echo "<p><strong>DSN (sin credenciales):</strong> mysql:host=$host;port=$port;dbname=$db</p>";
-            exit; // o throw $e; si preferís que la excepción suba
+            // Si es admin (cualquier página admin excepto health), redirigir a health
+            if (isset($_GET['sec']) && $_GET['sec'] === 'admin') {
+                $page = $_GET['page'] ?? null;
+                if ($page !== 'health') {
+                    header('Location: /?sec=admin&page=health&error=db');
+                    exit;
+                }
+            } elseif (!isset($_GET['sec']) || $_GET['sec'] !== 'db-error') {
+                // Si es público y no es la página de error, redirigir a página de error
+                header('Location: /?sec=db-error');
+                exit;
+            }
+            
+            throw $e;
         }
 
         return self::$pdo;

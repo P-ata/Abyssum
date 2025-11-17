@@ -17,20 +17,20 @@ class PactFilter
      */
     private function parseFilters(): void
     {
-        // Obtener filtros de la URL
+        // Alinear filtros con demons: solo categoría y orden
+        $sort = $_GET['sort'] ?? 'newest';
+        $category = $_GET['category'] ?? null;
+
         $this->filters = [
-            'demon_id' => isset($_GET['demon']) ? (int)$_GET['demon'] : null,
-            'category' => $_GET['category'] ?? null,
-            'sort' => $_GET['sort'] ?? 'newest',
+            'category' => $category,
+            'sort' => $sort,
         ];
 
         // Filtrar valores null
         $this->filters = array_filter($this->filters, fn($v) => $v !== null);
 
-        // Determinar si se están aplicando filtros (excluyendo sort por defecto)
-        $this->hasActiveFilters = (isset($_GET['demon']) && $_GET['demon'] !== '') || 
-                                   (isset($_GET['category']) && $_GET['category'] !== '') ||
-                                   (isset($_GET['sort']) && $_GET['sort'] !== 'newest');
+        // Filtros activos: categoría presente o sort distinto de 'newest'
+        $this->hasActiveFilters = ($category !== null && $category !== '') || ($sort !== 'newest');
     }
 
     /**
@@ -54,18 +54,41 @@ class PactFilter
      */
     public function showToastIfNeeded(): void
     {
-        // Solo mostrar toast si hay filtros activos y viene del formulario
-        $showFilterToast = $this->hasActiveFilters && 
-                          isset($_SERVER['HTTP_REFERER']) && 
-                          strpos($_SERVER['HTTP_REFERER'], 'sec=pacts') !== false &&
-                          !isset($_SESSION['filter_toast_shown']);
+        // Determinar si el referer es de la misma sección
+        $isSameSection = isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'sec=pacts') !== false;
 
-        if ($showFilterToast) {
-            $_SESSION['filter_toast_shown'] = true;
+        if (!$isSameSection) {
+            // Limpiar flags si cambio de sección
+            unset($_SESSION['filter_toast_pacts_applied'], $_SESSION['filter_toast_pacts_cleared']);
+            return;
+        }
+
+        // Extraer parámetros del referer para detectar "limpieza" de filtros
+        $refQuery = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY) ?? '';
+        parse_str($refQuery, $refParams);
+
+        $refHadFilters = (isset($refParams['category']) && $refParams['category'] !== '')
+                      || (isset($refParams['sort']) && $refParams['sort'] !== 'newest');
+
+        // Caso 1: Filtros aplicados
+        if ($this->hasActiveFilters && !isset($_SESSION['filter_toast_pacts_applied'])) {
+            $_SESSION['filter_toast_pacts_applied'] = true;
+            unset($_SESSION['filter_toast_pacts_cleared']);
             Toast::info('Filtros aplicados');
-        } else {
-            // Limpiar flag si no hay filtros activos
-            unset($_SESSION['filter_toast_shown']);
+            return;
+        }
+
+        // Caso 2: Filtros limpiados (antes había, ahora no)
+        if (!$this->hasActiveFilters && $refHadFilters && !isset($_SESSION['filter_toast_pacts_cleared'])) {
+            $_SESSION['filter_toast_pacts_cleared'] = true;
+            unset($_SESSION['filter_toast_pacts_applied']);
+            Toast::success('Filtros eliminados correctamente');
+            return;
+        }
+
+        // Si no hay filtros, limpiar flag de "applied" para futuros clics
+        if (!$this->hasActiveFilters) {
+            unset($_SESSION['filter_toast_pacts_applied']);
         }
     }
 

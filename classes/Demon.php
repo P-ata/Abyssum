@@ -54,15 +54,15 @@ class Demon
         $d->lore = $row['lore'] ?? null;
         $d->abilities_summary = $row['abilities_summary'] ?? null;
         
-        // JSON arrays - decode if string
+        // JSON arrays - decode if string with proper Unicode handling
         $d->aliases = isset($row['aliases']) && is_string($row['aliases']) 
-            ? json_decode($row['aliases'], true) 
+            ? json_decode($row['aliases'], true, 512, JSON_UNESCAPED_UNICODE) 
             : ($row['aliases'] ?? null);
         $d->personality = isset($row['personality']) && is_string($row['personality']) 
-            ? json_decode($row['personality'], true) 
+            ? json_decode($row['personality'], true, 512, JSON_UNESCAPED_UNICODE) 
             : ($row['personality'] ?? null);
         $d->weaknesses_limits = isset($row['weaknesses_limits']) && is_string($row['weaknesses_limits']) 
-            ? json_decode($row['weaknesses_limits'], true) 
+            ? json_decode($row['weaknesses_limits'], true, 512, JSON_UNESCAPED_UNICODE) 
             : ($row['weaknesses_limits'] ?? null);
         
         // Stats
@@ -277,5 +277,25 @@ class Demon
         $pdo = DbConnection::get();
         $stmt = $pdo->prepare('DELETE FROM demons WHERE id = ?');
         $stmt->execute([$this->id]);
+    }
+
+    /**
+     * Get all categories associated with this demon
+     * @return Category[]
+     */
+    public function categories(): array
+    {
+        require_once __DIR__ . '/Category.php';
+        
+        $pdo = DbConnection::get();
+        $stmt = $pdo->prepare('
+            SELECT c.* 
+            FROM categories c
+            WHERE c.slug = ?
+        ');
+        $stmt->execute([$this->slug]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        return array_map([Category::class, 'fromRow'], $rows ?: []);
     }
 }

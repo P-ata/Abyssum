@@ -2,16 +2,13 @@
 require_once BASE_PATH . '/classes/Pact.php';
 require_once BASE_PATH . '/classes/Demon.php';
 require_once BASE_PATH . '/classes/Category.php';
-require_once BASE_PATH . '/classes/Cart.php';
-require_once BASE_PATH . '/classes/Order.php';
-require_once BASE_PATH . '/classes/Toast.php';
 require_once BASE_PATH . '/classes/DbConnection.php';
 
 // Obtener ID del pacto
-$pactId = isset($_GET['pact_id']) ? (int)$_GET['pact_id'] : null;
+$pactId = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
 if (!$pactId) {
-    header('Location: /?sec=pacts');
+    header('Location: /?sec=admin&page=pacts');
     exit;
 }
 
@@ -21,16 +18,13 @@ $demon = null;
 $demonName = 'Desconocido';
 $pactImage = null;
 $categories = [];
-$isPurchased = false;
-$inCart = false;
 
 try {
     // Obtener el pacto
     $pact = Pact::find($pactId);
 
     if (!$pact) {
-        Toast::error('Pacto no encontrado');
-        header('Location: /?sec=pacts');
+        header('Location: /?sec=admin&page=pacts');
         exit;
     }
 
@@ -53,13 +47,6 @@ try {
 
     // Obtener categorías del pacto
     $categories = $pact->categories();
-
-    // Verificar si el usuario ya compró este pacto
-    if (isset($_SESSION['user_id'])) {
-        $purchasedPactIds = Order::getPurchasedPactIds((int)$_SESSION['user_id']);
-        $isPurchased = in_array($pact->id, $purchasedPactIds);
-        $inCart = Cart::has($pact->id);
-    }
 } catch (Exception $e) {
     $dbError = true;
     error_log('Error loading pact detail: ' . $e->getMessage());
@@ -84,7 +71,7 @@ try {
         <div class="text-amber-400/60 font-mono mb-6">
           No se pudo cargar el detalle del pacto. Por favor, intenta más tarde.
         </div>
-        <a href="/?sec=pacts" class="inline-block bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 px-6 py-3 rounded text-sm font-bold transition-all uppercase tracking-wider">
+        <a href="/?sec=admin&page=pacts" class="inline-block bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 px-6 py-3 rounded text-sm font-bold transition-all uppercase tracking-wider">
           <i class="fa-solid fa-arrow-left mr-2"></i>Volver a Pactos
         </a>
       </div>
@@ -94,7 +81,7 @@ try {
       
       <!-- Botón volver -->
       <div class="mb-6 mt-2 pact-back">
-        <a href="/?sec=pacts" class="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-amber-600/40 bg-amber-600/10 hover:bg-amber-600/20 hover:border-amber-600/60 transition-all text-amber-500 hover:text-amber-400 shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20">
+        <a href="/?sec=admin&page=<?= isset($_GET['return_to']) ? htmlspecialchars($_GET['return_to']) : 'pacts' ?>" class="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-amber-600/40 bg-amber-600/10 hover:bg-amber-600/20 hover:border-amber-600/60 transition-all text-amber-500 hover:text-amber-400 shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20">
           <i class="fa-solid fa-arrow-left text-base"></i>
           <span class="font-bold text-sm uppercase tracking-wider">Volver a Pactos</span>
         </a>
@@ -213,30 +200,21 @@ try {
           </div>
         <?php endif; ?>
 
-        <!-- Botones de acción -->
+        <!-- Botones de acción ADMIN -->
         <div class="pact-actions flex flex-col sm:flex-row gap-3">
-          <?php if ($isPurchased): ?>
-            <div class="flex-1 bg-green-900/30 text-green-400 text-sm font-bold py-3 px-6 rounded-lg border border-green-500/50 text-center flex items-center justify-center gap-2">
-              <i class="fa-solid fa-check-circle"></i>
-              YA ADQUIRIDO
-            </div>
-          <?php elseif ($inCart): ?>
-            <div class="flex-1 bg-blue-900/30 text-blue-400 text-sm font-bold py-3 px-6 rounded-lg border border-blue-500/50 text-center flex items-center justify-center gap-2">
-              <i class="fa-solid fa-shopping-cart"></i>
-              EN CARRITO
-            </div>
-          <?php else: ?>
-            <form action="/?sec=actions&action=add-to-cart" method="POST" class="flex-1">
-              <input type="hidden" name="pact_id" value="<?= $pact->id ?>">
-              <button type="submit" class="w-full bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 text-sm font-bold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2">
-                <i class="fa-solid fa-cart-plus"></i>
-                AGREGAR AL CARRITO
-              </button>
-            </form>
-          <?php endif; ?>
+          <a href="/?sec=admin&page=edit-pact&id=<?= $pact->id ?>&return_to=pact-detail" class="flex-1 bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 text-sm font-bold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-edit"></i>
+            EDITAR PACTO
+          </a>
           
-          <a href="/?sec=pacts" class="bg-black/60 hover:bg-black/80 border border-amber-600/40 text-amber-600 hover:text-amber-500 text-sm font-bold py-3 px-6 rounded-lg transition-all text-center">
-            VER MÁS PACTOS
+          <a href="/?sec=admin&action=delete-pact&id=<?= $pact->id ?>" onclick="return confirm('¿Estás seguro de eliminar este pacto?')" class="bg-red-900/30 hover:bg-red-900/50 border border-red-600/40 text-red-500 text-sm font-bold py-3 px-6 rounded-lg transition-all text-center flex items-center justify-center gap-2">
+            <i class="fa-solid fa-trash"></i>
+            ELIMINAR
+          </a>
+
+          <a href="/?sec=pact-detail&pact_id=<?= $pact->id ?>" target="_blank" class="bg-black/60 hover:bg-black/80 border border-amber-600/40 text-amber-600 hover:text-amber-500 text-sm font-bold py-3 px-6 rounded-lg transition-all text-center flex items-center justify-center gap-2">
+            <i class="fa-solid fa-external-link-alt"></i>
+            VER PÚBLICO
           </a>
         </div>
 
@@ -251,3 +229,5 @@ try {
 
   </div>
 </div>
+
+<script type="module" src="http://localhost:5173/public/assets/admin/js/pact-detail.js"></script>

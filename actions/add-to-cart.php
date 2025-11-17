@@ -6,7 +6,7 @@ require_once __DIR__ . '/../classes/Order.php';
 require_once __DIR__ . '/../admin/classes/Toast.php';
 require_once __DIR__ . '/../includes/auth.php';
 
-// Requiere estar logueado para agregar al carrito
+// logueado para carrito
 if (!isLoggedIn()) {
     Toast::warning('Debes iniciar sesión para agregar pactos al carrito');
     header('Location: /?sec=login&return=' . urlencode('/?sec=pacts'));
@@ -27,22 +27,22 @@ if ($pactId <= 0) {
     exit;
 }
 
-// Verificar si ya fue comprado
+// ver si ya se compro
 if (Order::hasPurchased($userId, $pactId)) {
     Toast::warning('Ya has adquirido este pacto anteriormente');
     header('Location: /?sec=pacts');
     exit;
 }
 
-// Intentar agregar al carrito
+// agregar
 $added = Cart::add($pactId);
 
 if ($added) {
-    // Sincronizar con base de datos
+    // sincronizar con base de datos
     Cart::syncToDatabase($userId);
     Toast::success('Pacto agregado al carrito');
 } else {
-    // Verificar si ya estaba en el carrito
+    // verificar si ya estaba en el carrito
     if (Cart::has($pactId)) {
         Toast::warning('Este pacto ya está en tu carrito');
     } else {

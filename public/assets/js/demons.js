@@ -1,271 +1,290 @@
-/* import { gsap } from 'gsap';
+import { gsap } from 'gsap';
 
-// Demon Carousel with GSAP
-class DemonCarousel {
-  constructor() {
-    this.currentIndex = 0;
-    this.slides = document.querySelectorAll('.carousel-slide');
-    this.miniCards = document.querySelectorAll('.mini-card');
-    this.totalSlides = this.slides.length;
-    this.isAnimating = false;
+// Inicializar las cards cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+  initDemonCards();
+  animatePageElements();
+  initSelectArrows();
+});
 
-    // Demon data
-    this.demonData = [
-      {
-        name: "ASMODEUS",
-        description: "The Prince of Demons, master of desire and temptation. Commands the legions of the underworld with unmatched power.",
-        level: "10",
-        type: "Prince",
-        power: 6,
-        speed: 4,
-        defense: 5
-      },
-      {
-        name: "BELPHEGOR",
-        description: "The Demon of Sloth, seducer of idle minds. Whispers promises of easy wealth and corrupts through laziness.",
-        level: "08",
-        type: "Duke",
-        power: 5,
-        speed: 3,
-        defense: 6
-      },
-      {
-        name: "LILITH",
-        description: "The First Woman, Queen of Demons. Ancient spirit of the night, mother of monsters and dark enchantments.",
-        level: "09",
-        type: "Queen",
-        power: 5,
-        speed: 5,
-        defense: 4
-      },
-      {
-        name: "AZAZEL",
-        description: "The Fallen Angel, teacher of forbidden arts. Bound in chains of divine wrath, yet still spreads corruption.",
-        level: "10",
-        type: "Fallen",
-        power: 6,
-        speed: 5,
-        defense: 3
-      }
-    ];
-
-    this.init();
-  }
-
-  init() {
-    // Set initial slide
-    if (this.slides.length > 0) {
-      this.slides[0].classList.add('active');
-    }
-    this.updateInfo(0);
-
-    // Add click handlers to mini cards
-    this.miniCards.forEach((card, index) => {
-      card.addEventListener('click', () => this.goToSlide(index));
-    });
-
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') this.prevSlide();
-      if (e.key === 'ArrowRight') this.nextSlide();
-    });
-
-    // Auto-advance carousel
-    this.startAutoPlay();
-
-    // Animate entrance
-    this.animateEntrance();
-  }
-
-  goToSlide(index) {
-    if (this.isAnimating || index === this.currentIndex) return;
-    this.isAnimating = true;
-
-    const currentSlide = this.slides[this.currentIndex];
-    const nextSlide = this.slides[index];
-
-    // Simple fade transition
-    gsap.to(currentSlide, {
-      opacity: 0,
-      duration: 0.5,
-      ease: "power2.inOut",
-      onComplete: () => {
-        currentSlide.classList.remove('active');
-      }
-    });
-
-    gsap.to(nextSlide, {
-      opacity: 1,
-      duration: 0.5,
-      delay: 0.3,
-      ease: "power2.out",
-      onStart: () => {
-        nextSlide.classList.add('active');
-      },
-      onComplete: () => {
-        this.isAnimating = false;
-      }
-    });
-
-    // Update mini cards
-    this.miniCards.forEach(card => card.classList.remove('active'));
-    this.miniCards[index].classList.add('active');
-
-    // Update info panel
-    this.updateInfo(index);
-
-    this.currentIndex = index;
-  }
-
-  nextSlide() {
-    const nextIndex = (this.currentIndex + 1) % this.totalSlides;
-    this.goToSlide(nextIndex);
-  }
-
-  prevSlide() {
-    const prevIndex = (this.currentIndex - 1 + this.totalSlides) % this.totalSlides;
-    this.goToSlide(prevIndex);
-  }
-
-  updateInfo(index) {
-    const data = this.demonData[index];
+function initSelectArrows() {
+  const selects = document.querySelectorAll('.filter-item select');
+  
+  selects.forEach(select => {
+    const arrow = select.parentElement.querySelector('.fa-chevron-down');
     
-    const nameEl = document.querySelector('.demon-name');
-    const descEl = document.querySelector('.demon-description');
-    const statsEl = document.querySelector('.demon-stats');
+    if (!arrow) return;
     
-    if (!nameEl || !descEl || !statsEl) return;
-
-    // Animate out old info
-    gsap.to([nameEl, descEl, statsEl], {
-      opacity: 0,
-      x: -20,
-      duration: 0.3,
-      onComplete: () => {
-        // Update content
-        nameEl.textContent = data.name;
-        descEl.textContent = data.description;
-        
-        const statItems = statsEl.querySelectorAll('.flex');
-        if (statItems.length >= 2) {
-          statItems[0].querySelector('.text-gray-300').textContent = data.level;
-          statItems[1].querySelector('.text-gray-300').textContent = data.type;
-        }
-
-        // Update power bars
-        const powerBarsContainer = document.querySelector('.mt-auto');
-        if (powerBarsContainer) {
-          const powerBars = powerBarsContainer.querySelectorAll('.flex.justify-between');
-          if (powerBars.length >= 3) {
-            this.updatePowerBar(powerBars[0], data.power);
-            this.updatePowerBar(powerBars[1], data.speed);
-            this.updatePowerBar(powerBars[2], data.defense);
-          }
-        }
-
-        // Animate in new info
-        gsap.to([nameEl, descEl, statsEl], {
-          opacity: 1,
-          x: 0,
-          duration: 0.4,
-          stagger: 0.1,
-          ease: "power2.out"
-        });
-      }
+    // Detectar cuando se abre el select
+    select.addEventListener('mousedown', () => {
+      arrow.classList.add('rotate-180');
     });
-  }
-
-  updatePowerBar(element, level) {
-    const bar = element.querySelector('.text-amber-500');
-    const filled = '█'.repeat(level);
-    const empty = '░'.repeat(6 - level);
-    bar.textContent = filled + empty;
-  }
-
-  startAutoPlay(interval = 5000) {
-    this.autoPlayInterval = setInterval(() => {
-      if (!this.isAnimating) {
-        this.nextSlide();
-      }
-    }, interval);
-  }
-
-  stopAutoPlay() {
-    if (this.autoPlayInterval) {
-      clearInterval(this.autoPlayInterval);
-    }
-  }
-
-  animateEntrance() {
-    const leftPanel = document.querySelector('.w-\\[550px\\]:first-of-type');
-    const rightPanel = document.querySelector('.w-\\[550px\\]:last-of-type');
     
-    if (leftPanel) {
-      gsap.from(leftPanel, {
-        x: -300,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out"
-      });
-    }
-
-    if (rightPanel) {
-      gsap.from(rightPanel, {
-        x: 300,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out"
-      });
-    }
-
-    // Animate first demon image
-    const activeSlide = document.querySelector('.carousel-slide.active img');
-    if (activeSlide) {
-      gsap.from(activeSlide, {
-        scale: 0,
-        opacity: 0,
-        duration: 1.2,
-        delay: 0.5,
-        ease: "back.out(1.7)"
-      });
-    }
-
-    // Animate mini cards
-    gsap.from('.mini-card', {
-      scale: 0,
-      opacity: 0,
-      duration: 0.4,
-      delay: 0.8,
-      stagger: 0.1,
-      ease: "back.out(1.7)"
+    // Detectar cuando se cierra el select
+    select.addEventListener('blur', () => {
+      arrow.classList.remove('rotate-180');
     });
-  }
+    
+    select.addEventListener('change', () => {
+      arrow.classList.remove('rotate-180');
+    });
+  });
 }
 
-// Initialize carousel when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOM loaded, checking for GSAP...');
-  
-  // Check if GSAP is loaded
-  if (typeof gsap === 'undefined') {
-    console.error('GSAP is not loaded. Please include GSAP library.');
-    return;
-  }
-  
-  console.log('GSAP found, initializing carousel...');
+function animatePageElements() {
+  // Animar título
+  gsap.from('.demons-title h1', {
+    y: -40,
+    opacity: 0,
+    scale: 0.9,
+    duration: 0.8,
+    ease: 'back.out(1.4)'
+  });
 
-  // Initialize carousel
-  const carousel = new DemonCarousel();
-  
-  console.log('Carousel initialized with', carousel.slides.length, 'slides');
+  // Animar instrucciones superiores
+  gsap.from('.demons-instructions', {
+    y: -20,
+    opacity: 0,
+    duration: 0.8,
+    delay: 0.1,
+    ease: 'power3.out'
+  });
 
-  // Pause autoplay on hover
-  const slides = document.querySelectorAll('.carousel-slide');
-  if (slides.length > 0) {
-    slides.forEach(slide => {
-      slide.addEventListener('mouseenter', () => carousel.stopAutoPlay());
-      slide.addEventListener('mouseleave', () => carousel.startAutoPlay());
+  // Animar buscador
+  gsap.from('.search-container', {
+    y: -20,
+    opacity: 0,
+    duration: 0.7,
+    delay: 0.2,
+    ease: 'power3.out'
+  });
+
+  // Animar contenedor de filtros
+  gsap.from('.filters-container', {
+    y: 30,
+    opacity: 0,
+    duration: 0.8,
+    delay: 0.1,
+    ease: 'power3.out'
+  });
+
+  // Animar cada filtro individualmente
+  gsap.from('.filter-item', {
+    x: -20,
+    opacity: 0,
+    duration: 0.5,
+    stagger: 0.1,
+    delay: 0.3,
+    ease: 'power2.out'
+  });
+
+  // Animar botones de filtro
+  gsap.from('.filter-buttons', {
+    scale: 0.9,
+    opacity: 0,
+    duration: 0.5,
+    delay: 0.6,
+    ease: 'back.out(1.4)'
+  });
+}
+
+function initDemonCards() {
+  // Inicializar las expandable cards
+  initExpandableCards();
+
+  // Animar las cards con efecto de cascada mejorado
+  const cards = document.querySelectorAll('.expandable-card-container');
+  
+  gsap.from(cards, {
+    y: 60,
+    opacity: 0,
+    scale: 0.9,
+    rotation: 2,
+    duration: 0.6,
+    stagger: {
+      amount: 0.4,
+      from: 'start',
+      ease: 'power2.out'
+    },
+    ease: 'back.out(1.2)',
+    delay: 0.4,
+    clearProps: 'all'
+  });
+}
+
+function initExpandableCards() {
+  const cards = document.querySelectorAll('.expandable-card');
+  
+  cards.forEach(card => {
+    const container = card.closest('.expandable-card-container');
+    const cardInfo = card.querySelector('.card-info');
+    const panels = {
+      left: card.querySelector('.menu-left'),
+      right: card.querySelector('.menu-right'),
+      top: card.querySelector('.menu-top'),
+      bottom: card.querySelector('.menu-bottom')
+    };
+
+    let hoverTimeout = null;
+    let isHovering = false;
+    let isMouseInside = false;
+
+    // Configuración inicial
+    gsap.set([panels.left, panels.right, panels.top, panels.bottom], {
+      opacity: 0
     });
-  }
-});
- */
+    
+    // Desactivar pointer events inicialmente
+    [panels.left, panels.right, panels.top, panels.bottom].forEach(panel => {
+      if (panel) panel.style.pointerEvents = 'none';
+    });
+
+    // Configurar estado inicial visible para las cards (sin animación de entrada individual)
+    gsap.set(card, {
+      clearProps: 'all'
+    });
+
+    // Hover deshabilitado - no expandir paneles
+    card.addEventListener('mouseenter', (e) => {
+      // Verificar que el mouse realmente está sobre esta card
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX;
+      const y = e.clientY;
+      
+      if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+        return;
+      }
+      
+      isHovering = true;
+      isMouseInside = true;
+      
+      // Efecto de escala en hover
+      gsap.to(container, {
+        scale: 1.05,
+        duration: 0.3,
+        ease: 'power2.out'
+      });
+      
+      // Esperar 50ms antes de abrir
+      hoverTimeout = setTimeout(() => {
+        if (!isHovering || !isMouseInside) return;
+        
+        // Matar cualquier animación previa en los paneles
+        gsap.killTweensOf([panels.left, panels.right, panels.top, panels.bottom, cardInfo]);
+        
+        // Activar pointer events
+        [panels.left, panels.right, panels.top, panels.bottom].forEach(panel => {
+          if (panel) panel.style.pointerEvents = 'auto';
+        });
+        
+        // Ocultar card-info inmediatamente
+        gsap.to(cardInfo, {
+          opacity: 0,
+          duration: 0.2,
+          ease: 'power2.out'
+        });
+
+        // Panel izquierdo
+        gsap.to(panels.left, {
+          x: 0,
+          opacity: 1,
+          duration: 0.3,
+          ease: 'power3.out',
+          delay: 0
+        });
+
+        // Panel derecho
+        gsap.to(panels.right, {
+          x: 0,
+          opacity: 1,
+          duration: 0.3,
+          ease: 'power3.out',
+          delay: 0.05
+        });
+
+        // Panel superior
+        gsap.to(panels.top, {
+          y: 0,
+          opacity: 1,
+          duration: 0.3,
+          ease: 'power3.out',
+          delay: 0.1
+        });
+
+        // Panel inferior
+        gsap.to(panels.bottom, {
+          y: 0,
+          opacity: 1,
+          duration: 0.3,
+          ease: 'power3.out',
+          delay: 0.15
+        });
+      }, 51);
+    });
+
+    // Mouse leave deshabilitado
+    card.addEventListener('mouseleave', (e) => {
+      isHovering = false;
+      isMouseInside = false;
+      
+      // Cancelar timeout si sale antes de los 50ms
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = null;
+      }
+      
+      // Volver a escala normal
+      gsap.to(container, {
+        scale: 1,
+        duration: 0.3,
+        ease: 'power2.out'
+      });
+      
+      // Matar cualquier animación activa inmediatamente
+      gsap.killTweensOf([panels.left, panels.right, panels.top, panels.bottom, cardInfo]);
+      
+      // Desactivar pointer events inmediatamente
+      [panels.left, panels.right, panels.top, panels.bottom].forEach(panel => {
+        if (panel) panel.style.pointerEvents = 'none';
+      });
+      
+      // Mostrar card-info con delay de 0.7s
+      gsap.to(cardInfo, {
+        opacity: 1,
+        duration: 0.15,
+        delay: 0.7,
+        ease: 'power2.out'
+      });
+
+      gsap.to(panels.left, {
+        x: -150,
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power2.in'
+      });
+
+      gsap.to(panels.right, {
+        x: 150,
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power2.in'
+      });
+
+      gsap.to(panels.top, {
+        y: -100,
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power2.in'
+      });
+
+      gsap.to(panels.bottom, {
+        y: 100,
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power2.in'
+      });
+    });
+  });
+}
+
+export { initDemonCards };

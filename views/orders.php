@@ -1,15 +1,24 @@
 <?php
 require_once BASE_PATH . '/classes/Order.php';
+require_once BASE_PATH . '/classes/DbConnection.php';
 require_once BASE_PATH . '/includes/auth.php';
 
 requireLogin();
 
 $userId = $_SESSION['user_id'];
-$orders = Order::byUser($userId);
+$dbError = false;
+$orders = [];
 
-// Cargar items de cada orden
-foreach ($orders as $order) {
-    $order->items = $order->getItems();
+try {
+    $orders = Order::byUser($userId);
+
+    // Cargar items de cada orden
+    foreach ($orders as $order) {
+        $order->items = $order->getItems();
+    }
+} catch (Exception $e) {
+    $dbError = true;
+    error_log('Error loading orders: ' . $e->getMessage());
 }
 ?>
 
@@ -46,7 +55,19 @@ foreach ($orders as $order) {
       
       <!-- LISTADO DE ÓRDENES -->
       <div class="space-y-6">
-        <?php if (empty($orders)): ?>
+        <?php if ($dbError): ?>
+          <div class="text-center py-12">
+            <div class="text-red-400 font-mono text-xl mb-2">
+              // ERROR DE CONEXIÓN
+            </div>
+            <div class="text-amber-400/60 font-mono mb-6">
+              No se pudieron cargar tus compras. Por favor, intenta más tarde.
+            </div>
+            <a href="/?sec=profile" class="inline-block bg-amber-600/20 hover:bg-amber-600/30 border border-amber-600/40 text-amber-500 px-6 py-3 rounded text-sm font-bold transition-all uppercase tracking-wider">
+              <i class="fa-solid fa-arrow-left mr-2"></i>Volver a Mi Cuenta
+            </a>
+          </div>
+        <?php elseif (empty($orders)): ?>
           <div class="empty-state bg-black/70 border border-amber-600/30 rounded-xl p-12 text-center backdrop-blur-sm">
             <div class="text-6xl mb-4 text-amber-500/50">
               <i class="fa-solid fa-inbox"></i>

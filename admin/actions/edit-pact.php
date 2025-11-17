@@ -9,13 +9,16 @@ require_once __DIR__ . '/../../includes/auth.php';
 requireAdmin();
 
 require_once __DIR__ . '/../../classes/Pact.php';
-require_once __DIR__ . '/../../classes/Demon.php';
+require_once __DIR__ . '/../../classes/Pact.php';
 require_once __DIR__ . '/../classes/File.php';
 require_once __DIR__ . '/../classes/Toast.php';
 require_once __DIR__ . '/../includes/functions.php';
 
+// Get return_to parameter
+$returnTo = isset($_GET['return_to']) ? htmlspecialchars($_GET['return_to']) : 'dashboard';
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /?sec=admin&page=dashboard');
+    header('Location: /?sec=admin&page=' . $returnTo);
     exit;
 }
 
@@ -24,7 +27,7 @@ $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 
 if ($id <= 0) {
     Toast::error('ID de pacto inválido');
-    header('Location: /?sec=admin&page=dashboard');
+    header('Location: /?sec=admin&page=' . $returnTo);
     exit;
 }
 
@@ -118,5 +121,5 @@ try {
     Toast::error('Error al actualizar el pacto: ' . $e->getMessage());
 }
 
-header('Location: /?sec=admin&page=dashboard');
+header('Location: /?sec=admin&page=' . $returnTo);
 exit;

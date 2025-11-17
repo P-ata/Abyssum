@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><?= htmlspecialchars($adminTitle ?? 'Panel') ?></title>
   <link rel="stylesheet" href="/assets/admin/css/tailwind.css?v=<?= time() ?>" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <!-- Vite dev server para módulos ES (development) -->
   <?php if (($_SERVER['SERVER_NAME'] ?? 'localhost') === 'localhost'): ?>
@@ -15,7 +16,7 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   
   <!-- JS específico por vista admin (como módulos ES) -->
-  <?php if (($adminView ?? '') === 'dashboard'): ?>
+  <?php if (in_array($adminView ?? '', ['dashboard', 'pacts', 'demons', 'users', 'orders', 'contacts', 'health'])): ?>
     <script type="module" src="http://localhost:5173/public/assets/admin/js/dashboard.js"></script>
   <?php endif; ?>
   <?php if (($adminView ?? '') === 'new-pact'): ?>
@@ -32,3 +33,5 @@
   <?php endif; ?>
 </head>
 <body class="bg-black text-white">
+
+<?php include __DIR__ . '/admin-header.php'; ?>

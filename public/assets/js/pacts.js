@@ -50,6 +50,15 @@ function animatePageElements() {
     ease: 'power3.out'
   });
 
+  // Animar buscador
+  gsap.from('.search-container', {
+    y: -20,
+    opacity: 0,
+    duration: 0.7,
+    delay: 0.2,
+    ease: 'power3.out'
+  });
+
   // Animar contenedor de filtros
   gsap.from('.filters-container', {
     y: 30,

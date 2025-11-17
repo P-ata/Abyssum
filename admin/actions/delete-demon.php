@@ -11,11 +11,14 @@ requireAdmin();
 require_once __DIR__ . '/../../classes/Demon.php';
 require_once __DIR__ . '/../classes/Toast.php';
 
+// Get return_to parameter
+$returnTo = isset($_GET['return_to']) ? htmlspecialchars($_GET['return_to']) : 'dashboard';
+
 $id = $_GET['id'] ?? null;
 
 if ($id === null) {
     Toast::error('ID de demonio requerido');
-    header('Location: /?sec=admin&page=dashboard');
+    header('Location: /?sec=admin&page=' . $returnTo);
     exit;
 }
 
@@ -31,5 +34,5 @@ try {
     Toast::error('Error al eliminar el demonio: ' . $e->getMessage());
 }
 
-header('Location: /?sec=admin&page=dashboard');
+header('Location: /?sec=admin&page=' . $returnTo);
 exit;

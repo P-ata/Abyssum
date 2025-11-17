@@ -70,7 +70,27 @@ if ($section === 'admin') {
 
     // /admin/login (GET form view - NO requiere auth)
     if ($adminPage === 'login') {
+        // Verificar si la DB está disponible antes de mostrar login
+        require_once BASE_PATH . '/classes/DbConnection.php';
+        try {
+            DbConnection::get(); // Intentar conectar
+        } catch (Exception $e) {
+            // Si falla, ya debería haber redirigido desde DbConnection::get()
+            // Pero por si acaso, redirigir manualmente
+            header('Location: /?sec=admin&page=health&error=db');
+            exit;
+        }
         require BASE_PATH . '/admin/views/login.php';
+        exit;
+    }
+
+    // Permitir health sin auth SOLO si viene con parámetro error (desde redirect automático)
+    if ($adminPage === 'health' && isset($_GET['error'])) {
+        require BASE_PATH . '/admin/views/partials/admin-head.php';
+        echo '<main class="flex-grow">';
+        require BASE_PATH . '/admin/views/health.php';
+        echo '</main>';
+        require BASE_PATH . '/admin/views/partials/admin-footer.php';
         exit;
     }
 
@@ -132,8 +152,21 @@ if ($section === 'actions') {
 // =======================
 // RUTAS PÚBLICAS
 // =======================
-$validSections = Sections::validSections();
-$menuSections  = Sections::menuSections();
+
+// Permitir página de error de DB sin validación
+if ($section === 'db-error') {
+    require BASE_PATH . '/views/db-error.php';
+    exit;
+}
+
+try {
+    $validSections = Sections::validSections();
+    $menuSections  = Sections::menuSections();
+} catch (Exception $e) {
+    // Si falla la carga de secciones (DB error), redirigir a página de error
+    header('Location: /?sec=db-error');
+    exit;
+}
 
 // si no vino nada → redirect a abyssum con parámetro visible
 if (!$section) {
@@ -144,7 +177,12 @@ if (!$section) {
 // si no es válida → 404
 $view = in_array($section, $validSections, true) ? $section : '404';
 
-$sections = Sections::sectionsOfSite();
+try {
+    $sections = Sections::sectionsOfSite();
+} catch (Exception $e) {
+    $sections = [];
+}
+
 $sectionTitle = '';
 
 foreach ($sections as $value) {

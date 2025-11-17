@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+/* Estilos para inputs */
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    color: rgb(252 211 77) !important; /* text-amber-300 */
+}
+
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="text"]::placeholder {
+    color: rgba(252, 211, 77, 0.3) !important; /* text-amber-300/30 */
+}
+
+/* Prevenir fondo blanco del autocompletado */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.6) inset !important;
+    -webkit-text-fill-color: rgb(252 211 77) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
 /* Cyber Grid Animation */
 .cyber-grid {
     background-image: linear-gradient(rgba(0,255,255,.08) 1px, transparent 1px),

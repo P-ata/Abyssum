@@ -7,6 +7,7 @@ require_once __DIR__ . '/../includes/auth.php';
 
 requireLogin();
 
+//solo por post
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /?sec=orders');
     exit;
@@ -28,14 +29,14 @@ if (!$order) {
     exit;
 }
 
-// Verificar que la orden pertenece al usuario
+// verificar que sea el usuario el que cancela
 if ($order->user_id !== $_SESSION['user_id']) {
     Toast::error('No tienes permiso para cancelar esta orden');
     header('Location: /?sec=orders');
     exit;
 }
 
-// Solo se puede cancelar si está en estado 'paid'
+// solo se puede cancelar si se pago
 if ($order->status !== 'paid') {
     Toast::error('Esta orden no puede ser cancelada');
     header('Location: /?sec=orders');

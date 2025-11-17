@@ -45,6 +45,22 @@ class Category
         return array_map([self::class, 'fromRow'], $rows ?: []);
     }
 
+    /**
+     * Get all categories for demons (categories that are demon names)
+     * @return Category[]
+     */
+    public static function allForDemons(): array
+    {
+        $pdo = DbConnection::get();
+        $sql = 'SELECT c.slug, c.display_name, c.created_at 
+                FROM categories c
+                WHERE c.slug IN (SELECT slug FROM demons)
+                ORDER BY c.display_name';
+        $stmt = $pdo->query($sql);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map([self::class, 'fromRow'], $rows ?: []);
+    }
+
     public static function find(string $slug): ?self
     {
         $pdo = DbConnection::get();

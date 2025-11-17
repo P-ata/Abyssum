@@ -21,6 +21,9 @@
   <?php if (($view ?? '') === 'pacts'): ?>
     <script type="module" src="http://localhost:5173/public/assets/js/pacts.js"></script>
   <?php endif; ?>
+  <?php if (($view ?? '') === 'demons'): ?>
+    <script type="module" src="http://localhost:5173/public/assets/js/demons.js"></script>
+  <?php endif; ?>
   <?php if (($view ?? '') === 'abyssum'): ?>
     <script type="module" src="http://localhost:5173/public/assets/js/abyssum.js"></script>
   <?php endif; ?>
@@ -44,6 +47,12 @@
   <?php endif; ?>
   <?php if (($view ?? '') === 'pact-detail'): ?>
     <script type="module" src="http://localhost:5173/public/assets/js/pact-detail.js"></script>
+  <?php endif; ?>
+  <?php if (($view ?? '') === 'demon-detail'): ?>
+    <script type="module" src="http://localhost:5173/public/assets/js/demon-detail.js"></script>
+  <?php endif; ?>
+  <?php if (($view ?? '') === 'sellador'): ?>
+    <script type="module" src="http://localhost:5173/public/assets/js/sellador.js"></script>
   <?php endif; ?>
 </head>
 <body class="flex flex-col min-h-screen bg-black">
