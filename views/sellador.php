@@ -26,7 +26,7 @@ require_once BASE_PATH . '/classes/Toast.php';
       <div class="lg:col-span-2">
         <div class="bg-black/70 border border-amber-600/30 rounded-xl overflow-hidden shadow-2xl shadow-amber-500/20">
           <div class="aspect-[4/5] flex items-center justify-center bg-gradient-to-br from-black/80 to-amber-950/10">
-              <img src="../assets/img/sellador.png" alt="Foto del Sellador" class="w-full h-full object-cover"/>
+              <img src="../assets/img/sellador.webp" alt="Foto del Sellador" class="w-full h-full object-cover"/>
           </div>
           <div class="p-5 border-t border-amber-600/20">
             <div class="flex items-center justify-between">
